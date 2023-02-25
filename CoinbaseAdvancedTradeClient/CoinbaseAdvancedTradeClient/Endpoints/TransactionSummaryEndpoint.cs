@@ -11,7 +11,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public ITransactionSummaryEndpoint TransactionSummary => this;
 
-        public Task<object> GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, string productType)
+        Task<object> ITransactionSummaryEndpoint.GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, string productType)
         {
             throw new NotImplementedException();
         }

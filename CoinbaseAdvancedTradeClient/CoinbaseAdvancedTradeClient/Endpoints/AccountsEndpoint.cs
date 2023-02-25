@@ -11,7 +11,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IAccountsEndpoint Accounts => this;
 
-        public async Task<IList<Account>> GetListAccountsAsync()
+        async Task<AccountsPage> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
         {
             var endpoint = Config.ApiUrl.AppendPathSegment(ApiEndpoints.AccountsEndpoint);
 
@@ -20,7 +20,7 @@ namespace CoinbaseAdvancedTradeClient
             return response.Accounts;
         }
 
-        public Task<Account> GetAccountAsync(string accountId)
+        Task<Account> IAccountsEndpoint.GetAccountAsync(string accountId)
         {
             throw new NotImplementedException();
         }

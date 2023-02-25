@@ -12,27 +12,27 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IOrdersEndpoint Orders => this;
 
-        public Task<IList<object>> GetListFills(object filterParameters)
+        Task<IList<object>> IOrdersEndpoint.GetListFills(object filterParameters)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<object>> GetListOrders(object filterParameters)
+        Task<IList<object>> IOrdersEndpoint.GetListOrders(object filterParameters)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> GetOrder(object filterParameters)
+        Task<object> IOrdersEndpoint.GetOrder(object filterParameters)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> PostCancelOrders(string[] orderIds)
+        Task<object> IOrdersEndpoint.PostCancelOrders(string[] orderIds)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> PostCreateOrder(object order)
+        Task<object> IOrdersEndpoint.PostCreateOrder(object order)
         {
             throw new NotImplementedException();
         }

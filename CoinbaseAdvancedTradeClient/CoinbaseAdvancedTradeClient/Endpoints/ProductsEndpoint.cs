@@ -11,22 +11,22 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IProductsEndpoint Products => this;
 
-        public Task<IList<object>> GetListProducts(object filterParameters)
+        Task<IList<object>> IProductsEndpoint.GetListProducts(object filterParameters)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<object>> GetMarketTrades(string productId, int limit)
+        Task<IList<object>> IProductsEndpoint.GetMarketTrades(string productId, int limit)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> GetProduct(string productId)
+        Task<object> IProductsEndpoint.GetProduct(string productId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<object>> GetProductCandles(string productId, object filterParameters)
+        Task<IList<object>> IProductsEndpoint.GetProductCandles(string productId, object filterParameters)
         {
             throw new NotImplementedException();
         }
