@@ -10,9 +10,20 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col">
+        <button class="btn btn-primary" @onclick="@GetAccountAsync">GET Account</button>
+    </div>
+    <div class="col">
+        <InputText class="form-control" @bind-Value="@GetAccountId" ></InputText>
+    </div>
+</div>
+
 @code {
 
     public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
+
+    public string GetAccountId { get; set; }
 
     protected override void OnInitialized()
     {
@@ -26,7 +37,7 @@
         var limit = 50;
 
         var pageOne = await Client.Accounts.GetListAccountsAsync(limit);
-        
+
         await Task.Delay(1);
 
         var pageTwo = await Client.Accounts.GetListAccountsAsync(limit, pageOne.Cursor);
@@ -34,6 +45,15 @@
         await Task.Delay(1);
 
         var pageThree = await Client.Accounts.GetListAccountsAsync(cursor: pageTwo.Cursor);
+
+        await Task.Delay(1);
+
+        GetAccountId = pageOne.Accounts.First().Id;
+    }
+
+    public async Task GetAccountAsync()
+    {
+        var account = await Client.Accounts.GetAccountAsync(GetAccountId);
 
         await Task.Delay(1);
     }

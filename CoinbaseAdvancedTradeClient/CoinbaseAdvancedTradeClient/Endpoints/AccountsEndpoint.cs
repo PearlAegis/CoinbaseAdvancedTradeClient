@@ -30,9 +30,23 @@ namespace CoinbaseAdvancedTradeClient
             }
         }
 
-        Task<Account> IAccountsEndpoint.GetAccountAsync(string accountId)
+        async Task<Account> IAccountsEndpoint.GetAccountAsync(string accountId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var response = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
+                    .AppendPathSegment(accountId)
+                    .GetJsonAsync<AccountResponse>();
+
+                return response.Account;
+            }
+            catch (Exception ex)
+            {
+                var type = ex.GetType().Name;
+                return new Account();
+            }
         }
 
     }
