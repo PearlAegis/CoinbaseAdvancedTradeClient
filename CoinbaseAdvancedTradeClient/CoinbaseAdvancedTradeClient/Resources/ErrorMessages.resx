@@ -126,4 +126,10 @@
   <data name="ApiSecretRequired" xml:space="preserve">
     <value>An API Secret is required.</value>
   </data>
+  <data name="GetAccountIdRequired" xml:space="preserve">
+    <value>Get Account: An Account ID is required.</value>
+  </data>
+  <data name="GetListAccountsLimitRange" xml:space="preserve">
+    <value>Get List Accounts: The 'limit' parameter must be between 1 and 250.</value>
+  </data>
 </root>

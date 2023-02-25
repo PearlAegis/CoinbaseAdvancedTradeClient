@@ -2,6 +2,7 @@
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api;
 using CoinbaseAdvancedTradeClient.Models.Pages;
+using CoinbaseAdvancedTradeClient.Resources;
 using Flurl;
 using Flurl.Http;
 
@@ -13,6 +14,8 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<AccountsPage>> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
         {
+            if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(nameof(limit), ErrorMessages.GetListAccountsLimitRange);
+
             var response = new ApiResponse<AccountsPage>();
 
             try
@@ -37,6 +40,8 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<Account>> IAccountsEndpoint.GetAccountAsync(string accountId)
         {
+            if (string.IsNullOrWhiteSpace(accountId)) throw new ArgumentNullException(nameof(accountId), ErrorMessages.GetAccountIdRequired);
+
             var response = new ApiResponse<Account>();
 
             try

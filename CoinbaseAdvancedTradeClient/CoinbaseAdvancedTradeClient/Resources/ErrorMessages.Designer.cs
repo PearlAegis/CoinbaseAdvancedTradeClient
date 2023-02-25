@@ -86,5 +86,23 @@ namespace CoinbaseAdvancedTradeClient.Resources {
                 return ResourceManager.GetString("ApiSecretRequired", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get Account: An Account ID is required..
+        /// </summary>
+        internal static string GetAccountIdRequired {
+            get {
+                return ResourceManager.GetString("GetAccountIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get List Accounts: The &apos;limit&apos; parameter must be between 1 and 250..
+        /// </summary>
+        internal static string GetListAccountsLimitRange {
+            get {
+                return ResourceManager.GetString("GetListAccountsLimitRange", resourceCulture);
+            }
+        }
     }
 }
