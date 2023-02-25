@@ -13,11 +13,21 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<AccountsPage> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
         {
-            var endpoint = Config.ApiUrl.AppendPathSegment(ApiEndpoints.AccountsEndpoint);
+            try
+            {
+                var response = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
+                    .SetQueryParam(nameof(limit), limit)
+                    .SetQueryParam(nameof(cursor), cursor)
+                    .GetJsonAsync<AccountsPage>();
 
-            var response = await endpoint.WithClient(this).GetJsonAsync<AccountsPage>();
-
-            return response.Accounts;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new AccountsPage();
+            }
         }
 
         Task<Account> IAccountsEndpoint.GetAccountAsync(string accountId)
