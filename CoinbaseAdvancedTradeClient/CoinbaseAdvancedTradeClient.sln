@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E122F712
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbaseAdvancedTradeClient.UnitTests", "CoinbaseAdvancedTradeClient.UnitTests\CoinbaseAdvancedTradeClient.UnitTests.csproj", "{3A134682-90BE-48A3-AF92-B1E9ED8A883F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbaseAdvancedTradeClient.SandboxTests", "CoinbaseAdvancedTradeClient.SandboxTests\CoinbaseAdvancedTradeClient.SandboxTests.csproj", "{18E7301B-0C82-449B-A828-034A4F8F13C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{3A134682-90BE-48A3-AF92-B1E9ED8A883F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A134682-90BE-48A3-AF92-B1E9ED8A883F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A134682-90BE-48A3-AF92-B1E9ED8A883F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18E7301B-0C82-449B-A828-034A4F8F13C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E7301B-0C82-449B-A828-034A4F8F13C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E7301B-0C82-449B-A828-034A4F8F13C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E7301B-0C82-449B-A828-034A4F8F13C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3A134682-90BE-48A3-AF92-B1E9ED8A883F} = {E122F712-CA00-4933-A40D-E43E3A387585}
+		{18E7301B-0C82-449B-A828-034A4F8F13C7} = {E122F712-CA00-4933-A40D-E43E3A387585}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {81237F06-0F6C-4AAD-B8C2-765018CF2C1B}

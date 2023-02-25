@@ -1,0 +1,40 @@
+﻿@page "/"
+
+@inject IOptionsMonitor<ApiClientConfig> Config
+
+<PageTitle>Index</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-primary" @onclick="@GetListAccountsAsync">GET List Accounts</button>
+    </div>
+</div>
+
+@code {
+
+    public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
+
+    protected override void OnInitialized()
+    {
+        Client = new CoinbaseAdvancedTradeApiClient(Config.CurrentValue);
+
+        base.OnInitialized();
+    }
+
+    public async Task GetListAccountsAsync()
+    {
+        var limit = 50;
+
+        var pageOne = await Client.Accounts.GetListAccountsAsync(limit);
+        
+        await Task.Delay(1);
+
+        var pageTwo = await Client.Accounts.GetListAccountsAsync(limit, pageOne.Cursor);
+
+        await Task.Delay(1);
+
+        var pageThree = await Client.Accounts.GetListAccountsAsync(cursor: pageTwo.Cursor);
+
+        await Task.Delay(1);
+    }
+}
