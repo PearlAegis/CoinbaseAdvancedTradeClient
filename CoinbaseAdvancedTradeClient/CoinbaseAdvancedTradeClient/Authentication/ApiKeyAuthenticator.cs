@@ -6,29 +6,31 @@ namespace CoinbaseAdvancedTradeClient.Authentication
 {
     public static class ApiKeyAuthenticator
     {
+        public static string GenerateTimestamp()
+        {
+            var unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var timestamp = unixTime.ToString(CultureInfo.InvariantCulture);
+
+            return timestamp;
+        }
+
         public static string GenerateSignature(string apiSecret, string timestamp, string method, string requestPath, string body)
         {
             return Sign(apiSecret, timestamp + method + requestPath + body);
         }
 
-        internal static string Sign(string apiSecret, string data)
+        private static string Sign(string apiSecret, string data)
         {
-            var hmacKey = Convert.FromBase64String(apiSecret);
+            var apiSecretBytes = Encoding.UTF8.GetBytes(apiSecret);
             var dataBytes = Encoding.UTF8.GetBytes(data);
 
-            using (var hmac = new HMACSHA256(hmacKey))
+            using (var hmac = new HMACSHA256(apiSecretBytes))
             {
-                var signature = hmac.ComputeHash(dataBytes);
-                return Convert.ToBase64String(signature);
+                var hash = hmac.ComputeHash(dataBytes);
+                var signature = Convert.ToHexString(hash).ToLowerInvariant();
+
+                return signature;
             }
-        }
-
-        public static string GenerateTimestamp()
-        {
-            var totalSeconds = (long)(DateTime.UtcNow - DateTime.UnixEpoch).TotalSeconds;
-            var timestamp = totalSeconds.ToString("D", CultureInfo.InvariantCulture);
-
-            return timestamp;
         }
     }
 }

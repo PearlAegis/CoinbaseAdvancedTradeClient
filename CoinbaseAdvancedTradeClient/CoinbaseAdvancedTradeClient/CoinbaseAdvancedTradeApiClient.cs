@@ -33,7 +33,7 @@ namespace CoinbaseAdvancedTradeClient
             {
                 var body = http.RequestBody;
                 var method = http.Request.Verb.Method.ToUpperInvariant();
-                var url = http.Request.Url.ToUri().PathAndQuery;
+                var url = http.Request.Url.ToUri().AbsolutePath;
                 var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
                 var signature = ApiKeyAuthenticator.GenerateSignature(Config.ApiSecret, timestamp, method, url, body);
 
