@@ -23,13 +23,13 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public bool Active { get; set; }
 
         [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
         
         [JsonProperty("updated_at")]
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [JsonProperty("deleted_at")]
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }

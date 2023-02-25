@@ -19,7 +19,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public string OrderId { get; set; }
 
         [JsonProperty("trade_time")]
-        public DateTime TradeTime { get; set; }
+        public DateTime? TradeTime { get; set; }
 
         [JsonProperty("trade_type")]
         public string TradeType { get; set; }
@@ -37,7 +37,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public string ProductId { get; set; }
 
         [JsonProperty("sequence_timestamp")]
-        public DateTime SequenceTimestamp { get; set; }
+        public DateTime? SequenceTimestamp { get; set; }
 
         [JsonProperty("liquidity_indicator")]
         public string LiquidityIndicator { get; set; }

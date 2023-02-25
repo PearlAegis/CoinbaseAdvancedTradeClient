@@ -17,7 +17,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public string Size { get; set; }
 
         [JsonProperty("time")]
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
 
         [JsonProperty("side")]
         public string Side { get; set; }
