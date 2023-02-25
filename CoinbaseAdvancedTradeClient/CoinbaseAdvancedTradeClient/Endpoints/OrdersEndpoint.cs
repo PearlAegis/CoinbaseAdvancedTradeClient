@@ -1,10 +1,4 @@
-﻿using CoinbaseAdvancedTradeClient.Interfaces;
-using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 
 namespace CoinbaseAdvancedTradeClient
 {
