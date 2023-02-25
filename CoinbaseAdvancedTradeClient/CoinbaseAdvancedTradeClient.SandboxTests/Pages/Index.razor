@@ -36,24 +36,24 @@
     {
         var limit = 50;
 
-        var pageOne = await Client.Accounts.GetListAccountsAsync(limit);
+        var responseOne = await Client.Accounts.GetListAccountsAsync(limit);
 
         await Task.Delay(1);
 
-        var pageTwo = await Client.Accounts.GetListAccountsAsync(limit, pageOne.Cursor);
+        var responseTwo = await Client.Accounts.GetListAccountsAsync(limit, responseOne.Data.Cursor);
 
         await Task.Delay(1);
 
-        var pageThree = await Client.Accounts.GetListAccountsAsync(cursor: pageTwo.Cursor);
+        var responseThree = await Client.Accounts.GetListAccountsAsync(cursor: responseTwo.Data.Cursor);
 
         await Task.Delay(1);
 
-        GetAccountId = pageOne.Accounts.First().Id;
+        GetAccountId = responseOne.Data.Accounts.First().Id;
     }
 
     public async Task GetAccountAsync()
     {
-        var account = await Client.Accounts.GetAccountAsync(GetAccountId);
+        var response = await Client.Accounts.GetAccountAsync(GetAccountId);
 
         await Task.Delay(1);
     }

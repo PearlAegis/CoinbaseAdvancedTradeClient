@@ -11,42 +11,51 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IAccountsEndpoint Accounts => this;
 
-        async Task<AccountsPage> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
+        async Task<ApiResponse<AccountsPage>> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
         {
+            var response = new ApiResponse<AccountsPage>();
+
             try
             {
-                var response = await Config.ApiUrl
+                var accountsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
                     .SetQueryParam(nameof(limit), limit)
                     .SetQueryParam(nameof(cursor), cursor)
                     .GetJsonAsync<AccountsPage>();
 
-                return response;
+                response.Data = accountsPage;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                return new AccountsPage();
+                await HandleExceptionResponse(ex, response);
             }
+
+            return response;
         }
 
-        async Task<Account> IAccountsEndpoint.GetAccountAsync(string accountId)
+        async Task<ApiResponse<Account>> IAccountsEndpoint.GetAccountAsync(string accountId)
         {
+            var response = new ApiResponse<Account>();
+
             try
             {
-                var response = await Config.ApiUrl
+                var accountsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
                     .AppendPathSegment(accountId)
-                    .GetJsonAsync<AccountResponse>();
+                    .GetJsonAsync<AccountsPage>();
 
-                return response.Account;
+                response.Data = accountsPage.Account;
+                response.Success = true;
             }
             catch (Exception ex)
             {
-                var type = ex.GetType().Name;
-                return new Account();
+                await HandleExceptionResponse(ex, response);
             }
+
+            return response;
         }
 
     }

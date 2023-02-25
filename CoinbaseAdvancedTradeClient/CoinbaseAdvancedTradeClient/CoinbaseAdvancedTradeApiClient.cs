@@ -1,6 +1,7 @@
 ﻿using CoinbaseAdvancedTradeClient.Authentication;
 using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces;
+using CoinbaseAdvancedTradeClient.Models.Api;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
@@ -44,6 +45,38 @@ namespace CoinbaseAdvancedTradeClient
             }
 
             settings.BeforeCallAsync = SetHeaders;
+        }
+
+        private async Task HandleExceptionResponse<T>(Exception ex, ApiResponse<T> response)
+        {
+            response.Success = false;
+            response.ExceptionType = ex.GetType().Name;
+            response.ExceptionMessage = ex.Message;
+            response.ExceptionDetails = await GetExceptionDetails(ex);
+        }
+
+        private async Task<string> GetExceptionDetails(Exception ex)
+        {
+            var flurlHttpException = (ex as FlurlHttpException);
+
+            if (flurlHttpException != null)
+            {
+                try
+                {
+                    var error = await flurlHttpException.GetResponseJsonAsync<ErrorResponse>().ConfigureAwait(false);
+
+                    return error?.Message ?? string.Empty;
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }
