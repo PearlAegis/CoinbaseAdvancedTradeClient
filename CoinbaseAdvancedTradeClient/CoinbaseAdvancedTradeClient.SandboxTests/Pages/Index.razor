@@ -4,24 +4,63 @@
 
 <PageTitle>Index</PageTitle>
 
+<h1>Account Endpoints</h1>
+
+<h2>Get List Accounts</h2>
 <div class="row">
-    <div class="col">
-        <button class="btn btn-primary" @onclick="@GetListAccountsAsync">GET List Accounts</button>
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Limit</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@GetListAccountsLimit"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Cursor</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@GetListAccountsCursor"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetListAccountsAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
     </div>
 </div>
 
+<h2>Get Account</h2>
 <div class="row">
-    <div class="col">
-        <button class="btn btn-primary" @onclick="@GetAccountAsync">GET Account</button>
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Account ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@GetAccountId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetAccountAsync">GET</button>
+            </div>
+        </div>
     </div>
-    <div class="col">
-        <InputText class="form-control" @bind-Value="@GetAccountId" ></InputText>
+    <div class="col-6">
+        <h3>Response</h3>
     </div>
 </div>
 
 @code {
 
     public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
+
+    public int GetListAccountsLimit { get; set; } = 50;
+
+    public string GetListAccountsCursor { get; set; }
 
     public string GetAccountId { get; set; }
 
@@ -34,27 +73,11 @@
 
     public async Task GetListAccountsAsync()
     {
-        var limit = 50;
-
-        var responseOne = await Client.Accounts.GetListAccountsAsync(limit);
-
-        await Task.Delay(1);
-
-        var responseTwo = await Client.Accounts.GetListAccountsAsync(limit, responseOne.Data.Cursor);
-
-        await Task.Delay(1);
-
-        var responseThree = await Client.Accounts.GetListAccountsAsync(cursor: responseTwo.Data.Cursor);
-
-        await Task.Delay(1);
-
-        GetAccountId = responseOne.Data.Accounts.First().Id;
+        var response = await Client.Accounts.GetListAccountsAsync(GetListAccountsLimit, GetListAccountsCursor);
     }
 
     public async Task GetAccountAsync()
     {
         var response = await Client.Accounts.GetAccountAsync(GetAccountId);
-
-        await Task.Delay(1);
     }
 }
