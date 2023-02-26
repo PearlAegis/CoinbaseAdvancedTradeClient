@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries
 {
     public class TransactionSummary
     {

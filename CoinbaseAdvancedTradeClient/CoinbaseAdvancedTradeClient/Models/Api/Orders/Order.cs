@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
     public class Order
     {
@@ -13,8 +13,8 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         [JsonProperty("user_id")]
         public string UserId { get; set; }
 
-        [JsonProperty("order_configuration")] 
-        public OrderConfiguration OrderConfiguration { get; set; } = new OrderConfiguration(); 
+        [JsonProperty("order_configuration")]
+        public OrderConfiguration OrderConfiguration { get; set; } = new OrderConfiguration();
 
         [JsonProperty("side")]
         public string Side { get; set; }

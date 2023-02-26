@@ -1,7 +1,7 @@
 ﻿using CoinbaseAdvancedTradeClient.Authentication;
 using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces;
-using CoinbaseAdvancedTradeClient.Models.Api;
+using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;

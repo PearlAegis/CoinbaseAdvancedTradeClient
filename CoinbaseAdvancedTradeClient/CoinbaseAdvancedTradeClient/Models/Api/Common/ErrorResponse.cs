@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.Common
 {
     public class ErrorResponse
     {

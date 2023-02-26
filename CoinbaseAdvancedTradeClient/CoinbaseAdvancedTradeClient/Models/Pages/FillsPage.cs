@@ -1,4 +1,4 @@
-﻿using CoinbaseAdvancedTradeClient.Models.Api;
+﻿using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Pages

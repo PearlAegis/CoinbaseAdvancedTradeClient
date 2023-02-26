@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
-    public class StopLimitGtd : StopLimitGtc
+    public class LimitGtd : LimitGtc
     {
         [JsonProperty("end_time")]
         public DateTime? EndTime { get; set; }

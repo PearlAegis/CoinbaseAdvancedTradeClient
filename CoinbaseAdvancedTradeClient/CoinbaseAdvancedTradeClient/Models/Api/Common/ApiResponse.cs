@@ -1,4 +1,4 @@
-﻿namespace CoinbaseAdvancedTradeClient.Models.Api
+﻿namespace CoinbaseAdvancedTradeClient.Models.Api.Common
 {
     public class ApiResponse<T>
     {

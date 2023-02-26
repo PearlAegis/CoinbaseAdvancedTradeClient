@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.Accounts
 {
     public class Account
     {
@@ -24,7 +24,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
 
         [JsonProperty("created_at")]
         public DateTime? CreatedAt { get; set; }
-        
+
         [JsonProperty("updated_at")]
         public DateTime? UpdatedAt { get; set; }
 

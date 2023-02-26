@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace CoinbaseAdvancedTradeClient.Models.Api
+namespace CoinbaseAdvancedTradeClient.Models.Api.Products
 {
     public class Product
     {
@@ -44,7 +44,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public string QuoteName { get; set; }
 
         [JsonProperty("watched")]
-        public bool Watched  { get; set; }
+        public bool Watched { get; set; }
 
         [JsonProperty("is_disabled")]
         public bool IsDisabled { get; set; }
@@ -56,7 +56,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public string Status { get; set; }
 
         [JsonProperty("cancel_only")]
-        public bool CancelOnly  { get; set; }
+        public bool CancelOnly { get; set; }
 
         [JsonProperty("limit_only")]
         public bool LimitOnly { get; set; }
@@ -65,10 +65,10 @@ namespace CoinbaseAdvancedTradeClient.Models.Api
         public bool PostOnly { get; set; }
 
         [JsonProperty("trading_disabled")]
-        public bool TradingDisabled  { get; set; }
+        public bool TradingDisabled { get; set; }
 
         [JsonProperty("auction_mode")]
-        public bool AuctionMode  { get; set; }
+        public bool AuctionMode { get; set; }
 
         [JsonProperty("product_type")]
         public string ProductType { get; set; }

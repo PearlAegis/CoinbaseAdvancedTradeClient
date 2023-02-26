@@ -1,4 +1,5 @@
-﻿using CoinbaseAdvancedTradeClient.Models.Api;
+﻿using CoinbaseAdvancedTradeClient.Models.Api.Accounts;
+using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 
 namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
