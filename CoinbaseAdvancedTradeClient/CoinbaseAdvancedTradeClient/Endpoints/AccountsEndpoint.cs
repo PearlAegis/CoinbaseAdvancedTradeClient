@@ -18,7 +18,7 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(nameof(limit), ErrorMessages.GetListAccountsLimitRange);
+                if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.GetListAccountsLimitRange, nameof(limit));
 
                 var accountsPage = await Config.ApiUrl
                     .WithClient(this)
@@ -62,6 +62,5 @@ namespace CoinbaseAdvancedTradeClient
 
             return response;
         }
-
     }
 }
