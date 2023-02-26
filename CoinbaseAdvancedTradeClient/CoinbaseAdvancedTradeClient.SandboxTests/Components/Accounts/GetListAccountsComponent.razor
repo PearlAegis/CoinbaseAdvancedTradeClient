@@ -1,0 +1,79 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Limit</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@Limit"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Cursor</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@Cursor"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetListAccountsAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Number of Accounts</label>
+                    <label class="col-8 col-form-label">@Result.Data.Size</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Has Next</label>
+                    <label class="col-8 col-form-label">@Result.Data.HasNext</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Cursor</label>
+                    <label class="col-8 col-form-label">@Result.Data.Cursor</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Accounts</label>
+                </div>
+                <RadzenDataGrid TItem="Account" Data="Result.Data.Accounts" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Account" Property="Id" Title="ID" />
+                        <RadzenDataGridColumn TItem="Account" Property="Name" Title="Name" />
+                        <RadzenDataGridColumn TItem="Account" Property="Currency" Title="Currency" Width="150px" />
+                        <RadzenDataGridColumn TItem="Account" Property="Type" Title="Type" />
+                    </Columns>
+                </RadzenDataGrid>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="AccountsPage" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public int Limit { get; set; } = 50;
+
+    public string Cursor { get; set; }
+
+    public ApiResponse<AccountsPage> Result { get; set; } = null;
+
+    public async Task GetListAccountsAsync()
+    {
+        Result = await Client.Accounts.GetListAccountsAsync(Limit, Cursor);
+    }
+}
