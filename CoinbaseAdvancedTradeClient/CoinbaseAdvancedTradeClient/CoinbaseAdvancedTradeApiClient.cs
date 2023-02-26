@@ -13,7 +13,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public ApiClientConfig? Config { get; private set; }
 
-        public CoinbaseAdvancedTradeApiClient(ApiClientConfig? config = null)
+        public CoinbaseAdvancedTradeApiClient(ApiClientConfig config)
         {
             ValidateConfig(config);
             this.Configure(ApiKeyAuth);
