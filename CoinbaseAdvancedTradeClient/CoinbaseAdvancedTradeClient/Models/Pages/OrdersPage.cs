@@ -6,7 +6,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Pages
     public class OrdersPage : Page
     {
         [JsonProperty("orders")]
-        public List<Order> Orders { get; set; } = new List<Order>();
+        public List<Order> Orders { get; set; }
 
         [JsonProperty("sequence")]
         public long Sequence { get; set; }

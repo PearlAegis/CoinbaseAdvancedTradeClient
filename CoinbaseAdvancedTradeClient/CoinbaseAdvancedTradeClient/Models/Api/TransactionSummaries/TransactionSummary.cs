@@ -11,13 +11,13 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries
         public double TotalFees { get; set; }
 
         [JsonProperty("fee_tier")]
-        public FeeTier FeeTier { get; set; } = new FeeTier();
+        public FeeTier FeeTier { get; set; }
 
         [JsonProperty("margin_rate")]
-        public MarginRate MarginRate { get; set; } = new MarginRate();
+        public MarginRate MarginRate { get; set; }
 
         [JsonProperty("goods_and_services_tax")]
-        public GoodsAndServicesTax GoodsAndServicesTax { get; set; } = new GoodsAndServicesTax();
+        public GoodsAndServicesTax GoodsAndServicesTax { get; set; }
 
         [JsonProperty("advanced_trade_only_volume")]
         public double AdvancedTradeOnlyVolume { get; set; }
