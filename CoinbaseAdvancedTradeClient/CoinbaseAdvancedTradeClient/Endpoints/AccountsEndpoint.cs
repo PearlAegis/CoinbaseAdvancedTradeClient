@@ -14,12 +14,12 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<AccountsPage>> IAccountsEndpoint.GetListAccountsAsync(int? limit = null, string cursor = null)
         {
-            if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(nameof(limit), ErrorMessages.GetListAccountsLimitRange);
-
             var response = new ApiResponse<AccountsPage>();
 
             try
             {
+                if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(nameof(limit), ErrorMessages.GetListAccountsLimitRange);
+
                 var accountsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
@@ -40,12 +40,12 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<Account>> IAccountsEndpoint.GetAccountAsync(string accountId)
         {
-            if (string.IsNullOrWhiteSpace(accountId)) throw new ArgumentNullException(nameof(accountId), ErrorMessages.GetAccountIdRequired);
-
             var response = new ApiResponse<Account>();
 
             try
             {
+                if (string.IsNullOrWhiteSpace(accountId)) throw new ArgumentNullException(nameof(accountId), ErrorMessages.GetAccountIdRequired);
+
                 var accountsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
