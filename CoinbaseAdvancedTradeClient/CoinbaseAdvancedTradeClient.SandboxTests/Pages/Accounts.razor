@@ -1,0 +1,31 @@
+﻿@page "/accounts"
+
+@inject IOptionsMonitor<ApiClientConfig> Config
+
+<PageTitle>Account Endpoints</PageTitle>
+
+<h1>Account Endpoints</h1>
+
+<RadzenAccordion Multiple="true">
+    <Items>
+        <RadzenAccordionItem Text="Get List Accounts">
+            <GetListAccountsComponent Client="Client" />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Get Account">
+            <GetAccountComponent Client="Client" />
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
+
+
+@code {
+    public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
+
+    protected override void OnInitialized()
+    {
+        Client = new CoinbaseAdvancedTradeApiClient(Config.CurrentValue);
+
+        base.OnInitialized();
+    }
+
+}

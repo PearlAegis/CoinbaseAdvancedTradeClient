@@ -1,0 +1,19 @@
+﻿@typeparam TItem
+
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Exception Type</label>
+    <label class="col-8 col-form-label">@Result.ExceptionType</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Exception Message</label>
+    <label class="col-8 col-form-label">@Result.ExceptionMessage</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Exception Detail</label>
+    <label class="col-8 col-form-label">@Result.ExceptionDetails</label>
+</div>
+
+@code {
+    [Parameter]
+    public ApiResponse<TItem> Result { get; set; }
+}

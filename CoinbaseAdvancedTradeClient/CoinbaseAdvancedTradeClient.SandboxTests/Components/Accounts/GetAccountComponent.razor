@@ -1,0 +1,104 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Account ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@AccountId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetAccountAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">ID</label>
+                    <label class="col-8 col-form-label">@Result.Data.Id</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Name</label>
+                    <label class="col-8 col-form-label">@Result.Data.Name</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Currency</label>
+                    <label class="col-8 col-form-label">@Result.Data.Currency</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Available Balance: Currency</label>
+                    <label class="col-8 col-form-label">@Result.Data.AvailableBalance.Currency</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Available Balance: Value</label>
+                    <label class="col-8 col-form-label">@Result.Data.AvailableBalance.Value</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Default</label>
+                    <label class="col-8 col-form-label">@Result.Data.Default</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Active</label>
+                    <label class="col-8 col-form-label">@Result.Data.Active</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Created At</label>
+                    <label class="col-8 col-form-label">@Result.Data.CreatedAt</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Updated At</label>
+                    <label class="col-8 col-form-label">@Result.Data.UpdatedAt</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Deleted At</label>
+                    <label class="col-8 col-form-label">@Result.Data.DeletedAt</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Type</label>
+                    <label class="col-8 col-form-label">@Result.Data.Type</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Ready</label>
+                    <label class="col-8 col-form-label">@Result.Data.Ready</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Hold: Currency</label>
+                    <label class="col-8 col-form-label">@Result.Data.Hold.Currency</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Hold: Value</label>
+                    <label class="col-8 col-form-label">@Result.Data.Hold.Value</label>
+                </div>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="Account" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public string AccountId { get; set; }
+
+    public ApiResponse<Account> Result { get; set; } = null;
+
+    public async Task GetAccountAsync()
+    {
+        Result = await Client.Accounts.GetAccountAsync(AccountId);
+    }
+}

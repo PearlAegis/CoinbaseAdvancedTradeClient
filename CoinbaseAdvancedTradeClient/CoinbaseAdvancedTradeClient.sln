@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbaseAdvancedTradeClient", "CoinbaseAdvancedTradeClient\CoinbaseAdvancedTradeClient.csproj", "{5165D8EF-345A-4D92-BFE7-24F28B027D75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinbaseAdvancedTradeClient", "CoinbaseAdvancedTradeClient\CoinbaseAdvancedTradeClient.csproj", "{5165D8EF-345A-4D92-BFE7-24F28B027D75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E122F712-CA00-4933-A40D-E43E3A387585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbaseAdvancedTradeClient.UnitTests", "CoinbaseAdvancedTradeClient.UnitTests\CoinbaseAdvancedTradeClient.UnitTests.csproj", "{3A134682-90BE-48A3-AF92-B1E9ED8A883F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinbaseAdvancedTradeClient.UnitTests", "CoinbaseAdvancedTradeClient.UnitTests\CoinbaseAdvancedTradeClient.UnitTests.csproj", "{3A134682-90BE-48A3-AF92-B1E9ED8A883F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbaseAdvancedTradeClient.SandboxTests", "CoinbaseAdvancedTradeClient.SandboxTests\CoinbaseAdvancedTradeClient.SandboxTests.csproj", "{18E7301B-0C82-449B-A828-034A4F8F13C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinbaseAdvancedTradeClient.SandboxTests", "CoinbaseAdvancedTradeClient.SandboxTests\CoinbaseAdvancedTradeClient.SandboxTests.csproj", "{18E7301B-0C82-449B-A828-034A4F8F13C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
