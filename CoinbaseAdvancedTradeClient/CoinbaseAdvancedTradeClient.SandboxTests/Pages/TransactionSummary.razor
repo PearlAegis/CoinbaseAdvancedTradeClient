@@ -1,0 +1,26 @@
+﻿@page "/transactionsummary"
+
+@inject IOptionsMonitor<ApiClientConfig> Config
+
+<PageTitle>Transaction Summary Endpoints</PageTitle>
+
+<h1>Transaction Summary Endpoints</h1>
+
+<RadzenAccordion Multiple="true">
+    <Items>
+        <RadzenAccordionItem Text="Get Transaction Summary">
+            <GetTransactionSummaryComponent Client="Client" />
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
+
+@code {
+    public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
+
+    protected override void OnInitialized()
+    {
+        Client = new CoinbaseAdvancedTradeApiClient(Config.CurrentValue);
+
+        base.OnInitialized();
+    }
+}

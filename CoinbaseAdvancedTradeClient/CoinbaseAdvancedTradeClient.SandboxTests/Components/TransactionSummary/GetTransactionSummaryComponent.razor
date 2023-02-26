@@ -1,0 +1,128 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Start Date</label>
+            <div class="col-8">
+                <InputDate class="form-control" @bind-Value="@StartDate"></InputDate>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">End Date</label>
+            <div class="col-8">
+                <InputDate class="form-control" @bind-Value="@EndDate"></InputDate>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">User Native Currency</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@UserNativeCurrency"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product Type</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductType"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetTransactionSummaryAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Total Volume</label>
+                    <label class="col-8 col-form-label">@Result.Data.TotalVolume</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Total Fees</label>
+                    <label class="col-8 col-form-label">@Result.Data.TotalFees</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fee Tier: Pricing Tier</label>
+                    <label class="col-8 col-form-label">@Result.Data.FeeTier?.PricingTier</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fee Tier: USD From</label>
+                    <label class="col-8 col-form-label">@Result.Data.FeeTier?.UsdFrom</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fee Tier: USD To</label>
+                    <label class="col-8 col-form-label">@Result.Data.FeeTier?.UsdTo</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fee Tier: Taker Fee Rate</label>
+                    <label class="col-8 col-form-label">@Result.Data.FeeTier?.TakerFeeRate</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fee Tier: Maker Fee Rate</label>
+                    <label class="col-8 col-form-label">@Result.Data.FeeTier?.MakerFeeRate</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Margin Rate: Value</label>
+                    <label class="col-8 col-form-label">@Result.Data.MarginRate?.Value</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Goods and Services Tax: Rate</label>
+                    <label class="col-8 col-form-label">@Result.Data.GoodsAndServicesTax?.Rate</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Goods and Services Tax: Type</label>
+                    <label class="col-8 col-form-label">@Result.Data.GoodsAndServicesTax?.Type</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Advanced Trade Only Volume</label>
+                    <label class="col-8 col-form-label">@Result.Data.AdvancedTradeOnlyVolume</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Advanced Trade Only Fees</label>
+                    <label class="col-8 col-form-label">@Result.Data.AdvancedTradeOnlyFees</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Coinbase Pro Volume</label>
+                    <label class="col-8 col-form-label">@Result.Data.CoinbaseProVolume</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Coinbase Pro Fees</label>
+                    <label class="col-8 col-form-label">@Result.Data.CoinbaseProFees</label>
+                </div>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="TransactionSummary" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public DateTime StartDate { get; set; } = DateTime.Today;
+
+    public DateTime EndDate { get; set; } = DateTime.Today.AddMonths(-1);
+
+    public string UserNativeCurrency { get; set; } = "USD";
+
+    public string ProductType { get; set; } = "SPOT";
+
+    public ApiResponse<TransactionSummary> Result { get; set; } = null;
+
+    public async Task GetTransactionSummaryAsync()
+    {
+        Result = await Client.TransactionSummary.GetTransactionSummaryAsync(StartDate, EndDate, UserNativeCurrency, ProductType);
+    }
+}
