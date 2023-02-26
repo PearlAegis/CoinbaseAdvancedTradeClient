@@ -19,6 +19,8 @@ namespace CoinbaseAdvancedTradeClient
             this.Configure(ApiKeyAuth);
         }
 
+        #region Client Configuration
+
         private void ValidateConfig(ApiClientConfig? config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
@@ -46,6 +48,10 @@ namespace CoinbaseAdvancedTradeClient
 
             settings.BeforeCallAsync = SetHeaders;
         }
+
+        #endregion // Client Configuration
+
+        #region Exception Response Handling
 
         private async Task HandleExceptionResponse<T>(Exception ex, ApiResponse<T> response)
         {
@@ -78,5 +84,7 @@ namespace CoinbaseAdvancedTradeClient
                 return string.Empty;
             }
         }
+
+        #endregion // Exception Response Handling
     }
 }
