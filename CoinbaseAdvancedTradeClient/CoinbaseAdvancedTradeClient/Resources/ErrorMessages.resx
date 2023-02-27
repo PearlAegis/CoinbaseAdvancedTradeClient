@@ -144,7 +144,4 @@
   <data name="StartDateRequired" xml:space="preserve">
     <value>A start date is required.</value>
   </data>
-  <data name="UserNativeCurrencyRequired" xml:space="preserve">
-    <value>User native currency is required.</value>
-  </data>
 </root>

@@ -19,7 +19,6 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (startDate.Equals(DateTime.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(startDate));
                 if (endDate.Equals(DateTime.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(endDate));
-                if (string.IsNullOrWhiteSpace(userNativeCurrency)) throw new ArgumentNullException(nameof(userNativeCurrency), ErrorMessages.UserNativeCurrencyRequired);
                 if (string.IsNullOrWhiteSpace(productType)) throw new ArgumentNullException(nameof(productType), ErrorMessages.ProductTypeRequired);
 
                 var validProductTypes = new List<string>() { ProductTypes.Spot };

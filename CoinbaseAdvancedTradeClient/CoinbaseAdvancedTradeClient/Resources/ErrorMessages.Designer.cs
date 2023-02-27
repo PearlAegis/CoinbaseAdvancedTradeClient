@@ -140,14 +140,5 @@ namespace CoinbaseAdvancedTradeClient.Resources {
                 return ResourceManager.GetString("StartDateRequired", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User native currency is required..
-        /// </summary>
-        internal static string UserNativeCurrencyRequired {
-            get {
-                return ResourceManager.GetString("UserNativeCurrencyRequired", resourceCulture);
-            }
-        }
     }
 }
