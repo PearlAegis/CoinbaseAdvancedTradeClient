@@ -1,6 +1,5 @@
 ﻿@page "/transactionsummary"
-
-@inject IOptionsMonitor<ApiClientConfig> Config
+@inherits ApiClientSandboxPageBase
 
 <PageTitle>Transaction Summary Endpoints</PageTitle>
 
@@ -13,14 +12,3 @@
         </RadzenAccordionItem>
     </Items>
 </RadzenAccordion>
-
-@code {
-    public ICoinbaseAdvancedTradeApiClient Client { get; private set; }
-
-    protected override void OnInitialized()
-    {
-        Client = new CoinbaseAdvancedTradeApiClient(Config.CurrentValue);
-
-        base.OnInitialized();
-    }
-}
