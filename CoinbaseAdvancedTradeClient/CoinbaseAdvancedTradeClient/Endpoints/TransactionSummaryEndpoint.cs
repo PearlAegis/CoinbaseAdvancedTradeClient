@@ -17,15 +17,14 @@ namespace CoinbaseAdvancedTradeClient
             try
             {
                 //TODO Parameter validation
-                //TODO Parameter constants
 
                 var transactionSummary = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.TransactionSummaryEndpoint)
-                    .SetQueryParam("start_date", startDate)
-                    .SetQueryParam("end_date", endDate)
-                    .SetQueryParam("user_native_currency", userNativeCurrency)
-                    .SetQueryParam("product_type", productType)
+                    .SetQueryParam(RequestParameters.StartDate, startDate)
+                    .SetQueryParam(RequestParameters.EndDate, endDate)
+                    .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
+                    .SetQueryParam(RequestParameters.ProductType, productType)
                     .GetJsonAsync<TransactionSummary>();
 
                 response.Data = transactionSummary;

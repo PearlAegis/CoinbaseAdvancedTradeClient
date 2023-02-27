@@ -24,8 +24,8 @@ namespace CoinbaseAdvancedTradeClient
                 var accountsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
-                    .SetQueryParam(nameof(limit), limit)
-                    .SetQueryParam(nameof(cursor), cursor)
+                    .SetQueryParam(RequestParameters.Limit, limit)
+                    .SetQueryParam(RequestParameters.Cursor, cursor)
                     .GetJsonAsync<AccountsPage>();
 
                 response.Data = accountsPage;
