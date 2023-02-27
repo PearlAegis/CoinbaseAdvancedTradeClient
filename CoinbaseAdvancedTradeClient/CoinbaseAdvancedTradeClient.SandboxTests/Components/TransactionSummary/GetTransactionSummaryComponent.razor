@@ -111,9 +111,9 @@
     [Parameter]
     public ICoinbaseAdvancedTradeApiClient Client { get; set; }
 
-    public DateTime StartDate { get; set; } = DateTime.Today;
+    public DateTime StartDate { get; set; }
 
-    public DateTime EndDate { get; set; } = DateTime.Today.AddMonths(-1);
+    public DateTime EndDate { get; set; }
 
     public string UserNativeCurrency { get; set; } = "USD";
 
