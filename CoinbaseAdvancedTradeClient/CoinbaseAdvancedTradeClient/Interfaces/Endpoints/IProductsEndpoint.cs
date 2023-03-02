@@ -1,11 +1,13 @@
-﻿namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
+﻿using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Pages;
+
+namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
 {
     public interface IProductsEndpoint
     {
-        //TODO Models
-        Task<IList<object>> GetListProducts(object filterParameters);
-        Task<object> GetProduct(string productId);
-        Task<IList<object>> GetProductCandles(string productId, object filterParameters);
-        Task<IList<object>> GetMarketTrades(string productId, int limit);
+        Task<ApiResponse<ProductsPage>> GetListProducts(int limit, int offset, string productType);
+        Task<ApiResponse<ProductsPage>> GetProduct(string productId);
+        Task<ApiResponse<CandlesPage>> GetProductCandles(string productId, DateTime start, DateTime end, string granularity);
+        Task<ApiResponse<TradesPage>> GetMarketTrades(string productId, int limit);
     }
 }

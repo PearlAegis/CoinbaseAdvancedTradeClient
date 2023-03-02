@@ -1,4 +1,6 @@
 ﻿using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
+using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Pages;
 
 namespace CoinbaseAdvancedTradeClient
 {
@@ -6,24 +8,68 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IProductsEndpoint Products => this;
 
-        Task<IList<object>> IProductsEndpoint.GetListProducts(object filterParameters)
+        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProducts(int limit, int offset, string productType)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<ProductsPage>();
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<IList<object>> IProductsEndpoint.GetMarketTrades(string productId, int limit)
+        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetProduct(string productId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<ProductsPage>();
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<object> IProductsEndpoint.GetProduct(string productId)
+        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandles(string productId, DateTime start, DateTime end, string granularity)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<CandlesPage>();
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<IList<object>> IProductsEndpoint.GetProductCandles(string productId, object filterParameters)
+        async Task<ApiResponse<TradesPage>> IProductsEndpoint.GetMarketTrades(string productId, int limit)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<TradesPage>();
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
     }
 }
