@@ -53,15 +53,15 @@ namespace CoinbaseAdvancedTradeClient
 
         #region Exception Response Handling
 
-        private async Task HandleExceptionResponse<T>(Exception ex, ApiResponse<T> response)
+        private async Task HandleExceptionResponseAsync<T>(Exception ex, ApiResponse<T> response)
         {
             response.Success = false;
             response.ExceptionType = ex.GetType().Name;
             response.ExceptionMessage = ex.Message;
-            response.ExceptionDetails = await GetExceptionDetails(ex);
+            response.ExceptionDetails = await GetExceptionDetailsAsync(ex);
         }
 
-        private async Task<string> GetExceptionDetails(Exception ex)
+        private async Task<string> GetExceptionDetailsAsync(Exception ex)
         {
             var flurlHttpException = (ex as FlurlHttpException);
 
