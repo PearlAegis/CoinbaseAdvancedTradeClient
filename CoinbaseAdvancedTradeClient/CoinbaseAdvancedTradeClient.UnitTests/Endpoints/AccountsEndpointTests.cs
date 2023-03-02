@@ -133,12 +133,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Arrange
             ApiResponse<AccountsPage> result;
 
-            var invalidJson = GetInvalildAccountsListJsonString();
+            var accountsListJson = GetAccountsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(invalidJson);
+                httpTest.RespondWith(accountsListJson);
 
                 result = await _testClient.Accounts.GetListAccountsAsync(limit);
             }
@@ -158,7 +158,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Arrange
             ApiResponse<AccountsPage> result;
 
-            var invalidJson = GetInvalildAccountsListJsonString();
+            var accountsListJson = GetAccountsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -214,12 +214,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             ApiResponse<Account> result;
 
             var accountId = "test";
-            var accountsListJson = GetAccountJsonString();
+            var accountJson = GetAccountJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(accountsListJson);
+                httpTest.RespondWith(accountJson);
 
                 result = await _testClient.Accounts.GetAccountAsync(accountId);
             }
@@ -272,17 +272,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         [InlineData("  ")]
         [InlineData("\t")]
         [InlineData(null)]
-        public async Task GetAccountAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse(string accountId)
+        public async Task GetAccountAsync_NullOrWhitespaceAccountId_ReturnsUnsuccessfulApiResponse(string accountId)
         {
             //Arrange
             ApiResponse<Account> result;
 
-            var invalidJson = GetInvalildAccountsListJsonString();
+            var accountJson = GetAccountJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(invalidJson);
+                httpTest.RespondWith(accountJson);
 
                 result = await _testClient.Accounts.GetAccountAsync(accountId);
             }
@@ -303,7 +303,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             ApiResponse<Account> result;
 
             var accountId = "test";
-            var invalidJson = GetInvalildAccountsListJsonString();
+            var accountJson = GetAccountJsonString();
 
             //Act
             using (var httpTest = new HttpTest())

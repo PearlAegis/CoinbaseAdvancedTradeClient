@@ -61,6 +61,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An Account ID is required..
+        /// </summary>
+        internal static string AccountIdRequired {
+            get {
+                return ResourceManager.GetString("AccountIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An API Configuration is required..
         /// </summary>
         internal static string ApiConfigRequired {
@@ -88,20 +97,47 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get Account: An Account ID is required..
+        ///   Looks up a localized string similar to An end date is required..
         /// </summary>
-        internal static string GetAccountIdRequired {
+        internal static string EndDateRequired {
             get {
-                return ResourceManager.GetString("GetAccountIdRequired", resourceCulture);
+                return ResourceManager.GetString("EndDateRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get List Accounts: The &apos;limit&apos; parameter must be between 1 and 250..
+        ///   Looks up a localized string similar to The &apos;limit&apos; parameter must be between 1 and 250..
         /// </summary>
-        internal static string GetListAccountsLimitRange {
+        internal static string LimitParameterRange {
             get {
-                return ResourceManager.GetString("GetListAccountsLimitRange", resourceCulture);
+                return ResourceManager.GetString("LimitParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid product type..
+        /// </summary>
+        internal static string ProductTypeInvalid {
+            get {
+                return ResourceManager.GetString("ProductTypeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product type is required..
+        /// </summary>
+        internal static string ProductTypeRequired {
+            get {
+                return ResourceManager.GetString("ProductTypeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A start date is required..
+        /// </summary>
+        internal static string StartDateRequired {
+            get {
+                return ResourceManager.GetString("StartDateRequired", resourceCulture);
             }
         }
     }

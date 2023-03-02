@@ -14,7 +14,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public string UserId { get; set; }
 
         [JsonProperty("order_configuration")]
-        public OrderConfiguration OrderConfiguration { get; set; } = new OrderConfiguration();
+        public OrderConfiguration OrderConfiguration { get; set; }
 
         [JsonProperty("side")]
         public string Side { get; set; }

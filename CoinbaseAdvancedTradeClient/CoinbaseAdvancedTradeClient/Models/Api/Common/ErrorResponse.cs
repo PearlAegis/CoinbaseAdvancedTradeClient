@@ -14,6 +14,6 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Common
         public string Message { get; set; }
 
         [JsonProperty("details")]
-        public List<ErrorDetail> Details { get; set; } = new List<ErrorDetail>();
+        public List<ErrorDetail> Details { get; set; }
     }
 }

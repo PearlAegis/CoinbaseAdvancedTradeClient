@@ -14,7 +14,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Accounts
         public string Currency { get; set; }
 
         [JsonProperty("available_balance")]
-        public CurrencyValue AvailableBalance { get; set; } = new CurrencyValue();
+        public CurrencyValue AvailableBalance { get; set; }
 
         [JsonProperty("default")]
         public bool Default { get; set; }
@@ -38,6 +38,6 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Accounts
         public bool Ready { get; set; }
 
         [JsonProperty("hold")]
-        public CurrencyValue Hold { get; set; } = new CurrencyValue();
+        public CurrencyValue Hold { get; set; }
     }
 }
