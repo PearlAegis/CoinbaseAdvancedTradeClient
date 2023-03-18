@@ -1,0 +1,19 @@
+﻿<div class="row">
+    <div class="col-6">
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public string ProductId { get; set; }
+
+    public ApiResponse<ProductsPage> Result { get; set; } = null;
+
+    public async Task GetProductAsync()
+    {
+        Result = await Client.Products.GetProduct(ProductId);
+    }
+}
