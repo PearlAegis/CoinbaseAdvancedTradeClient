@@ -1,6 +1,147 @@
 ﻿<div class="row">
     <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetProductAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
 
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Product ID</label>
+                    <label class="col-8 col-form-label">@Result.Data.ProductId</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Price</label>
+                    <label class="col-8 col-form-label">@Result.Data.Price</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Price Percentage Change 24H</label>
+                    <label class="col-8 col-form-label">@Result.Data.PricePercentageChange24H</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Volume 24H</label>
+                    <label class="col-8 col-form-label">@Result.Data.Volume24H</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Volume Percentage Change 24H</label>
+                    <label class="col-8 col-form-label">@Result.Data.VolumePercentageChange24H</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Increment</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseIncrement</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Increment</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteIncrement</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Min Size</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteMinSize</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Max Size</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteMaxSize</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Min Size</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseMinSize</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Max Size</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseMaxSize</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Name</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseName</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Name</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteName</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Watched</label>
+                    <label class="col-8 col-form-label">@Result.Data.Watched</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Is Disabled</label>
+                    <label class="col-8 col-form-label">@Result.Data.IsDisabled</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Is New</label>
+                    <label class="col-8 col-form-label">@Result.Data.IsNew</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Status</label>
+                    <label class="col-8 col-form-label">@Result.Data.Status</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Cancel Only</label>
+                    <label class="col-8 col-form-label">@Result.Data.CancelOnly</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Limit Only</label>
+                    <label class="col-8 col-form-label">@Result.Data.LimitOnly</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Post Only</label>
+                    <label class="col-8 col-form-label">@Result.Data.PostOnly</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Trading Disabled</label>
+                    <label class="col-8 col-form-label">@Result.Data.TradingDisabled</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Auction Mode</label>
+                    <label class="col-8 col-form-label">@Result.Data.AuctionMode</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Product Type</label>
+                    <label class="col-8 col-form-label">@Result.Data.ProductType</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Currency ID</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteCurrencyId</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Currency ID</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseCurrencyId</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Mid Market Price</label>
+                    <label class="col-8 col-form-label">@Result.Data.MidMarketPrice</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Base Display Symbol</label>
+                    <label class="col-8 col-form-label">@Result.Data.BaseDisplaySymbol</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Quote Display Symbol</label>
+                    <label class="col-8 col-form-label">@Result.Data.QuoteDisplaySymbol</label>
+                </div>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="Product" Result="Result" />
+            }
+        }
     </div>
 </div>
 
@@ -10,10 +151,10 @@
 
     public string ProductId { get; set; }
 
-    public ApiResponse<ProductsPage> Result { get; set; } = null;
+    public ApiResponse<Product> Result { get; set; } = null;
 
     public async Task GetProductAsync()
     {
-        Result = await Client.Products.GetProduct(ProductId);
+        Result = await Client.Products.GetProductAsync(ProductId);
     }
 }
