@@ -1,6 +1,5 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
-using CoinbaseAdvancedTradeClient.Models.Api.Accounts;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Products;
 using CoinbaseAdvancedTradeClient.Models.Pages;
@@ -24,7 +23,8 @@ namespace CoinbaseAdvancedTradeClient
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
                     .SetQueryParam(RequestParameters.Offset, offset)
-                    .GetJsonAsync();
+                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .GetJsonAsync<ProductsPage>();
 
                 response.Data = productsPage;
                 response.Success = true;
@@ -40,17 +40,18 @@ namespace CoinbaseAdvancedTradeClient
         async Task<ApiResponse<Product>> IProductsEndpoint.GetProductAsync(string productId)
         {
             var response = new ApiResponse<Product>();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
 
-                var productsPage = await Config.ApiUrl
+                var product = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
-                    .GetJsonAsync<ProductsPage>();
+                    .GetJsonAsync<Product>();
 
-                response.Data = productsPage.Product;
+                response.Data = product;
                 response.Success = true;
             }
             catch (Exception ex)
