@@ -5,6 +5,9 @@ namespace CoinbaseAdvancedTradeClient.Models.Pages
 {
     public class ProductsPage : Page
     {
+        [JsonProperty("product")]
+        public Product Product { get; set; }
+
         [JsonProperty("products")]
         public List<Product> Products { get; set; }
 

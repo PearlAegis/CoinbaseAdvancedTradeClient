@@ -115,6 +115,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Product ID is required..
+        /// </summary>
+        internal static string ProductIdRequired {
+            get {
+                return ResourceManager.GetString("ProductIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid product type..
         /// </summary>
         internal static string ProductTypeInvalid {

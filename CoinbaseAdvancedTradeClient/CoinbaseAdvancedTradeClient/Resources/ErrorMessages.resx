@@ -135,6 +135,9 @@
   <data name="LimitParameterRange" xml:space="preserve">
     <value>The 'limit' parameter must be between 1 and 250.</value>
   </data>
+  <data name="ProductIdRequired" xml:space="preserve">
+    <value>A Product ID is required.</value>
+  </data>
   <data name="ProductTypeInvalid" xml:space="preserve">
     <value>Invalid product type.</value>
   </data>
