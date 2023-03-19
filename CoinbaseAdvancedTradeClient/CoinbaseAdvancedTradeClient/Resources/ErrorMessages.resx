@@ -129,11 +129,17 @@
   <data name="ApiSecretRequired" xml:space="preserve">
     <value>An API Secret is required.</value>
   </data>
+  <data name="CandleGranularityInvalid" xml:space="preserve">
+    <value>Invalid candle granularity.</value>
+  </data>
   <data name="EndDateRequired" xml:space="preserve">
     <value>An end date is required.</value>
   </data>
   <data name="LimitParameterRange" xml:space="preserve">
     <value>The 'limit' parameter must be between 1 and 250.</value>
+  </data>
+  <data name="OffsetParameterRange" xml:space="preserve">
+    <value>The 'offset' parameter must be greater than zero.</value>
   </data>
   <data name="ProductIdRequired" xml:space="preserve">
     <value>A Product ID is required.</value>

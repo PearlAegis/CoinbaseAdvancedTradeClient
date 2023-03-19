@@ -12,12 +12,21 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IProductsEndpoint Products => this;
 
-        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProductsAsync(int limit, int offset, string productType)
+        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProductsAsync(int? limit, int? offset, string productType)
         {
             var response = new ApiResponse<ProductsPage>();
 
             try
             {
+                var validProductTypes = new List<string>() 
+                { 
+                    ProductTypes.Spot 
+                };
+
+                if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
+                if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
+                if (!string.IsNullOrWhiteSpace(productType) && !validProductTypes.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
+
                 var productsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
@@ -62,22 +71,36 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandlesAsync(string productId, DateTime start, DateTime end, string granularity)
+        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandlesAsync(string productId, DateTimeOffset start, DateTimeOffset end, string granularity)
         {
             var response = new ApiResponse<CandlesPage>();
 
             try
             {
-                //TODO Additional parameter validation
+                var validGranularity = new List<string>()
+                {
+                    CandleGranularity.OneMinute,
+                    CandleGranularity.FiveMinute,
+                    CandleGranularity.FifteenMinute,
+                    CandleGranularity.ThirtyMinute,
+                    CandleGranularity.OneHour,
+                    CandleGranularity.TwoHour,
+                    CandleGranularity.SixHour,
+                    CandleGranularity.OneDay
+                };
+
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
+                if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
+                if (!validGranularity.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
 
                 var candlesPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
                     .AppendPathSegment(ApiEndpoints.CandlesEndpoint)
-                    .SetQueryParam(RequestParameters.Start, start)
-                    .SetQueryParam(RequestParameters.End, end)
+                    .SetQueryParam(RequestParameters.Start, start.ToUnixTimeSeconds())
+                    .SetQueryParam(RequestParameters.End, end.ToUnixTimeSeconds())
                     .SetQueryParam(RequestParameters.Granularity, granularity)
                     .GetJsonAsync<CandlesPage>();
 
@@ -98,8 +121,8 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                //TODO Additional parameter validation
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
                 var tradesPage = await Config.ApiUrl
                     .WithClient(this)

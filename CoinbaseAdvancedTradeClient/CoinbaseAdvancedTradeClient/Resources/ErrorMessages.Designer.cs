@@ -97,6 +97,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid candle granularity..
+        /// </summary>
+        internal static string CandleGranularityInvalid {
+            get {
+                return ResourceManager.GetString("CandleGranularityInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An end date is required..
         /// </summary>
         internal static string EndDateRequired {
@@ -111,6 +120,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         internal static string LimitParameterRange {
             get {
                 return ResourceManager.GetString("LimitParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;offset&apos; parameter must be greater than zero..
+        /// </summary>
+        internal static string OffsetParameterRange {
+            get {
+                return ResourceManager.GetString("OffsetParameterRange", resourceCulture);
             }
         }
         
