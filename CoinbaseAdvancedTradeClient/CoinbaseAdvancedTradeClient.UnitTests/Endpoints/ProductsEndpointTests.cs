@@ -129,11 +129,112 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Assert
         }
 
-
         #endregion // GetListProductsAsync
 
         #region GetProductAsync
 
+        [Fact]
+        public async Task GetProductAsync_ValidRequestAndResponseJson_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task GetProductAsync_ValidRequestAndResponseJson_ResponseHasValidProductsPage()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task GetProductAsync_ValidRequestAndResponseJson_ResponseHasValidProducts()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task GetProductAsync_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Theory]
+        [InlineData(251)]
+        [InlineData(0)]
+        [InlineData(-25)]
+        public async Task GetProductAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse(int limit)
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Theory]
+        [InlineData(251)]
+        [InlineData(0)]
+        [InlineData(-25)]
+        public async Task GetProductAsync_InvalidOffsetRange_ReturnsUnsuccessfulApiResponse(int offset)
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+        [Fact]
+        public async Task GetProductAsync_InvalidProductType_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
+
+
+        [Fact]
+        public async Task GetProductsAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            //Assert
+        }
 
 
         #endregion // GetProductAsync
