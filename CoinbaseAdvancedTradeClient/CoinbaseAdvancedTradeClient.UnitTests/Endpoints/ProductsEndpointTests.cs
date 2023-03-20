@@ -104,6 +104,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             //Assert
             Assert.NotNull(result.Data.Products);
+            Assert.True(result.Data.Products.Count > 0);
             Assert.Contains(result.Data.Products, p => p.ProductId.Equals("BTC-USD", StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -758,7 +759,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
-            Assert.False(true);
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.NotNull(result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Theory]
@@ -816,7 +822,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.NotNull(result);
             Assert.Null(result.Data);
             Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
             Assert.Contains(ErrorMessages.ProductIdRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
