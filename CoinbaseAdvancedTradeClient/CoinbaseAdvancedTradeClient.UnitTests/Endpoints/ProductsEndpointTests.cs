@@ -133,6 +133,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Null(result.Data);
             Assert.False(result.Success);
             Assert.NotNull(result.ExceptionType);
+            Assert.Equal(nameof(FlurlParsingException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
         }
@@ -473,7 +474,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             //Assert
             Assert.NotNull(result.Data.Candles);
-            Assert.Contains(result.Data.Candles, c => c.Open.Equals("BTC-USD", StringComparison.InvariantCultureIgnoreCase));
+            Assert.Contains(result.Data.Candles, c => c.Start.Equals("1639508050", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
@@ -501,7 +502,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.NotNull(result);
             Assert.Null(result.Data);
             Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionType);
+            Assert.Equal(nameof(FlurlParsingException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
         }
@@ -748,7 +750,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var productId = "TEST";
             var limit = 1;
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetInvalidMarketTradesListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -763,6 +765,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Null(result.Data);
             Assert.False(result.Success);
             Assert.NotNull(result.ExceptionType);
+            Assert.Equal(nameof(FlurlParsingException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
         }
@@ -946,7 +949,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             return json;
         }
 
-
         private string GetProductJsonString()
         {
             var json =
@@ -1051,16 +1053,16 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var json =
             """
             {
-              "candles": [
+              "candles": 
                   {
-                    "start": "INVALID",
+                    "start": "1639508050",
                     "low": "140.21",
                     "high": "140.21",
                     "open": "140.21",
                     "close": "140.21",
                     "volume": "56437345"
                   }
-              ]
+              
             }
             """;
 
@@ -1097,7 +1099,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var json =
             """
             {
-                "trades": [
+                "trades": 
                     {
                         "trade_id": "34b080bf-fcfd-445a-832b-46b5ddc65601",
                         "product_id": "BTC-USD",
@@ -1107,8 +1109,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "side": "UNKNOWN_ORDER_SIDE",
                         "bid": "291.13",
                         "ask": "292.40"
-                    }
-                ],
+                    },
                 "best_bid": "291.13",
                 "best_ask": "292.40"
             }
