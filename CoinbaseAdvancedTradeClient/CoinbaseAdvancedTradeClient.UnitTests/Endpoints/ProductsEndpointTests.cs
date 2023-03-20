@@ -1,12 +1,12 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Api.Products;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
 using Flurl.Http.Testing;
-using System.Collections.Generic;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
@@ -38,7 +38,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "SPOT";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -67,7 +67,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "SPOT";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -92,7 +92,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "SPOT";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -148,7 +148,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "SPOT";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -178,7 +178,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = -1;
             var productType = "SPOT";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -208,7 +208,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "TEST";
 
-            var json = GetMarketTradesListJsonString();
+            var json = GetProductsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -238,8 +238,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var offset = 0;
             var productType = "SPOT";
 
-            var productsListJson = GetMarketTradesListJsonString();
-
             //Act
             using (var httpTest = new HttpTest())
             {
@@ -265,105 +263,132 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task GetProductAsync_ValidRequestAndResponseJson_ReturnsSuccessfulApiResponse()
         {
             //Arrange
+            ApiResponse<Product> result;
 
+            var productId = "TEST";
+
+            var json = GetProductJsonString();
 
             //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
 
+                result = await _testClient.Products.GetProductAsync(productId);
+            }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
         }
 
         [Fact]
-        public async Task GetProductAsync_ValidRequestAndResponseJson_ResponseHasValidProductsPage()
+        public async Task GetProductAsync_ValidRequestAndResponseJson_ResponseHasValidProduct()
         {
             //Arrange
+            ApiResponse<Product> result;
 
+            var productId = "TEST";
 
-            //Act
-
-
-            //Assert
-        }
-
-        [Fact]
-        public async Task GetProductAsync_ValidRequestAndResponseJson_ResponseHasValidProducts()
-        {
-            //Arrange
-
+            var json = GetProductJsonString();
 
             //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
 
+                result = await _testClient.Products.GetProductAsync(productId);
+            }
 
             //Assert
+            Assert.True(false);
         }
 
         [Fact]
         public async Task GetProductAsync_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
         {
             //Arrange
+            ApiResponse<Product> result;
 
+            var productId = "TEST";
+
+            var json = GetInvalidProductJsonString();
 
             //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
 
+                result = await _testClient.Products.GetProductAsync(productId);
+            }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlParsingException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Theory]
-        [InlineData(251)]
-        [InlineData(0)]
-        [InlineData(-25)]
-        public async Task GetProductAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse(int limit)
+        [InlineData("  ")]
+        [InlineData("\t")]
+        [InlineData(null)]
+        public async Task GetProductAsync_NullOrWhitespaceProductId_ReturnsUnsuccessfulApiResponse(string productId)
         {
             //Arrange
+            ApiResponse<Product> result;
 
-
-            //Act
-
-
-            //Assert
-        }
-
-        [Theory]
-        [InlineData(251)]
-        [InlineData(0)]
-        [InlineData(-25)]
-        public async Task GetProductAsync_InvalidOffsetRange_ReturnsUnsuccessfulApiResponse(int offset)
-        {
-            //Arrange
-
+            var json = GetProductJsonString();
 
             //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
 
-
-            //Assert
-        }
-
-        [Fact]
-        public async Task GetProductAsync_InvalidProductType_ReturnsUnsuccessfulApiResponse()
-        {
-            //Arrange
-
-
-            //Act
-
+                result = await _testClient.Products.GetProductAsync(productId);
+            }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
-
 
         [Fact]
         public async Task GetProductsAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
         {
             //Arrange
+            ApiResponse<Product> result;
 
+            var productId = "TEST";
+
+            var json = GetProductJsonString();
 
             //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(status: 401);
 
+                result = await _testClient.Products.GetProductAsync(productId);
+            }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
-
 
         #endregion // GetProductAsync
 
@@ -420,12 +445,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
-
             //Assert
+            Assert.False(true);
         }
 
         [Fact]
-        public async Task GetProductCandlesAsync_ValidRequestAndResponseJson_ResponseHasValidProducts()
+        public async Task GetProductCandlesAsync_ValidRequestAndResponseJson_ResponseHasValidCandles()
         {
             //Arrange
             ApiResponse<CandlesPage> result;
@@ -445,8 +470,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
-
             //Assert
+            Assert.NotNull(result.Data.Candles);
+            Assert.Contains(result.Data.Candles, c => c.Open.Equals("BTC-USD", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
@@ -471,18 +497,23 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Theory]
-        [InlineData(251)]
-        [InlineData(0)]
-        [InlineData(-25)]
-        public async Task GetProductCandlesAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse(int limit)
+        [InlineData("  ")]
+        [InlineData("\t")]
+        [InlineData(null)]
+        public async Task GetProductCandlesAsync_InvalidProductId_ReturnsUnsuccessfulApiResponse(string productId)
         {
             //Arrange
             ApiResponse<CandlesPage> result;
 
-            var productId = "TEST";
             var start = DateTimeOffset.UtcNow.AddDays(-2);
             var end = DateTimeOffset.UtcNow.AddDays(-1);
             var granularity = CandleGranularity.OneMinute;
@@ -497,46 +528,24 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
-
             //Assert
-        }
-
-        [Theory]
-        [InlineData(251)]
-        [InlineData(0)]
-        [InlineData(-25)]
-        public async Task GetProductCandlesAsync_InvalidOffsetRange_ReturnsUnsuccessfulApiResponse(int offset)
-        {
-            //Arrange
-            ApiResponse<CandlesPage> result;
-
-            var productId = "TEST";
-            var start = DateTimeOffset.UtcNow.AddDays(-2);
-            var end = DateTimeOffset.UtcNow.AddDays(-1);
-            var granularity = CandleGranularity.OneMinute;
-
-            var json = GetCandlesListJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
-            }
-
-
-            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+            Assert.Contains(ErrorMessages.ProductIdRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
         }
 
         [Fact]
-        public async Task GetProductCandlesAsync_InvalidProductType_ReturnsUnsuccessfulApiResponse()
+        public async Task GetProductCandlesAsync_InvalidStartDate_ReturnsUnsuccessfulApiResponse()
         {
             //Arrange
             ApiResponse<CandlesPage> result;
 
             var productId = "TEST";
-            var start = DateTimeOffset.UtcNow.AddDays(-2);
+            var start = DateTimeOffset.MinValue;
             var end = DateTimeOffset.UtcNow.AddDays(-1);
             var granularity = CandleGranularity.OneMinute;
 
@@ -551,8 +560,77 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+            Assert.Contains(ErrorMessages.StartDateRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        [Fact]
+        public async Task GetProductCandlesAsync_InvalidEndDate_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CandlesPage> result;
+
+            var productId = "TEST";
+            var start = DateTimeOffset.UtcNow.AddDays(-2);
+            var end = DateTimeOffset.MinValue;
+            var granularity = CandleGranularity.OneMinute;
+
+            var json = GetCandlesListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
+            }
+
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+            Assert.Contains(ErrorMessages.EndDateRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        [Fact]
+        public async Task GetProductCandlesAsync_InvalidGranularity_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CandlesPage> result;
+
+            var productId = "TEST";
+            var start = DateTimeOffset.UtcNow.AddDays(-2);
+            var end = DateTimeOffset.UtcNow.AddDays(-1);
+            var granularity = "INVALID";
+
+            var json = GetCandlesListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+            Assert.Contains(ErrorMessages.CandleGranularityInvalid, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
+        }
 
         [Fact]
         public async Task GetProductCandlesAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
@@ -565,17 +643,21 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var end = DateTimeOffset.UtcNow.AddDays(-1);
             var granularity = CandleGranularity.OneMinute;
 
-            var json = GetCandlesListJsonString();
-
             //Act
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(json);
+                httpTest.RespondWith(status: 401);
 
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
             //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         #endregion // GetProductCandlesAsync
@@ -630,6 +712,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
+            Assert.NotNull(result.Data.Trades);
         }
 
         [Fact]
@@ -652,6 +735,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
+            Assert.False(true);
         }
 
         [Fact]
@@ -674,6 +758,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
+            Assert.False(true);
         }
 
         [Theory]
@@ -706,14 +791,15 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.NotNull(result.ExceptionDetails);
         }
 
-
-        [Fact]
-        public async Task GetMarketTradesAsync_InvalidProductId_ReturnsUnsuccessfulApiResponse()
+        [Theory]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        [InlineData(null)]
+        public async Task GetMarketTradesAsync_InvalidProductId_ReturnsUnsuccessfulApiResponse(string productId)
         {
             //Arrange
             ApiResponse<TradesPage> result;
 
-            var productId = string.Empty;
             var limit = 1;
 
             var json = GetMarketTradesListJsonString();
@@ -733,8 +819,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal(nameof(ArgumentException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
+            Assert.Contains(ErrorMessages.ProductIdRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
         }
-
 
         [Fact]
         public async Task GetMarketTradesAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
@@ -766,7 +852,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         #region Test Response Json
 
-        private string GetMarketTradesListJsonString()
+        private string GetProductsListJsonString()
         {
             var json =
             """
@@ -809,7 +895,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             return json;
         }
-
 
         private string GetInvalidProductsListJsonString()
         {
@@ -976,7 +1061,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             return json;
         }
 
-        private string GetTradesListJsonString()
+        private string GetMarketTradesListJsonString()
         {
             var json =
             """
