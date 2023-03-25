@@ -307,7 +307,34 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
-            Assert.True(false);
+            Assert.Equal("BTC-USD", result.Data.ProductId);
+            Assert.Equal("140.21", result.Data.Price);
+            Assert.Equal("9.43%", result.Data.PricePercentageChange24H);
+            Assert.Equal("1908432", result.Data.Volume24H);
+            Assert.Equal("9.43%", result.Data.VolumePercentageChange24H);
+            Assert.Equal("0.00000001", result.Data.BaseIncrement);
+            Assert.Equal("0.00000001", result.Data.QuoteIncrement);
+            Assert.Equal("0.00000001", result.Data.QuoteMinSize);
+            Assert.Equal("1000", result.Data.QuoteMaxSize);
+            Assert.Equal("0.00000001", result.Data.BaseMinSize);
+            Assert.Equal("1000", result.Data.BaseMaxSize);
+            Assert.Equal("Bitcoin", result.Data.BaseName);
+            Assert.Equal("US Dollar", result.Data.QuoteName);
+            Assert.True(result.Data.Watched);
+            Assert.False(result.Data.IsDisabled);
+            Assert.True(result.Data.IsNew);
+            Assert.Equal("string", result.Data.Status);
+            Assert.True(result.Data.CancelOnly);
+            Assert.True(result.Data.LimitOnly);
+            Assert.True(result.Data.PostOnly);
+            Assert.False(result.Data.TradingDisabled);
+            Assert.True(result.Data.AuctionMode);
+            Assert.Equal("SPOT", result.Data.ProductType);
+            Assert.Equal("USD", result.Data.QuoteCurrencyId);
+            Assert.Equal("BTC", result.Data.BaseCurrencyId);
+            Assert.Equal("140.22", result.Data.MidMarketPrice);
+            Assert.Equal("BTC", result.Data.BaseDisplaySymbol);
+            Assert.Equal("USD", result.Data.QuoteDisplaySymbol);
         }
 
         [Fact]
@@ -427,7 +454,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Fact]
-        public async Task GetProductCandlesAsync_ValidRequestAndResponseJson_ResponseHasValidProductsPage()
+        public async Task GetProductCandlesAsync_ValidRequestAndResponseJson_ResponseHasValidCandlesPage()
         {
             //Arrange
             ApiResponse<CandlesPage> result;
@@ -447,8 +474,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
+            var candle = result.Data.Candles.FirstOrDefault();
+
             //Assert
-            Assert.False(true);
+
         }
 
         [Fact]
@@ -696,7 +725,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Fact]
-        public async Task GetMarketTradesAsync_ValidRequestAndResponseJson_ResponseHasValidProductsPage()
+        public async Task GetMarketTradesAsync_ValidRequestAndResponseJson_ResponseHasValidTradesPage()
         {
             //Arrange
             ApiResponse<TradesPage> result;
@@ -716,10 +745,13 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             //Assert
             Assert.NotNull(result.Data.Trades);
+            Assert.NotEmpty(result.Data.Trades);
+            Assert.Equal("291.13", result.Data.BestBid);
+            Assert.Equal("292.40", result.Data.BestAsk);
         }
 
         [Fact]
-        public async Task GetMarketTradesAsync_ValidRequestAndResponseJson_ResponseHasValidProducts()
+        public async Task GetMarketTradesAsync_ValidRequestAndResponseJson_ResponseHasValidTrades()
         {
             //Arrange
             ApiResponse<TradesPage> result;
@@ -738,7 +770,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             }
 
             //Assert
-            Assert.False(true);
+            Assert.Contains(result.Data.Trades, t => t.TradeId.Equals("34b080bf-fcfd-445a-832b-46b5ddc65601", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
