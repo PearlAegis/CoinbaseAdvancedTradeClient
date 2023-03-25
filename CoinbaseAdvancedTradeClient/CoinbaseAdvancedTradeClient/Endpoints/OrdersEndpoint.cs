@@ -1,6 +1,7 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 using Flurl.Http;
 
@@ -76,9 +77,29 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        Task<object> IOrdersEndpoint.GetOrder(object filterParameters)
+        async Task<ApiResponse<Order>> IOrdersEndpoint.GetOrder(string orderId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<Order>();
+
+            try
+            {
+                //TODO Parameter Validation
+
+                var order = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersHistoricalEndpoint)
+                    .AppendPathSegment(orderId)
+                    .GetJsonAsync<Order>();
+
+                response.Data = order;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
         Task<object> IOrdersEndpoint.PostCancelOrders(string[] orderIds)
