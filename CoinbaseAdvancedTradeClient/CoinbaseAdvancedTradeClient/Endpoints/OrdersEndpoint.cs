@@ -11,7 +11,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IOrdersEndpoint Orders => this;
 
-        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFills(string? orderId = null, string? productId = null, 
+        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFillsAsync(string? orderId = null, string? productId = null, 
             DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null)
         {
             var response = new ApiResponse<FillsPage>();
@@ -41,7 +41,7 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrders(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,  
+        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,  
             DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null, 
             string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
@@ -77,7 +77,7 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<Order>> IOrdersEndpoint.GetOrder(string orderId)
+        async Task<ApiResponse<Order>> IOrdersEndpoint.GetOrderAsync(string orderId)
         {
             var response = new ApiResponse<Order>();
 
@@ -102,12 +102,12 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        Task<object> IOrdersEndpoint.PostCancelOrders(string[] orderIds)
+        Task<object> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds)
         {
             throw new NotImplementedException();
         }
 
-        Task<object> IOrdersEndpoint.PostCreateOrder(object order)
+        Task<object> IOrdersEndpoint.PostCreateOrderAsync(object order)
         {
             throw new NotImplementedException();
         }
