@@ -477,7 +477,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var candle = result.Data.Candles.FirstOrDefault();
 
             //Assert
-
+            Assert.NotNull(result.Data.Candles);
+            Assert.NotEmpty(result.Data.Candles);
         }
 
         [Fact]
@@ -746,31 +747,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Assert
             Assert.NotNull(result.Data.Trades);
             Assert.NotEmpty(result.Data.Trades);
+            Assert.Contains(result.Data.Trades, t => t.TradeId.Equals("34b080bf-fcfd-445a-832b-46b5ddc65601", StringComparison.InvariantCultureIgnoreCase));
             Assert.Equal("291.13", result.Data.BestBid);
             Assert.Equal("292.40", result.Data.BestAsk);
-        }
-
-        [Fact]
-        public async Task GetMarketTradesAsync_ValidRequestAndResponseJson_ResponseHasValidTrades()
-        {
-            //Arrange
-            ApiResponse<TradesPage> result;
-
-            var productId = "TEST";
-            var limit = 1;
-
-            var json = GetMarketTradesListJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Products.GetMarketTradesAsync(productId, limit);
-            }
-
-            //Assert
-            Assert.Contains(result.Data.Trades, t => t.TradeId.Equals("34b080bf-fcfd-445a-832b-46b5ddc65601", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
@@ -1094,7 +1073,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                     "close": "140.21",
                     "volume": "56437345"
                   }
-              
             }
             """;
 
