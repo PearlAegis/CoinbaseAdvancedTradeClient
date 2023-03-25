@@ -1,0 +1,8 @@
+﻿<h3>GetListOrdersComponent</h3>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public ApiResponse<OrdersPage> Result { get; set; } = null;
+}

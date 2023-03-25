@@ -1,0 +1,8 @@
+﻿<h3>GetListFillsComponent</h3>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public ApiResponse<FillsPage> Result { get; set; } = null;
+}
