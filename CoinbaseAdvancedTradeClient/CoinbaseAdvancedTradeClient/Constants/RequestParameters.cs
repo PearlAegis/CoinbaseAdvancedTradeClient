@@ -16,5 +16,9 @@
         public const string Granularity = "granularity";
         public const string OrderId = "order_id";
         public const string ProductId = "product_id";
+        public const string OrderStatus = "order_status";
+        public const string OrderType = "order_type";
+        public const string OrderSide = "order_side";
+        public const string OrderPlacementSource = "order_placement_source";
     }
 }

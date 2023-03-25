@@ -10,7 +10,8 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IOrdersEndpoint Orders => this;
 
-        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFills(string? orderId = null, string? productId = null, DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null)
+        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFills(string? orderId = null, string? productId = null, 
+            DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null)
         {
             var response = new ApiResponse<FillsPage>();
 
@@ -39,9 +40,40 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        Task<IList<object>> IOrdersEndpoint.GetListOrders(object filterParameters)
+        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrders(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,  
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null, 
+            string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<OrdersPage>();
+
+            try
+            {
+                //TODO Parameter Validation
+                var ordersPage = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersHistoricalBatchEndpoint)
+                    .SetQueryParam(RequestParameters.ProductId, productId)
+                    .SetQueryParam(RequestParameters.OrderStatus, orderStatuses?.ToArray())
+                    .SetQueryParam(RequestParameters.Limit, limit)
+                    .SetQueryParam(RequestParameters.StartDate, startDate)
+                    .SetQueryParam(RequestParameters.EndDate, endDate)
+                    .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
+                    .SetQueryParam(RequestParameters.OrderType, orderType)
+                    .SetQueryParam(RequestParameters.OrderSide, orderSide)
+                    .SetQueryParam(RequestParameters.Cursor, cursor)
+                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
+                    .GetJsonAsync<OrdersPage>();
+
+                response.Data = ordersPage;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
         Task<object> IOrdersEndpoint.GetOrder(object filterParameters)
