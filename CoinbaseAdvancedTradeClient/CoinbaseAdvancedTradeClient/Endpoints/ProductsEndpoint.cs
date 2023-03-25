@@ -18,14 +18,9 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                var validProductTypes = new List<string>() 
-                { 
-                    ProductTypes.Spot 
-                };
-
                 if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
                 if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
-                if (!string.IsNullOrWhiteSpace(productType) && !validProductTypes.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
+                if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
                 var productsPage = await Config.ApiUrl
                     .WithClient(this)
@@ -77,22 +72,10 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                var validGranularity = new List<string>()
-                {
-                    CandleGranularity.OneMinute,
-                    CandleGranularity.FiveMinute,
-                    CandleGranularity.FifteenMinute,
-                    CandleGranularity.ThirtyMinute,
-                    CandleGranularity.OneHour,
-                    CandleGranularity.TwoHour,
-                    CandleGranularity.SixHour,
-                    CandleGranularity.OneDay
-                };
-
                 if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
-                if (!validGranularity.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
+                if (!CandleGranularity.CandleGranularityList.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
 
                 var candlesPage = await Config.ApiUrl
                     .WithClient(this)
