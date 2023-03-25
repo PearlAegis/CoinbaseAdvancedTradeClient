@@ -22,7 +22,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ErrorMessages {
+    public class ErrorMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CoinbaseAdvancedTradeClient.Resources.ErrorMessages", typeof(ErrorMessages).Assembly);
@@ -51,7 +51,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to An Account ID is required..
         /// </summary>
-        internal static string AccountIdRequired {
+        public static string AccountIdRequired {
             get {
                 return ResourceManager.GetString("AccountIdRequired", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to An API Configuration is required..
         /// </summary>
-        internal static string ApiConfigRequired {
+        public static string ApiConfigRequired {
             get {
                 return ResourceManager.GetString("ApiConfigRequired", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to An API Key is required..
         /// </summary>
-        internal static string ApiKeyRequired {
+        public static string ApiKeyRequired {
             get {
                 return ResourceManager.GetString("ApiKeyRequired", resourceCulture);
             }
@@ -90,16 +90,25 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to An API Secret is required..
         /// </summary>
-        internal static string ApiSecretRequired {
+        public static string ApiSecretRequired {
             get {
                 return ResourceManager.GetString("ApiSecretRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid candle granularity..
+        /// </summary>
+        public static string CandleGranularityInvalid {
+            get {
+                return ResourceManager.GetString("CandleGranularityInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An end date is required..
         /// </summary>
-        internal static string EndDateRequired {
+        public static string EndDateRequired {
             get {
                 return ResourceManager.GetString("EndDateRequired", resourceCulture);
             }
@@ -108,16 +117,34 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The &apos;limit&apos; parameter must be between 1 and 250..
         /// </summary>
-        internal static string LimitParameterRange {
+        public static string LimitParameterRange {
             get {
                 return ResourceManager.GetString("LimitParameterRange", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &apos;offset&apos; parameter must be greater than zero..
+        /// </summary>
+        public static string OffsetParameterRange {
+            get {
+                return ResourceManager.GetString("OffsetParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Product ID is required..
+        /// </summary>
+        public static string ProductIdRequired {
+            get {
+                return ResourceManager.GetString("ProductIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid product type..
         /// </summary>
-        internal static string ProductTypeInvalid {
+        public static string ProductTypeInvalid {
             get {
                 return ResourceManager.GetString("ProductTypeInvalid", resourceCulture);
             }
@@ -126,7 +153,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Product type is required..
         /// </summary>
-        internal static string ProductTypeRequired {
+        public static string ProductTypeRequired {
             get {
                 return ResourceManager.GetString("ProductTypeRequired", resourceCulture);
             }
@@ -135,7 +162,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         /// <summary>
         ///   Looks up a localized string similar to A start date is required..
         /// </summary>
-        internal static string StartDateRequired {
+        public static string StartDateRequired {
             get {
                 return ResourceManager.GetString("StartDateRequired", resourceCulture);
             }

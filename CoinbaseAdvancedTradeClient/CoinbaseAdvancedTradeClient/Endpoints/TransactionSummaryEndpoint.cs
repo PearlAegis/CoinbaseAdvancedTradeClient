@@ -38,7 +38,7 @@ namespace CoinbaseAdvancedTradeClient
             }
             catch(Exception ex)
             {
-                await HandleExceptionResponse(ex, response);
+                await HandleExceptionResponseAsync(ex, response);
             }
 
             return response;

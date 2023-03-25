@@ -1,0 +1,80 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Limit</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@Limit"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Offset</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@Offset"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product Type</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductType"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetListProductsAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Number of Products</label>
+                    <label class="col-8 col-form-label">@Result.Data.NumberOfProducts</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Products</label>
+                </div>
+                <RadzenDataGrid TItem="Product" Data="Result.Data.Products" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Product" Property="ProductId" Title="Product ID" />
+                        <RadzenDataGridColumn TItem="Product" Property="BaseName" Title="Base Name" />
+                        <RadzenDataGridColumn TItem="Product" Property="QuoteName" Title="Quote Name" />
+                        <RadzenDataGridColumn TItem="Product" Property="Price" Title="Price" />
+                        <RadzenDataGridColumn TItem="Product" Property="Status" Title="Status" />
+                    </Columns>
+                </RadzenDataGrid>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="ProductsPage" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public int Limit { get; set; } = 50;
+
+    public int Offset { get; set; }
+
+    public string ProductType { get; set; }
+
+    public ApiResponse<ProductsPage> Result { get; set; } = null;
+
+    public async Task GetListProductsAsync()
+    {
+        Result = await Client.Products.GetListProductsAsync(Limit, Offset, ProductType);
+    }
+}

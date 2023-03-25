@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Pages
 {
-    public class TradesPage : Page
+    public class TradesPage
     {
         [JsonProperty("trades")]
         public List<Trade> Trades { get; set; }

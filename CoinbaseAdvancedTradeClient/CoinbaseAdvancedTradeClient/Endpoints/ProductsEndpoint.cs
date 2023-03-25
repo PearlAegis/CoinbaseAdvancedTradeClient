@@ -1,4 +1,10 @@
-﻿using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
+﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
+using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Api.Products;
+using CoinbaseAdvancedTradeClient.Models.Pages;
+using CoinbaseAdvancedTradeClient.Resources;
+using Flurl.Http;
 
 namespace CoinbaseAdvancedTradeClient
 {
@@ -6,24 +12,135 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IProductsEndpoint Products => this;
 
-        Task<IList<object>> IProductsEndpoint.GetListProducts(object filterParameters)
+        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProductsAsync(int? limit, int? offset, string productType)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<ProductsPage>();
+
+            try
+            {
+                var validProductTypes = new List<string>() 
+                { 
+                    ProductTypes.Spot 
+                };
+
+                if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
+                if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
+                if (!string.IsNullOrWhiteSpace(productType) && !validProductTypes.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
+
+                var productsPage = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
+                    .SetQueryParam(RequestParameters.Limit, limit)
+                    .SetQueryParam(RequestParameters.Offset, offset)
+                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .GetJsonAsync<ProductsPage>();
+
+                response.Data = productsPage;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<IList<object>> IProductsEndpoint.GetMarketTrades(string productId, int limit)
+        async Task<ApiResponse<Product>> IProductsEndpoint.GetProductAsync(string productId)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<Product>();
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+
+                var product = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
+                    .AppendPathSegment(productId)
+                    .GetJsonAsync<Product>();
+
+                response.Data = product;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<object> IProductsEndpoint.GetProduct(string productId)
+        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandlesAsync(string productId, DateTimeOffset start, DateTimeOffset end, string granularity)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<CandlesPage>();
+
+            try
+            {
+                var validGranularity = new List<string>()
+                {
+                    CandleGranularity.OneMinute,
+                    CandleGranularity.FiveMinute,
+                    CandleGranularity.FifteenMinute,
+                    CandleGranularity.ThirtyMinute,
+                    CandleGranularity.OneHour,
+                    CandleGranularity.TwoHour,
+                    CandleGranularity.SixHour,
+                    CandleGranularity.OneDay
+                };
+
+                if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
+                if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
+                if (!validGranularity.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
+
+                var candlesPage = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
+                    .AppendPathSegment(productId)
+                    .AppendPathSegment(ApiEndpoints.CandlesEndpoint)
+                    .SetQueryParam(RequestParameters.Start, start.ToUnixTimeSeconds())
+                    .SetQueryParam(RequestParameters.End, end.ToUnixTimeSeconds())
+                    .SetQueryParam(RequestParameters.Granularity, granularity)
+                    .GetJsonAsync<CandlesPage>();
+
+                response.Data = candlesPage;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<IList<object>> IProductsEndpoint.GetProductCandles(string productId, object filterParameters)
+        async Task<ApiResponse<TradesPage>> IProductsEndpoint.GetMarketTradesAsync(string productId, int limit)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<TradesPage>();
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
+
+                var tradesPage = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
+                    .AppendPathSegment(productId)
+                    .AppendPathSegment(ApiEndpoints.TickerEndpoint)
+                    .SetQueryParam(RequestParameters.Limit, limit)
+                    .GetJsonAsync<TradesPage>();
+
+                response.Data = tradesPage;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
     }
 }
