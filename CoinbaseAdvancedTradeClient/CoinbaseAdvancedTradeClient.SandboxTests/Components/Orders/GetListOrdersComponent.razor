@@ -1,8 +1,148 @@
-﻿<h3>GetListOrdersComponent</h3>
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderStatus"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Limit</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@Limit"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Start Date</label>
+            <div class="col-8">
+                <InputDate class="form-control" @bind-Value="@StartDate"></InputDate>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">End Date</label>
+            <div class="col-8">
+                <InputDate class="form-control" @bind-Value="@EndDate"></InputDate>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">User Native Currency</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@UserNativeCurrency"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order Type</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderType"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order Side</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderSide"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Cursor</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@Cursor"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product Type</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductType"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order Placement Source</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderPlacementSource"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@GetListOrdersAsync">GET</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Has Next</label>
+                    <label class="col-8 col-form-label">@Result.Data.HasNext</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Cursor</label>
+                    <label class="col-8 col-form-label">@Result.Data.Cursor</label>
+                </div>
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Fills</label>
+                </div>
+                <RadzenDataGrid TItem="Order" Data="Result.Data.Orders" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Order" Property="Id" Title="Order ID" />
+                        <RadzenDataGridColumn TItem="Order" Property="ProductId" Title="Product ID" />
+                        <RadzenDataGridColumn TItem="Order" Property="Side" Title="Side" />
+                    </Columns>
+                </RadzenDataGrid>
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="OrdersPage" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
 
 @code {
     [Parameter]
     public ICoinbaseAdvancedTradeApiClient Client { get; set; }
 
+    public string ProductId { get; set; }
+
+    public string OrderStatus { get; set; }
+
+    public int Limit { get; set; }
+
+    public DateTimeOffset StartDate { get; set; }
+
+    public DateTimeOffset EndDate { get; set; }
+
+    public string UserNativeCurrency { get; set; }
+
+    public string OrderType { get; set; }
+
+    public string OrderSide { get; set; }
+
+    public string Cursor { get; set; }
+
+    public string ProductType { get; set; }
+
+    public string OrderPlacementSource { get; set; }
+
     public ApiResponse<OrdersPage> Result { get; set; } = null;
+
+    public async Task GetListOrdersAsync()
+    {
+        var orderStatuses = OrderStatus?.Split(",").ToList();
+        Result = await Client.Orders.GetListOrdersAsync(ProductId, orderStatuses, Limit, StartDate, EndDate, UserNativeCurrency, OrderType, OrderSide, Cursor, ProductType, OrderPlacementSource);
+    }
 }
