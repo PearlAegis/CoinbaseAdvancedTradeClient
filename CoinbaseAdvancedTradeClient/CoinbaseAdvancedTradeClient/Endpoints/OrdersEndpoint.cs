@@ -3,6 +3,7 @@ using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using CoinbaseAdvancedTradeClient.Models.Pages;
+using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
 
 namespace CoinbaseAdvancedTradeClient
@@ -18,7 +19,11 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                //TODO Parameter Validation
+                if (limit != null && limit != 0 && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
+
+                if (start.Equals(DateTimeOffset.MinValue)) start = null;
+                if (end.Equals(DateTimeOffset.MinValue)) end = null;
+
                 var fillsPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalFillsEndpoint)
@@ -49,7 +54,16 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                //TODO Parameter Validation
+                if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
+                if (!string.IsNullOrWhiteSpace(orderSide) && !OrderSides.OrderSideList.Contains(orderSide)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(orderSide));
+                if (!string.IsNullOrWhiteSpace(orderType) && !OrderTypes.OrderTypeList.Contains(orderType)) throw new ArgumentException(ErrorMessages.OrderTypeInvalid, nameof(orderType));
+                if (!string.IsNullOrWhiteSpace(orderPlacementSource) && !OrderTypes.OrderTypeList.Contains(orderPlacementSource)) throw new ArgumentException(ErrorMessages.OrderPlacementSourceInvalid, nameof(orderPlacementSource));
+                if (limit != null && limit != 0 && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
+
+                if (orderStatuses != null && !orderStatuses.Any()) orderStatuses = null;
+                if (startDate.Equals(DateTimeOffset.MinValue)) startDate = null;
+                if (endDate.Equals(DateTimeOffset.MinValue)) endDate = null;
+
                 var ordersPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalBatchEndpoint)
@@ -83,15 +97,15 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                //TODO Parameter Validation
+                if (string.IsNullOrWhiteSpace(orderId)) throw new ArgumentNullException(nameof(orderId), ErrorMessages.OrderIdRequired);
 
-                var order = await Config.ApiUrl
+                var ordersPage = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalEndpoint)
                     .AppendPathSegment(orderId)
-                    .GetJsonAsync<Order>();
+                    .GetJsonAsync<OrdersPage>();
 
-                response.Data = order;
+                response.Data = ordersPage.Order;
                 response.Success = true;
             }
             catch (Exception ex)
