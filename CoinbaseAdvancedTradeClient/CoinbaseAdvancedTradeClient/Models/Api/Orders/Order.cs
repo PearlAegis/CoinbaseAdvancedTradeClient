@@ -46,6 +46,9 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         [JsonProperty("number_of_fills")]
         public string NumberOfFills { get; set; }
 
+        [JsonProperty("filled_value")]
+        public string FilledValue { get; set; }
+
         [JsonProperty("pending_cancel")]
         public bool PendingCancel { get; set; }
 
@@ -84,5 +87,8 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 
         [JsonProperty("order_placement_source")]
         public string OrderPlacementSource { get; set; }
+
+        [JsonProperty("outstanding_hold_amount")]
+        public string OutstandingHoldAmount { get; set; }
     }
 }
