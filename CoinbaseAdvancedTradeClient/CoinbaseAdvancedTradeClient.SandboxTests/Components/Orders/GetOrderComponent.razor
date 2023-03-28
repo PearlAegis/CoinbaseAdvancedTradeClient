@@ -36,10 +36,113 @@
                     <label class="col-4 col-form-label">User ID</label>
                     <label class="col-8 col-form-label">@Result.Data.UserId</label>
                 </div>
-                <div class="form-group row p-2">
-                    <label class="col-4 col-form-label">Order Configuration</label>
-                    <label class="col-8 col-form-label">@Result.Data.OrderConfiguration</label>
-                </div>
+                @if (Result.Data.OrderConfiguration.MarketLoc != null)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order Configuration</label>
+                        <label class="col-8 col-form-label">Market LOC</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Quote Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.MarketLoc.QuoteSize</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Base Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.MarketLoc.BaseSize</label>
+                    </div>
+                }
+                @if (Result.Data.OrderConfiguration.LimitGtc != null)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order Configuration</label>
+                        <label class="col-8 col-form-label">Limit GTC</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Base Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtc.BaseSize</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Limit Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtc.LimitPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Post Only</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtc.PostOnly</label>
+                    </div>
+                }
+                @if (Result.Data.OrderConfiguration.LimitGtd != null)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order Configuration</label>
+                        <label class="col-8 col-form-label">Limit GTD</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Base Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtd.BaseSize</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Limit Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtd.LimitPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Post Only</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtd.PostOnly</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">End Time</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.LimitGtd.EndTime</label>
+                    </div>
+                }
+                @if (Result.Data.OrderConfiguration.StopLimitGtc != null)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order Configuration</label>
+                        <label class="col-8 col-form-label">Stop Limit GTC</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Base Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtc.BaseSize</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Limit Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtc.LimitPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Stop Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtc.StopPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Post Only</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtc.StopDirection</label>
+                    </div>
+                }
+                @if (Result.Data.OrderConfiguration.StopLimitGtd != null)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order Configuration</label>
+                        <label class="col-8 col-form-label">Stop Limit GTD</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Base Size</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtd.BaseSize</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Limit Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtd.LimitPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Stop Price</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtd.StopPrice</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Post Only</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtd.StopDirection</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">End Time</label>
+                        <label class="col-8 col-form-label">@Result.Data.OrderConfiguration.StopLimitGtd.EndTime</label>
+                    </div>
+                }
                 <div class="form-group row p-2">
                     <label class="col-4 col-form-label">Side</label>
                     <label class="col-8 col-form-label">@Result.Data.Side</label>
