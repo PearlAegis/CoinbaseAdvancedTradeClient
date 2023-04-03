@@ -67,7 +67,7 @@
                 </div>
                 <RadzenDataGrid TItem="Fill" Data="Result.Data.Fills" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
                     <Columns>
-                        <RadzenDataGridColumn TItem="Fill" Property="OrderId" Title="Order ID" />
+                        <RadzenDataGridColumn TItem="Fill" Property="OrderId" Title="Order ID" Width="300px" />
                         <RadzenDataGridColumn TItem="Fill" Property="ProductId" Title="Product ID" />
                         <RadzenDataGridColumn TItem="Fill" Property="TradeType" Title="Trade Type" />
                         <RadzenDataGridColumn TItem="Fill" Property="Price" Title="Price" />
@@ -87,17 +87,17 @@
     [Parameter]
     public ICoinbaseAdvancedTradeApiClient Client { get; set; }
 
-    public string OrderId { get; set; }
+    public string OrderId { get; set; } = null;
 
-    public string ProductId { get; set; }
+    public string ProductId { get; set; } = null;
 
-    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset? StartDate { get; set; } = null;
 
-    public DateTimeOffset EndDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; } = null;
 
-    public int Limit { get; set; }
+    public int? Limit { get; set; } = null;
 
-    public string Cursor { get; set; }
+    public string Cursor { get; set; } = null;
 
     public ApiResponse<FillsPage> Result { get; set; } = null;
 

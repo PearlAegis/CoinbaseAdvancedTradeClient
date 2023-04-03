@@ -1,15 +1,10 @@
 ﻿using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
+using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 using Flurl.Http;
 using Flurl.Http.Testing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
@@ -44,7 +39,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(json);
+                result = await _testClient.Orders.GetListOrdersAsync();
             }
 
             //Assert
@@ -69,7 +64,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(json);
+                result = await _testClient.Orders.GetListOrdersAsync();
             }
 
             //Assert
@@ -90,13 +85,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(json);
+                result = await _testClient.Orders.GetListOrdersAsync();
             }
 
             //Assert
             Assert.NotNull(result.Data.Orders);
-            Assert.Contains(result.Data.Orders, o => o.Id.Equals("BTC", StringComparison.InvariantCultureIgnoreCase));
-            Assert.Contains(result.Data.Orders, o => o.Id.Equals("ETH", StringComparison.InvariantCultureIgnoreCase));
+            Assert.Contains(result.Data.Orders, o => o.Id.Equals("0000-000000-000000", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
@@ -135,12 +129,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Arrange
             ApiResponse<OrdersPage> result;
 
-            var invalidJson = GetInvalidOrdersListJsonString();
+            var json = GetOrdersListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(invalidJson);
+                httpTest.RespondWith(json);
 
                 result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderSide: orderSide, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
             }
@@ -159,8 +153,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             //Arrange
             ApiResponse<OrdersPage> result;
-
-            var json = GetOrdersListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -212,48 +204,115 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task GetListFillsAsync_ValidRequestAndResponseJson_ResultHasValidFillsPage()
         {
             //Arrange
-            ApiResponse<OrdersPage> result;
+            ApiResponse<FillsPage> result;
 
-            var json = GetOrdersListJsonString();
+            var json = GetFillsListJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(json);
+                result = await _testClient.Orders.GetListFillsAsync();
             }
 
             //Assert
-            Assert.Null(result.Data.Order);
-            Assert.NotNull(result.Data.Orders);
+            Assert.NotNull(result.Data.Fills);
         }
 
         [Fact]
         public async Task GetListFillsAsync_ValidRequestAndResponseJson_ResponseHasValidFills()
         {
+            //Arrange
+            ApiResponse<FillsPage> result;
 
+            var json = GetFillsListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.GetListFillsAsync(json);
+            }
+
+            //Assert
+            Assert.NotNull(result.Data.Fills);
+            Assert.Contains(result.Data.Fills, f => f.EntryId.Equals("22222-2222222-22222222", StringComparison.InvariantCultureIgnoreCase));
         }
 
         [Fact]
         public async Task GetListFillsAsync_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
         {
+            //Arrange
+            ApiResponse<FillsPage> result;
 
+            var invalidJson = GetInvalidFillsListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(invalidJson);
+
+                result = await _testClient.Orders.GetListFillsAsync();
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.NotNull(result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Theory]
         [InlineData(251)]
-        [InlineData(0)]
         [InlineData(-25)]
         public async Task GetListFillsAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse(int limit)
         {
+            //Arrange
+            ApiResponse<FillsPage> result;
 
+            var json = GetFillsListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+                result = await _testClient.Orders.GetListFillsAsync(limit: limit);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Fact]
         public async Task GetListFillsAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
         {
+            //Arrange
+            ApiResponse<FillsPage> result;
 
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(status: 401);
+
+                result = await _testClient.Orders.GetListFillsAsync();
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         #endregion // GetListFillsAsync
@@ -263,37 +322,151 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         [Fact]
         public async Task GetOrderAsync_ValidRequestAndResponseJson_ReturnsSuccessfulApiResponse()
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var orderId = "0000-000000-000000";
+
+            var json = GetOrderJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
         }
 
         [Fact]
-        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResultHasValidFillsPage()
+        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResultHasValidOrder()
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var orderId = "0000-000000-000000";
+
+            var json = GetOrderJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result.Data);
         }
 
         [Fact]
-        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResponseHasValidFills()
+        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResponseHasValidOrder()
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var orderId = "0000-000000-000000";
+
+            var json = GetOrdersListJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result.Data);
         }
 
         [Fact]
         public async Task GetOrderAsync_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var orderId = "0000-000000-000000";
+
+            var invalidJson = GetInvalidOrderJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(invalidJson);
+
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.NotNull(result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
-        [Fact]
-        public async Task GetOrderAsync_InvalidLimitRange_ReturnsUnsuccessfulApiResponse()
+        [Theory]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        [InlineData(null)]
+        public async Task GetOrderAsync_NullOrWhitespaceOrderId_ReturnsUnsuccessfulApiResponse(string orderId)
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var json = GetOrderJsonString();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Fact]
         public async Task GetOrderAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
         {
+            //Arrange
+            ApiResponse<Order> result;
 
+            var orderId = "0000-000000-000000";
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(status: 401);
+
+                result = await _testClient.Orders.GetOrderAsync(orderId);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         #endregion // GetOrderAsync
@@ -304,7 +477,72 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "orders": [
+                        {
+                            "order_id": "0000-000000-000000",
+                            "product_id": "BTC-USD",
+                            "user_id": "2222-000000-000000",
+                            "order_configuration": {
+                                "market_market_ioc": {
+                                "quote_size": "10.00",
+                                "base_size": "0.001"
+                                },
+                                "limit_limit_gtc": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "post_only": false
+                                },
+                                "limit_limit_gtd": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "end_time": "2021-05-31T09:59:59Z",
+                                    "post_only": false
+                                },
+                                "stop_limit_stop_limit_gtc": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "stop_price": "20000.00",
+                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                },
+                                "stop_limit_stop_limit_gtd": {
+                                    "base_size": 0.001,
+                                    "limit_price": "10000.00",
+                                    "stop_price": "20000.00",
+                                    "end_time": "2021-05-31T09:59:59Z",
+                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                }
+                            },
+                            "side": "UNKNOWN_ORDER_SIDE",
+                            "client_order_id": "11111-000000-000000",
+                            "status": "OPEN",
+                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "created_time": "2021-05-31T09:59:59Z",
+                            "completion_percentage": "50",
+                            "filled_size": "0.001",
+                            "average_filled_price": "50",
+                            "fee": "123.45",
+                            "number_of_fills": "2",
+                            "filled_value": "10000",
+                            "pending_cancel": true,
+                            "size_in_quote": false,
+                            "total_fees": "5.00",
+                            "size_inclusive_of_fees": false,
+                            "total_value_after_fees": "string",
+                            "trigger_status": "UNKNOWN_TRIGGER_STATUS",
+                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "reject_reason": "REJECT_REASON_UNSPECIFIED",
+                            "settled": true,
+                            "product_type": "SPOT",
+                            "reject_message": "string",
+                            "cancel_message": "string",
+                            "order_placement_source": "RETAIL_ADVANCED"
+                        }
+                    ],
+                    "sequence": "12345",
+                    "has_next": true,
+                    "cursor": "789100"
+                }
                 """;
 
             return json;
@@ -314,7 +552,72 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "orders": [
+                        {
+                            "order_id": "0000-000000-000000",
+                            "product_id": "BTC-USD",
+                            "user_id": "2222-000000-000000",
+                            "order_configuration": {
+                                "market_market_ioc": {
+                                "quote_size": "10.00",
+                                "base_size": "0.001"
+                                },
+                                "limit_limit_gtc": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "post_only": "INVALID"
+                                },
+                                "limit_limit_gtd": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "end_time": "2021-05-31T09:59:59Z",
+                                    "post_only": false
+                                },
+                                "stop_limit_stop_limit_gtc": {
+                                    "base_size": "0.001",
+                                    "limit_price": "10000.00",
+                                    "stop_price": "20000.00",
+                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                },
+                                "stop_limit_stop_limit_gtd": {
+                                    "base_size": 0.001,
+                                    "limit_price": "10000.00",
+                                    "stop_price": "20000.00",
+                                    "end_time": "2021-05-31T09:59:59Z",
+                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                }
+                            },
+                            "side": "UNKNOWN_ORDER_SIDE",
+                            "client_order_id": "11111-000000-000000",
+                            "status": "OPEN",
+                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "created_time": "2021-05-31T09:59:59Z",
+                            "completion_percentage": "50",
+                            "filled_size": "0.001",
+                            "average_filled_price": "50",
+                            "fee": "123.45",
+                            "number_of_fills": "2",
+                            "filled_value": "10000",
+                            "pending_cancel": true,
+                            "size_in_quote": false,
+                            "total_fees": "5.00",
+                            "size_inclusive_of_fees": false,
+                            "total_value_after_fees": "string",
+                            "trigger_status": "UNKNOWN_TRIGGER_STATUS",
+                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "reject_reason": "REJECT_REASON_UNSPECIFIED",
+                            "settled": true,
+                            "product_type": "SPOT",
+                            "reject_message": "string",
+                            "cancel_message": "string",
+                            "order_placement_source": "RETAIL_ADVANCED"
+                        }
+                    ],
+                    "sequence": "12345",
+                    "has_next": true,
+                    "cursor": "789100"
+                }
                 """;
 
             return json;
@@ -324,7 +627,27 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "fills": [
+                        {
+                            "entry_id": "22222-2222222-22222222",
+                            "trade_id": "1111-11111-111111",
+                            "order_id": "0000-000000-000000",
+                            "trade_time": "2021-05-31T09:59:59Z",
+                            "trade_type": "FILL",
+                            "price": "10000.00",
+                            "size": "0.001",
+                            "commission": "1.25",
+                            "product_id": "BTC-USD",
+                            "sequence_timestamp": "2021-05-31T09:58:59Z",
+                            "liquidity_indicator": "UNKNOWN_LIQUIDITY_INDICATOR",
+                            "size_in_quote": false,
+                            "user_id": "3333-333333-3333333",
+                            "side": "UNKNOWN_ORDER_SIDE"
+                        }
+                    ],
+                    "cursor": "789100"
+                }
                 """;
 
             return json;
@@ -334,7 +657,27 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "fills": [
+                        {
+                            "entry_id": "22222-2222222-22222222",
+                            "trade_id": "1111-11111-111111",
+                            "order_id": "0000-000000-000000",
+                            "trade_time": "2021-05-31T09:59:59Z",
+                            "trade_type": "FILL",
+                            "price": "10000.00",
+                            "size": "0.001",
+                            "commission": "1.25",
+                            "product_id": "BTC-USD",
+                            "sequence_timestamp": "2021-05-31T09:58:59Z",
+                            "liquidity_indicator": "UNKNOWN_LIQUIDITY_INDICATOR",
+                            "size_in_quote": "INVALID",
+                            "user_id": "3333-333333-3333333",
+                            "side": "UNKNOWN_ORDER_SIDE"
+                        }
+                    ],
+                    "cursor": "789100"
+                }
                 """;
 
             return json;
@@ -344,7 +687,67 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "order": {
+                        "order_id": "0000-000000-000000",
+                        "product_id": "BTC-USD",
+                        "user_id": "2222-000000-000000",
+                        "order_configuration": {
+                            "market_market_ioc": {
+                                "quote_size": "10.00",
+                                "base_size": "0.001"
+                            },
+                            "limit_limit_gtc": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "post_only": false
+                            },
+                            "limit_limit_gtd": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "end_time": "2021-05-31T09:59:59Z",
+                                "post_only": false
+                            },
+                            "stop_limit_stop_limit_gtc": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "stop_price": "20000.00",
+                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                            },
+                            "stop_limit_stop_limit_gtd": {
+                                "base_size": 0.001,
+                                "limit_price": "10000.00",
+                                "stop_price": "20000.00",
+                                "end_time": "2021-05-31T09:59:59Z",
+                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                            }
+                        },
+                        "side": "UNKNOWN_ORDER_SIDE",
+                        "client_order_id": "11111-000000-000000",
+                        "status": "OPEN",
+                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "created_time": "2021-05-31T09:59:59Z",
+                        "completion_percentage": "50",
+                        "filled_size": "0.001",
+                        "average_filled_price": "50",
+                        "fee": "string",
+                        "number_of_fills": "2",
+                        "filled_value": "10000",
+                        "pending_cancel": true,
+                        "size_in_quote": false,
+                        "total_fees": "5.00",
+                        "size_inclusive_of_fees": false,
+                        "total_value_after_fees": "string",
+                        "trigger_status": "UNKNOWN_TRIGGER_STATUS",
+                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "reject_reason": "REJECT_REASON_UNSPECIFIED",
+                        "settled": "boolean",
+                        "product_type": "SPOT",
+                        "reject_message": "string",
+                        "cancel_message": "string",
+                        "order_placement_source": "RETAIL_ADVANCED"
+                    }
+                }
                 """;
 
             return json;
@@ -354,7 +757,67 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             var json =
                 """
-
+                {
+                    "order": {
+                        "order_id": "0000-000000-000000",
+                        "product_id": "BTC-USD",
+                        "user_id": "2222-000000-000000",
+                        "order_configuration": {
+                            "market_market_ioc": {
+                                "quote_size": "10.00",
+                                "base_size": "0.001"
+                            },
+                            "limit_limit_gtc": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "post_only": "INVALID"
+                            },
+                            "limit_limit_gtd": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "end_time": "2021-05-31T09:59:59Z",
+                                "post_only": false
+                            },
+                            "stop_limit_stop_limit_gtc": {
+                                "base_size": "0.001",
+                                "limit_price": "10000.00",
+                                "stop_price": "20000.00",
+                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                            },
+                            "stop_limit_stop_limit_gtd": {
+                                "base_size": 0.001,
+                                "limit_price": "10000.00",
+                                "stop_price": "20000.00",
+                                "end_time": "2021-05-31T09:59:59Z",
+                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                            }
+                        },
+                        "side": "UNKNOWN_ORDER_SIDE",
+                        "client_order_id": "11111-000000-000000",
+                        "status": "OPEN",
+                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "created_time": "2021-05-31T09:59:59Z",
+                        "completion_percentage": "50",
+                        "filled_size": "0.001",
+                        "average_filled_price": "50",
+                        "fee": "string",
+                        "number_of_fills": "2",
+                        "filled_value": "10000",
+                        "pending_cancel": true,
+                        "size_in_quote": false,
+                        "total_fees": "5.00",
+                        "size_inclusive_of_fees": false,
+                        "total_value_after_fees": "string",
+                        "trigger_status": "UNKNOWN_TRIGGER_STATUS",
+                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "reject_reason": "REJECT_REASON_UNSPECIFIED",
+                        "settled": "boolean",
+                        "product_type": "SPOT",
+                        "reject_message": "string",
+                        "cancel_message": "string",
+                        "order_placement_source": "RETAIL_ADVANCED"
+                    }
+                }
                 """;
 
             return json;
