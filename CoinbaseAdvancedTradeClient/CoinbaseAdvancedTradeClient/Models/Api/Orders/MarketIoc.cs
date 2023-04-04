@@ -2,7 +2,7 @@
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
-    public class MarketLoc
+    public class MarketIoc
     {
         [JsonProperty("quote_size")]
         public string QuoteSize { get; set; }
