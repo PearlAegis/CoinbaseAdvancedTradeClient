@@ -354,6 +354,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var orderId = "0000-000000-000000";
 
+            var expectedDate = DateTime.Parse("2021-05-31T09:59:59Z", styles: System.Globalization.DateTimeStyles.AdjustToUniversal);
+
             var json = GetOrderJsonString();
 
             //Act
@@ -366,6 +368,51 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             //Assert
             Assert.NotNull(result.Data);
+            Assert.Equal("0000-000000-000000", result.Data.Id);
+            Assert.Equal("BTC-USD", result.Data.ProductId);
+            Assert.Equal("2222-000000-000000", result.Data.UserId);
+            Assert.Equal("10.00", result.Data.OrderConfiguration.MarketIoc.QuoteSize);
+            Assert.Equal("0.001", result.Data.OrderConfiguration.MarketIoc.BaseSize);
+            Assert.Equal("0.001", result.Data.OrderConfiguration.LimitGtc.BaseSize);
+            Assert.Equal("10000.00", result.Data.OrderConfiguration.LimitGtc.LimitPrice);
+            Assert.False(result.Data.OrderConfiguration.LimitGtc.PostOnly);
+            Assert.Equal("0.001", result.Data.OrderConfiguration.LimitGtd.BaseSize);
+            Assert.Equal("10000.00", result.Data.OrderConfiguration.LimitGtd.LimitPrice);
+            Assert.Equal(expectedDate, result.Data.OrderConfiguration.LimitGtd.EndTime);
+            Assert.False(result.Data.OrderConfiguration.LimitGtd.PostOnly);
+            Assert.Equal("0.001", result.Data.OrderConfiguration.StopLimitGtc.BaseSize);
+            Assert.Equal("10000.00", result.Data.OrderConfiguration.StopLimitGtc.LimitPrice);
+            Assert.Equal("20000.00", result.Data.OrderConfiguration.StopLimitGtc.StopPrice);
+            Assert.Equal("UNKNOWN_STOP_DIRECTION", result.Data.OrderConfiguration.StopLimitGtc.StopDirection);
+            Assert.Equal("0.001", result.Data.OrderConfiguration.StopLimitGtd.BaseSize);
+            Assert.Equal("10000.00", result.Data.OrderConfiguration.StopLimitGtd.LimitPrice);
+            Assert.Equal("20000.00", result.Data.OrderConfiguration.StopLimitGtd.StopPrice);
+            Assert.Equal(expectedDate, result.Data.OrderConfiguration.StopLimitGtd.EndTime);
+            Assert.Equal("UNKNOWN_STOP_DIRECTION", result.Data.OrderConfiguration.StopLimitGtd.StopDirection);
+            Assert.Equal("UNKNOWN_ORDER_SIDE", result.Data.Side);
+            Assert.Equal("11111-000000-000000", result.Data.ClientOrderId);
+            Assert.Equal("OPEN", result.Data.Status);
+            Assert.Equal("UNKNOWN_TIME_IN_FORCE", result.Data.TimeInForce);
+            Assert.Equal(expectedDate, result.Data.CreatedTime);
+            Assert.Equal("50", result.Data.CompletionPercentage);
+            Assert.Equal("0.001", result.Data.FilledSize);
+            Assert.Equal("50", result.Data.AverageFilledPrice);
+            Assert.Equal("1.23", result.Data.Fee);
+            Assert.Equal("2", result.Data.NumberOfFills);
+            Assert.Equal("10000", result.Data.FilledValue);
+            Assert.True(result.Data.PendingCancel);
+            Assert.False(result.Data.SizeInQuote);
+            Assert.Equal("5.00", result.Data.TotalFees);
+            Assert.False(result.Data.SizeInclusiveOfFees);
+            Assert.Equal("123.45", result.Data.TotalValueAfterFees);
+            Assert.Equal("UNKNOWN_TRIGGER_STATUS", result.Data.TriggerStatus);
+            Assert.Equal("UNKNOWN_ORDER_TYPE", result.Data.OrderType);
+            Assert.Equal("REJECT_REASON_UNSPECIFIED", result.Data.RejectReason);
+            Assert.True(result.Data.Settled);
+            Assert.Equal("SPOT", result.Data.ProductType);
+            Assert.Equal("string", result.Data.RejectMessage);
+            Assert.Equal("string", result.Data.CancelMessage);
+            Assert.Equal("RETAIL_ADVANCED", result.Data.OrderPlacementSource);
         }
 
         [Fact]
