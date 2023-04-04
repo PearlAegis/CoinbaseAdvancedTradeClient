@@ -376,7 +376,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var orderId = "0000-000000-000000";
 
-            var json = GetOrdersListJsonString();
+            var json = GetOrderJsonString();
 
             //Act
             using (var httpTest = new HttpTest())
@@ -439,7 +439,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.NotNull(result);
             Assert.Null(result.Data);
             Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
         }
@@ -730,18 +730,18 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "completion_percentage": "50",
                         "filled_size": "0.001",
                         "average_filled_price": "50",
-                        "fee": "string",
+                        "fee": "1.23",
                         "number_of_fills": "2",
                         "filled_value": "10000",
                         "pending_cancel": true,
                         "size_in_quote": false,
                         "total_fees": "5.00",
                         "size_inclusive_of_fees": false,
-                        "total_value_after_fees": "string",
+                        "total_value_after_fees": "123.45",
                         "trigger_status": "UNKNOWN_TRIGGER_STATUS",
                         "order_type": "UNKNOWN_ORDER_TYPE",
                         "reject_reason": "REJECT_REASON_UNSPECIFIED",
-                        "settled": "boolean",
+                        "settled": true,
                         "product_type": "SPOT",
                         "reject_message": "string",
                         "cancel_message": "string",
