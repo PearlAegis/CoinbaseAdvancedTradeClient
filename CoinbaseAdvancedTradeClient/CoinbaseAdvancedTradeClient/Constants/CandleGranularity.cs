@@ -10,5 +10,17 @@
         public const string TwoHour = "TWO_HOUR";
         public const string SixHour = "SIX_HOUR";
         public const string OneDay = "ONE_DAY";
+
+        public readonly static ICollection<string> CandleGranularityList = new List<string>
+        {
+            OneMinute, 
+            FiveMinute, 
+            FifteenMinute,
+            ThirtyMinute, 
+            OneHour, 
+            TwoHour, 
+            SixHour, 
+            OneDay
+        };
     }
 }

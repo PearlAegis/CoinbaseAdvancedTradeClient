@@ -21,8 +21,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (endDate.Equals(DateTime.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(endDate));
                 if (string.IsNullOrWhiteSpace(productType)) throw new ArgumentNullException(nameof(productType), ErrorMessages.ProductTypeRequired);
 
-                var validProductTypes = new List<string>() { ProductTypes.Spot };
-                if (!validProductTypes.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
+                if (!ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
                 var transactionSummary = await Config.ApiUrl
                     .WithClient(this)

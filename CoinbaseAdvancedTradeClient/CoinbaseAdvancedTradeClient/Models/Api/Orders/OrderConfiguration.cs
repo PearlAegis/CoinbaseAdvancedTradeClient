@@ -4,8 +4,8 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
     public class OrderConfiguration
     {
-        [JsonProperty("market_market_loc")]
-        public MarketLoc MarketLoc { get; set; }
+        [JsonProperty("market_market_ioc")]
+        public MarketIoc MarketIoc { get; set; }
 
         [JsonProperty("limit_limit_gtc")]
         public LimitGtc LimitGtc { get; set; }

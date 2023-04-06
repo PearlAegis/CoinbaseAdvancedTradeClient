@@ -1,0 +1,26 @@
+﻿@page "/orders"
+@inherits ApiClientSandboxPageBase
+
+<PageTitle>Order Endpoints</PageTitle>
+
+<h1>Order Endpoints</h1>
+
+<RadzenAccordion Multiple="true">
+    <Items>
+        <RadzenAccordionItem Text="Get List Orders">
+            <GetListOrdersComponent Client="Client" />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Get List Fills">
+            <GetListFillsComponent Client="Client" />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Get Order">
+            <GetOrderComponent Client="Client" />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Post Create Order">
+            <label>TODO</label>
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Post Cancel Order">
+            <label>TODO</label>
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
