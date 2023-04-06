@@ -347,7 +347,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Fact]
-        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResultHasValidOrder()
+        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResponseHasValidOrder()
         {
             //Arrange
             ApiResponse<Order> result;
@@ -413,28 +413,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("string", result.Data.RejectMessage);
             Assert.Equal("string", result.Data.CancelMessage);
             Assert.Equal("RETAIL_ADVANCED", result.Data.OrderPlacementSource);
-        }
-
-        [Fact]
-        public async Task GetOrderAsync_ValidRequestAndResponseJson_ResponseHasValidOrder()
-        {
-            //Arrange
-            ApiResponse<Order> result;
-
-            var orderId = "0000-000000-000000";
-
-            var json = GetOrderJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Orders.GetOrderAsync(orderId);
-            }
-
-            //Assert
-            Assert.NotNull(result.Data);
         }
 
         [Fact]
