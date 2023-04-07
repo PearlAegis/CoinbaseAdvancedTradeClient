@@ -116,14 +116,50 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        Task<object> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds)
+        async Task<ApiResponse<Order>> IOrdersEndpoint.PostCreateOrderAsync(CreateOrderParameters order, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<Order>();
+
+            try
+            {
+                var x = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
+                    .PostJsonAsync(order, cancellationToken)
+                    .ReceiveJson();
+
+                response.Data = x;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<object> IOrdersEndpoint.PostCreateOrderAsync(object order)
+        async Task<ApiResponse<Order>> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<Order>();
+
+            try
+            {
+                var x = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
+                    .PostJsonAsync(orderIds, cancellationToken)
+                    .ReceiveJson();
+
+                response.Data = x;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
     }
 }
