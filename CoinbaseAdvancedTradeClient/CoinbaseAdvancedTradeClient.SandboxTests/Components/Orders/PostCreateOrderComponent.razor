@@ -1,0 +1,282 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Side</label>
+            <div class="col-8">
+                <InputSelect class="form-control" @bind-Value="@OrderSide">
+                    <option value="@OrderSides.Buy">Buy</option>
+                    <option value="@OrderSides.Sell">Sell</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Configuration</label>
+            <div class="col-8">
+                <InputSelect class="form-control" @bind-Value="@OrderConfiguration">
+                    <option value="@nameof(MarketIoc)">Market IOC</option>
+                    <option value="@nameof(LimitGtc)">Limit GTC</option>
+                    <option value="@nameof(LimitGtd)">Limit GTD</option>
+                    <option value="@nameof(StopLimitGtc)">Stop Limit GTC</option>
+                    <option value="@nameof(StopLimitGtd)">Stop Limit GTD</option>
+                </InputSelect>
+            </div>
+        </div>
+
+        @if (OrderConfiguration.Equals(nameof(MarketIoc)))
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Quote Size (BUY)</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@MarketIoc.QuoteSize"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Base Size (SELL)</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@MarketIoc.BaseSize"></InputText>
+                </div>
+            </div>
+        }
+
+        @if (OrderConfiguration.Equals(nameof(LimitGtc)))
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Base Size</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@LimitGtc.BaseSize"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Limit Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@LimitGtc.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Post Only</label>
+                <div class="col-8">
+                    <InputCheckbox @bind-Value="@LimitGtc.PostOnly"></InputCheckbox>
+                </div>
+            </div>
+        }
+
+        @if (OrderConfiguration.Equals(nameof(LimitGtd)))
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Base Size</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@LimitGtd.BaseSize"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Limit Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@LimitGtd.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Post Only</label>
+                <div class="col-8">
+                    <InputCheckbox @bind-Value="@LimitGtd.PostOnly"></InputCheckbox>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">End Date</label>
+                <div class="col-8">
+                    <InputDate class="form-control" @bind-Value="@LimitGtd.EndTime"></InputDate>
+                </div>
+            </div>
+        }
+
+        @if (OrderConfiguration.Equals(nameof(StopLimitGtc)))
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Base Size</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.BaseSize"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Limit Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Stop Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Stop Direction</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopDirection"></InputText>
+                </div>
+            </div>
+        }
+
+        @if (OrderConfiguration.Equals(nameof(StopLimitGtd)))
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Base Size</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.BaseSize"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Limit Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Stop Price</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.LimitPrice"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Stop Direction</label>
+                <div class="col-8">
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.StopDirection"></InputText>
+                </div>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">End Date</label>
+                <div class="col-8">
+                    <InputDate class="form-control" @bind-Value="@StopLimitGtd.EndTime"></InputDate>
+                </div>
+            </div>
+        }
+
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@PostCreateOrderAsync">POST</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Response</h3>
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                <div class="form-group row p-2">
+                    <label class="col-4 col-form-label">Create Order Success</label>
+                    <label class="col-8 col-form-label">@Result.Data.Success</label>
+                </div>
+
+                @if(Result.Data.Success)
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Order ID</label>
+                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.OrderId</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Product ID</label>
+                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.ProductId</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Side</label>
+                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.Side</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Client Order ID</label>
+                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.ClientOrderId</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label">Failure Reason</label>
+                        <label class="col-8 col-form-label">@Result.Data.FailureReason</label>
+                    </div>
+                    <div class="form-group row p-2">
+                        <label class="col-4 col-form-label"></label>
+                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse</label>
+                    </div>
+
+                }
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="CreateOrderResponse" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public string OrderId { get; set; } = Guid.NewGuid().ToString();
+
+    public string ProductId { get; set; } = null;
+
+    public string OrderSide { get; set; } = OrderSides.Buy;
+
+    public string OrderConfiguration { get; set; } = nameof(MarketIoc);
+
+    public ApiResponse<CreateOrderResponse> Result { get; set; } = null;
+
+    public MarketIoc MarketIoc { get; set; } = new MarketIoc();
+
+    public LimitGtc LimitGtc { get; set; } = new LimitGtc();
+
+    public LimitGtd LimitGtd { get; set; } = new LimitGtd();
+
+    public StopLimitGtc StopLimitGtc { get; set; } = new StopLimitGtc();
+
+    public StopLimitGtd StopLimitGtd { get; set; } = new StopLimitGtd();
+
+    public async Task PostCreateOrderAsync()
+    {
+        var order = new CreateOrderParameters
+            {
+                ClientOrderId = OrderId,
+                ProductId = ProductId,
+                Side = OrderSide,
+                OrderConfiguration = GetOrderConfiguration(OrderConfiguration)
+            };
+
+        Result = await Client.Orders.PostCreateOrderAsync(order);
+    }
+
+    private OrderConfiguration GetOrderConfiguration(string orderConfiguration)
+    {
+        switch (orderConfiguration)
+        {
+            case nameof(LimitGtc):
+                return new OrderConfiguration { LimitGtc = LimitGtc };
+            case nameof(LimitGtd):
+                return new OrderConfiguration { LimitGtd = LimitGtd };
+            case nameof(StopLimitGtc):
+                return new OrderConfiguration { StopLimitGtc = StopLimitGtc };
+            case nameof(StopLimitGtd):
+                return new OrderConfiguration { StopLimitGtd = StopLimitGtd };
+            case nameof(MarketIoc):
+            default:
+                return new OrderConfiguration { MarketIoc = MarketIoc };
+        }
+    }
+}
