@@ -122,6 +122,8 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
+                //TODO Parameter Validation
+
                 var createOrder = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
@@ -139,19 +141,20 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<Order>> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken = default)
+        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken = default)
         {
-            var response = new ApiResponse<Order>();
+            var response = new ApiResponse<CancelOrdersResponse>();
 
             try
             {
-                var x = await Config.ApiUrl
+                //TODO Parameter validation
+                var cancelOrders = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
                     .PostJsonAsync(orderIds, cancellationToken)
-                    .ReceiveJson();
+                    .ReceiveJson<CancelOrdersResponse>();
 
-                response.Data = x;
+                response.Data = cancelOrders;
                 response.Success = true;
             }
             catch (Exception ex)

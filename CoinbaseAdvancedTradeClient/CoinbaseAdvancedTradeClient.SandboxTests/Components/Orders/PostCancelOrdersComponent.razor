@@ -1,7 +1,45 @@
-﻿<h3>PostCancelOrdersComponent</h3>
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order IDs</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderIds"></InputText>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                
+            }
+            else
+            {
+                
+            }
+        }
+    </div>
+</div>
 
 @code {
     [Parameter]
     public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public string OrderIds { get; set; }
+
+    public ApiResponse<CancelOrdersResponse> Result { get; set; } = null;
+
+    public async Task PostCancelOrdersAsync()
+    {
+        var splitIds = OrderIds.Split(",").ToArray();
+        Result = await Client.Orders.PostCancelOrdersAsync(splitIds);
+    }
 
 }
