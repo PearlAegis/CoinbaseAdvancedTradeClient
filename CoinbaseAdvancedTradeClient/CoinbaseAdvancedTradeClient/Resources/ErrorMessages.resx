@@ -141,8 +141,14 @@
   <data name="OffsetParameterRange" xml:space="preserve">
     <value>The 'offset' parameter must be greater than zero.</value>
   </data>
+  <data name="OrderConfigurationInvalid" xml:space="preserve">
+    <value>Invalid order configuration.</value>
+  </data>
   <data name="OrderIdRequired" xml:space="preserve">
     <value>An Order ID is required.</value>
+  </data>
+  <data name="OrderParametersRequired" xml:space="preserve">
+    <value>An order is required.</value>
   </data>
   <data name="OrderPlacementSourceInvalid" xml:space="preserve">
     <value>Invalid order placement source.</value>

@@ -12,7 +12,9 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IOrdersEndpoint Orders => this;
 
-        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFillsAsync(string? orderId = null, string? productId = null, 
+        #region GET
+
+        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFillsAsync(string? orderId = null, string? productId = null,
             DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null)
         {
             var response = new ApiResponse<FillsPage>();
@@ -46,8 +48,8 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,  
-            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null, 
+        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null,
             string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
             var response = new ApiResponse<OrdersPage>();
@@ -116,21 +118,35 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.PostCreateOrderAsync(CreateOrderParameters order, CancellationToken cancellationToken = default)
+        #endregion // GET
+
+        #region POST
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.PostCreateOrderAsync(CreateOrderParameters createOrder, CancellationToken cancellationToken = default)
         {
             var response = new ApiResponse<CreateOrderResponse>();
 
             try
             {
-                //TODO Parameter Validation
+                if (createOrder == null) throw new ArgumentNullException(nameof(createOrder), ErrorMessages.OrderParametersRequired);
+                if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
+                if (!OrderSides.OrderSideList.Contains(createOrder.Side)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(createOrder.Side));
+                if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
-                var createOrder = await Config.ApiUrl
+                if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))
+                {
+                    createOrder.ClientOrderId = Guid.NewGuid().ToString();
+                }
+
+                ValidateCreateOrderConfiguration(createOrder);
+
+                var createOrderResponse = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
-                    .PostJsonAsync(order, cancellationToken)
+                    .PostJsonAsync(createOrder, cancellationToken)
                     .ReceiveJson<CreateOrderResponse>();
 
-                response.Data = createOrder;
+                response.Data = createOrderResponse;
                 response.Success = true;
             }
             catch (Exception ex)
@@ -141,20 +157,35 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds, CancellationToken cancellationToken = default)
+        private void ValidateCreateOrderConfiguration(CreateOrderParameters createOrder)
+        {
+            if (createOrder.OrderConfiguration?.LimitGtd?.EndTime != null)
+            {
+                createOrder.OrderConfiguration.LimitGtd.EndTime = createOrder.OrderConfiguration.LimitGtd?.EndTime.Value.ToUniversalTime();
+            }
+
+            if (createOrder.OrderConfiguration?.StopLimitGtd?.EndTime != null)
+            {
+                createOrder.OrderConfiguration.StopLimitGtd.EndTime = createOrder.OrderConfiguration.StopLimitGtd?.EndTime.Value.ToUniversalTime();
+            }
+        }
+
+        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
         {
             var response = new ApiResponse<CancelOrdersResponse>();
 
             try
             {
-                //TODO Parameter validation
-                var cancelOrders = await Config.ApiUrl
+                if (cancelOrders == null) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderParametersRequired);
+                if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
+
+                var cancelOrderResponse = await Config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
-                    .PostJsonAsync(orderIds, cancellationToken)
+                    .PostJsonAsync(cancelOrders, cancellationToken)
                     .ReceiveJson<CancelOrdersResponse>();
 
-                response.Data = cancelOrders;
+                response.Data = cancelOrderResponse;
                 response.Success = true;
             }
             catch (Exception ex)
@@ -164,5 +195,7 @@ namespace CoinbaseAdvancedTradeClient
 
             return response;
         }
+
+        #endregion // POST
     }
 }
