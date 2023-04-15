@@ -244,7 +244,7 @@
     [Parameter]
     public ICoinbaseAdvancedTradeApiClient Client { get; set; }
 
-    public string OrderId { get; set; } = Guid.NewGuid().ToString();
+    public string OrderId { get; set; }
 
     public string ProductId { get; set; } = null;
 
@@ -266,7 +266,7 @@
 
     public async Task PostCreateOrderAsync()
     {
-        var order = new CreateOrderParameters
+        var createOrder = new CreateOrderParameters
             {
                 ClientOrderId = OrderId,
                 ProductId = ProductId,
@@ -274,7 +274,7 @@
                 OrderConfiguration = GetOrderConfiguration(OrderConfiguration)
             };
 
-        Result = await Client.Orders.PostCreateOrderAsync(order);
+        Result = await Client.Orders.PostCreateOrderAsync(createOrder);
     }
 
     private OrderConfiguration GetOrderConfiguration(string orderConfiguration)
