@@ -7,7 +7,6 @@ using CoinbaseAdvancedTradeClient.Models.Pages;
 using FakeItEasy;
 using Flurl.Http;
 using Flurl.Http.Testing;
-using System.Collections.Generic;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
@@ -604,7 +603,129 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("Test error details.", result.Data.ErrorResponse.ErrorDetails, true);
             Assert.Equal("Preview failure reason", result.Data.ErrorResponse.PreviewFailureReason, true);
             Assert.Equal("New order failure reason", result.Data.ErrorResponse.NewOrderFailureReason, true);
+        }
 
+        [Fact]
+        public async Task PostCreateOrderAsync_NullCreateOrderParameters_ThrowsArgumentNullException()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(null);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task PostCreateOrderAsync_NullOrWhiteSpaceProductId_ThrowsArgumentException(string productId)
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = productId,
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_InvalidOrderSide_ThrowsArgumentException()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = "Test",
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_NullOrderConfiguration_ThrowsArgumentException()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy
+            };
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
         }
 
         [Fact]
@@ -730,6 +851,89 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Contains(result.Data.Results, x => x.Success == true && x.OrderId.Equals("Test123", StringComparison.InvariantCultureIgnoreCase) && x.FailureReason == null);
             Assert.Contains(result.Data.Results, x => x.Success == false && x.OrderId.Equals("Test456", StringComparison.InvariantCultureIgnoreCase) && x.FailureReason.Equals("Test failure reason.", StringComparison.InvariantCultureIgnoreCase));
         }
+
+        [Fact]
+        public async Task PostCancelOrders_NullCancelOrdersParameters_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var json = GetValidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(null);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCancelOrders_NullOrderIds_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters();
+
+            var json = GetValidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCancelOrders_EmptyOrderIds_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters
+            {
+                OrderIds = new List<string>()
+            };
+
+            var json = GetValidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
 
         [Fact]
         public async Task PostCancelOrders_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
