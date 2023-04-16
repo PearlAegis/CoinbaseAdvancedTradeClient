@@ -6,9 +6,8 @@ namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
 {
     public interface IOrdersEndpoint
     {
-        //TODO Models
-        Task<object> PostCreateOrderAsync(object order);
-        Task<object> PostCancelOrdersAsync(string[] orderIds);
+        Task<ApiResponse<CreateOrderResponse>> PostCreateOrderAsync(CreateOrderParameters createOrder, CancellationToken cancellationToken = default);
+        Task<ApiResponse<CancelOrdersResponse>> PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default);
         Task<ApiResponse<OrdersPage>> GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null, string? cursor = null, string? productType = null, string? orderPlacementSource = null);
         Task<ApiResponse<FillsPage>> GetListFillsAsync(string? orderId = null, string? productId = null, DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null);
         Task<ApiResponse<Order>> GetOrderAsync(string orderId);

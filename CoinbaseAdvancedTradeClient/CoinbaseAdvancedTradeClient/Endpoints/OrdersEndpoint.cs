@@ -12,7 +12,9 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IOrdersEndpoint Orders => this;
 
-        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFillsAsync(string? orderId = null, string? productId = null, 
+        #region GET
+
+        async Task<ApiResponse<FillsPage>> IOrdersEndpoint.GetListFillsAsync(string? orderId = null, string? productId = null,
             DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null)
         {
             var response = new ApiResponse<FillsPage>();
@@ -46,8 +48,8 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,  
-            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null, 
+        async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null,
             string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
             var response = new ApiResponse<OrdersPage>();
@@ -116,14 +118,84 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        Task<object> IOrdersEndpoint.PostCancelOrdersAsync(string[] orderIds)
+        #endregion // GET
+
+        #region POST
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.PostCreateOrderAsync(CreateOrderParameters createOrder, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var response = new ApiResponse<CreateOrderResponse>();
+
+            try
+            {
+                if (createOrder == null) throw new ArgumentNullException(nameof(createOrder), ErrorMessages.OrderParametersRequired);
+                if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
+                if (!OrderSides.OrderSideList.Contains(createOrder.Side)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(createOrder.Side));
+                if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
+
+                if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))
+                {
+                    createOrder.ClientOrderId = Guid.NewGuid().ToString();
+                }
+
+                ValidateCreateOrderConfiguration(createOrder);
+
+                var createOrderResponse = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
+                    .PostJsonAsync(createOrder, cancellationToken)
+                    .ReceiveJson<CreateOrderResponse>();
+
+                response.Data = createOrderResponse;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
         }
 
-        Task<object> IOrdersEndpoint.PostCreateOrderAsync(object order)
+        private void ValidateCreateOrderConfiguration(CreateOrderParameters createOrder)
         {
-            throw new NotImplementedException();
+            if (createOrder.OrderConfiguration?.LimitGtd?.EndTime != null)
+            {
+                createOrder.OrderConfiguration.LimitGtd.EndTime = createOrder.OrderConfiguration.LimitGtd?.EndTime.Value.ToUniversalTime();
+            }
+
+            if (createOrder.OrderConfiguration?.StopLimitGtd?.EndTime != null)
+            {
+                createOrder.OrderConfiguration.StopLimitGtd.EndTime = createOrder.OrderConfiguration.StopLimitGtd?.EndTime.Value.ToUniversalTime();
+            }
         }
+
+        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
+        {
+            var response = new ApiResponse<CancelOrdersResponse>();
+
+            try
+            {
+                if (cancelOrders == null) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderParametersRequired);
+                if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
+
+                var cancelOrderResponse = await Config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
+                    .PostJsonAsync(cancelOrders, cancellationToken)
+                    .ReceiveJson<CancelOrdersResponse>();
+
+                response.Data = cancelOrderResponse;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
+        }
+
+        #endregion // POST
     }
 }

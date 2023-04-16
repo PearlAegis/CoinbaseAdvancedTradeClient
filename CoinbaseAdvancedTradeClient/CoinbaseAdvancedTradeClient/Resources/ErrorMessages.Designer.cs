@@ -133,11 +133,29 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid order configuration..
+        /// </summary>
+        public static string OrderConfigurationInvalid {
+            get {
+                return ResourceManager.GetString("OrderConfigurationInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An Order ID is required..
         /// </summary>
         public static string OrderIdRequired {
             get {
                 return ResourceManager.GetString("OrderIdRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An order is required..
+        /// </summary>
+        public static string OrderParametersRequired {
+            get {
+                return ResourceManager.GetString("OrderParametersRequired", resourceCulture);
             }
         }
         

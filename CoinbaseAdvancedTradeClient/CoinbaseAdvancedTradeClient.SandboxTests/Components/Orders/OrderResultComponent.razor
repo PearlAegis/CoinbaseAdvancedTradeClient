@@ -1,0 +1,224 @@
+﻿<div class="form-group row p-2">
+    <label class="col-4 col-form-label">ID</label>
+    <label class="col-8 col-form-label">@Order.Id</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Product ID</label>
+    <label class="col-8 col-form-label">@Order.ProductId</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">User ID</label>
+    <label class="col-8 col-form-label">@Order.UserId</label>
+</div>
+@if (Order.OrderConfiguration.MarketIoc != null)
+{
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Order Configuration</label>
+        <label class="col-8 col-form-label">Market IOC</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Quote Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.MarketIoc.QuoteSize</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Base Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.MarketIoc.BaseSize</label>
+    </div>
+}
+@if (Order.OrderConfiguration.LimitGtc != null)
+{
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Order Configuration</label>
+        <label class="col-8 col-form-label">Limit GTC</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Base Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtc.BaseSize</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Limit Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtc.LimitPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Post Only</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtc.PostOnly</label>
+    </div>
+}
+@if (Order.OrderConfiguration.LimitGtd != null)
+{
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Order Configuration</label>
+        <label class="col-8 col-form-label">Limit GTD</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Base Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtd.BaseSize</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Limit Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtd.LimitPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Post Only</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtd.PostOnly</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">End Time</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.LimitGtd.EndTime</label>
+    </div>
+}
+@if (Order.OrderConfiguration.StopLimitGtc != null)
+{
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Order Configuration</label>
+        <label class="col-8 col-form-label">Stop Limit GTC</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Base Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtc.BaseSize</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Limit Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtc.LimitPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Stop Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtc.StopPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Post Only</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtc.StopDirection</label>
+    </div>
+}
+@if (Order.OrderConfiguration.StopLimitGtd != null)
+{
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Order Configuration</label>
+        <label class="col-8 col-form-label">Stop Limit GTD</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Base Size</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtd.BaseSize</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Limit Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtd.LimitPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Stop Price</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtd.StopPrice</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">Post Only</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtd.StopDirection</label>
+    </div>
+    <div class="form-group row p-2">
+        <label class="col-4 col-form-label">End Time</label>
+        <label class="col-8 col-form-label">@Order.OrderConfiguration.StopLimitGtd.EndTime</label>
+    </div>
+}
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Side</label>
+    <label class="col-8 col-form-label">@Order.Side</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Client Order ID</label>
+    <label class="col-8 col-form-label">@Order.ClientOrderId</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Status</label>
+    <label class="col-8 col-form-label">@Order.Status</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Time in Force</label>
+    <label class="col-8 col-form-label">@Order.TimeInForce</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Created Time</label>
+    <label class="col-8 col-form-label">@Order.CreatedTime</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Completion Percentage</label>
+    <label class="col-8 col-form-label">@Order.CompletionPercentage</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Filled Size</label>
+    <label class="col-8 col-form-label">@Order.FilledSize</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Average Filled Price</label>
+    <label class="col-8 col-form-label">@Order.AverageFilledPrice</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Fee</label>
+    <label class="col-8 col-form-label">@Order.Fee</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Number of Fills</label>
+    <label class="col-8 col-form-label">@Order.NumberOfFills</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Filled Value</label>
+    <label class="col-8 col-form-label">@Order.FilledValue</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Pending Cancel</label>
+    <label class="col-8 col-form-label">@Order.PendingCancel</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Size in Quote</label>
+    <label class="col-8 col-form-label">@Order.SizeInQuote</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Total Fees</label>
+    <label class="col-8 col-form-label">@Order.TotalFees</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Size Inclusive of Fees</label>
+    <label class="col-8 col-form-label">@Order.SizeInclusiveOfFees</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Total Value After Fees</label>
+    <label class="col-8 col-form-label">@Order.TotalValueAfterFees</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Trigger Status</label>
+    <label class="col-8 col-form-label">@Order.TriggerStatus</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Order Type</label>
+    <label class="col-8 col-form-label">@Order.OrderType</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Reject Reason</label>
+    <label class="col-8 col-form-label">@Order.RejectReason</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Settled</label>
+    <label class="col-8 col-form-label">@Order.Settled</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Product Type</label>
+    <label class="col-8 col-form-label">@Order.ProductType</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Reject Message</label>
+    <label class="col-8 col-form-label">@Order.RejectMessage</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Cancel Message</label>
+    <label class="col-8 col-form-label">@Order.CancelMessage</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Order Placement Source</label>
+    <label class="col-8 col-form-label">@Order.OrderPlacementSource</label>
+</div>
+<div class="form-group row p-2">
+    <label class="col-4 col-form-label">Outstanding Hold Amount</label>
+    <label class="col-8 col-form-label">@Order.OutstandingHoldAmount</label>
+</div>
+
+@code {
+    [Parameter]
+    public Order Order { get; set; }
+}

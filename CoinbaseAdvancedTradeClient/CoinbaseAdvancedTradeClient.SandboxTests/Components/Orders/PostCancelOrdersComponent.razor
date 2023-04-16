@@ -1,0 +1,76 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Order IDs</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@OrderIds"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@PostCancelOrdersAsync">POST</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        @if (Result != null)
+        {
+            <div class="form-group row p-2">
+                <label class="col-4 col-form-label">Success</label>
+                <label class="col-8 col-form-label">@Result.Success</label>
+            </div>
+
+            @if (Result.Success)
+            {
+                @if (Result.Data.Results.Any())
+                {
+                    @for(int i = 0; i < Result.Data.Results.Count; i++)
+                    {
+                        <div class="form-group row p-2">
+                            <label class="col-4 col-form-label">Order @(i+1)</label>
+                        </div>
+                        <div class="form-group row p-2">
+                            <label class="col-4 col-form-label">Cancel Order ID</label>
+                            <label class="col-8 col-form-label">@Result.Data.Results[i].OrderId</label>
+                        </div>
+                        <div class="form-group row p-2">
+                            <label class="col-4 col-form-label">Cancel Order Success</label>
+                            <label class="col-8 col-form-label">@Result.Data.Results[i].Success</label>
+                        </div>
+                        <div class="form-group row p-2">
+                            <label class="col-4 col-form-label">Cancel Failure Reason</label>
+                            <label class="col-8 col-form-label">@Result.Data.Results[i].FailureReason</label>
+                        </div>
+                        <hr />
+                    }
+                }
+            }
+            else
+            {
+                <ErrorResponseComponent TItem="CancelOrdersResponse" Result="Result" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
+
+    public string OrderIds { get; set; }
+
+    public ApiResponse<CancelOrdersResponse> Result { get; set; } = null;
+
+    public async Task PostCancelOrdersAsync()
+    {
+        var splitIds = OrderIds.Split(",").Select(s => s.Trim()).ToList();
+
+        var cancelOrders = new CancelOrdersParameters() 
+        { 
+            OrderIds = splitIds 
+        };
+
+        Result = await Client.Orders.PostCancelOrdersAsync(cancelOrders);
+    }
+}
