@@ -1,10 +1,13 @@
-﻿using CoinbaseAdvancedTradeClient.Interfaces;
+﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Models.Pages;
+using FakeItEasy;
 using Flurl.Http;
 using Flurl.Http.Testing;
+using System.Collections.Generic;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
@@ -496,6 +499,298 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         #endregion // GetOrderAsync
 
+        #region PostCreateOrderAsync
+
+        [Fact]
+        public async Task PostCreateOrderAsync_ValidRequestAndResponseJson_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_ValidRequestAndResponseJson_ResponseHasValidCreateOrderSuccessResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Data.Success);
+            Assert.NotNull(result.Data.SuccessResponse);
+            Assert.Null(result.Data.ErrorResponse);
+            Assert.Equal("Test123", result.Data.OrderId, true);
+            Assert.Equal("BTC-USD", result.Data.SuccessResponse.ProductId, true);
+            Assert.Equal("BUY", result.Data.SuccessResponse.Side, true);
+            Assert.Equal("Client123", result.Data.SuccessResponse.ClientOrderId, true);
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_ValidRequestAndResponseJson_ResponseHasValidCreateOrderErrorResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetValidCreateOrderErrorResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.False(result.Data.Success);
+            Assert.NotNull(result.Data.ErrorResponse);
+            Assert.Null(result.Data.SuccessResponse);
+            Assert.Equal("Test123", result.Data.OrderId, true);
+            Assert.Equal("Test failure reason.", result.Data.FailureReason, true);
+            Assert.Equal("Test Error", result.Data.ErrorResponse.Error, true);
+            Assert.Equal("Test error message.", result.Data.ErrorResponse.Message, true);
+            Assert.Equal("Test error details.", result.Data.ErrorResponse.ErrorDetails, true);
+            Assert.Equal("Preview failure reason", result.Data.ErrorResponse.PreviewFailureReason, true);
+            Assert.Equal("New order failure reason", result.Data.ErrorResponse.NewOrderFailureReason, true);
+
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            var json = GetInvalidCreateOrderResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.NotNull(result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCreateOrderAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var createOrder = new CreateOrderParameters
+            {
+                ProductId = "BTC-USD",
+                Side = OrderSides.Buy,
+                OrderConfiguration = A.Dummy<OrderConfiguration>()
+            };
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(status: 401);
+
+                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        #endregion // PostCreateOrderAsync
+
+        #region PostCancelOrdersAsync
+
+        [Fact]
+        public async Task PostCancelOrders_ValidRequestAndResponseJson_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters
+            {
+                OrderIds = new List<string>() { "Test123", "Test456" }
+            };
+
+            var json = GetValidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCancelOrders_ValidRequestAndResponseJson_ResponseHasValidCancelOrdersResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters
+            {
+                OrderIds = new List<string>() { "Test123", "Test456" }
+            };
+
+            var json = GetValidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result.Data.Results);
+            Assert.NotEmpty(result.Data.Results);
+            Assert.Contains(result.Data.Results, x => x.Success == true && x.OrderId.Equals("Test123", StringComparison.InvariantCultureIgnoreCase) && x.FailureReason == null);
+            Assert.Contains(result.Data.Results, x => x.Success == false && x.OrderId.Equals("Test456", StringComparison.InvariantCultureIgnoreCase) && x.FailureReason.Equals("Test failure reason.", StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        [Fact]
+        public async Task PostCancelOrders_InvalidResponseJson_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters
+            {
+                OrderIds = new List<string>() { "Test123", "Test456" }
+            };
+
+            var json = GetInvalidCancelOrdersResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.NotNull(result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        [Fact]
+        public async Task PostCancelOrders_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CancelOrdersResponse> result;
+
+            var cancelOrders = new CancelOrdersParameters
+            {
+                OrderIds = new List<string>() { "Test123", "Test456" }
+            };
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(status: 401);
+
+                result = await _testClient.Orders.PostCancelOrdersAsync(cancelOrders);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.False(result.Success);
+            Assert.Equal(nameof(FlurlHttpException), result.ExceptionType);
+            Assert.NotNull(result.ExceptionMessage);
+            Assert.NotNull(result.ExceptionDetails);
+        }
+
+        #endregion // PostCancelOrdersAsync
+
         #region Test Response Json
 
         private string GetOrdersListJsonString()
@@ -848,6 +1143,103 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             return json;
         }
 
+        public string GetValidCreateOrderSuccessResponse()
+        {
+            var json =
+                """
+                {
+                    "success": true,
+                    "order_id": "Test123",
+                    "success_response":
+                    {
+                        "order_id": "Test123",
+                        "product_id": "BTC-USD",
+                        "side": "BUY",
+                        "client_order_id": "Client123"
+                    }
+
+                }
+                """;
+
+            return json;
+        }
+
+        public string GetValidCreateOrderErrorResponse()
+        {
+            var json =
+                """
+                {
+                    "success": false,
+                    "order_id": "Test123",
+                    "failure_reason": "Test failure reason.",
+                    "error_response":
+                    {
+                        "error": "Test Error",
+                        "message": "Test error message.",
+                        "error_details": "Test error details.",
+                        "preview_failure_reason": "Preview failure reason",
+                        "new_order_failure_reason": "New order failure reason"
+                    }
+                }
+                """;
+
+            return json;
+        }
+
+        public string GetInvalidCreateOrderResponse()
+        {
+            var json =
+                """
+                {
+                    "success": "INVALID",
+                    "order_id": "Test123",
+                    "success_response":
+                    {
+                        "order_id": "Test123",
+                        "product_id": "BTC-USD",
+                        "side": "BUY",
+                        "client_order_id": "Client123"
+                    }
+
+                }
+                """;
+
+            return json;
+        }
+
+        public string GetValidCancelOrdersResponse()
+        {
+            var json =
+                """
+                {
+                    "results": [
+                        {
+                            "success": true,
+                            "order_id": "Test123"
+                        },
+                        {
+                            "success": false,
+                            "order_id": "Test456",
+                            "failure_reason": "Test failure reason.",
+                        }
+                    ]
+                }
+                """;
+
+            return json;
+        }
+
+        public string GetInvalidCancelOrdersResponse()
+        {
+            var json =
+                """
+                {
+                    "results": "INVALID"
+                }
+                """;
+
+            return json;
+        }
 
         #endregion // Test Response Json
     }
