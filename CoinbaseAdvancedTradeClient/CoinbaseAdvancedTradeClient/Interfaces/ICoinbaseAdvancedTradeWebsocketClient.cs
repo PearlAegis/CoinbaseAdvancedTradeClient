@@ -1,6 +1,7 @@
 ﻿namespace CoinbaseAdvancedTradeClient.Interfaces
 {
-    internal interface ICoinbaseAdvancedTradeWebsocketClient
+    public interface ICoinbaseAdvancedTradeWebSocketClient
     {
+        public Task ConnectAsync();
     }
 }

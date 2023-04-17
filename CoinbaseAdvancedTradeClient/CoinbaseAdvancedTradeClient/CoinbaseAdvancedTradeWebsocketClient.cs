@@ -1,6 +1,6 @@
 ﻿namespace CoinbaseAdvancedTradeClient
 {
-    public class CoinbaseAdvancedTradeWebsocketClient
+    public class CoinbaseAdvancedTradeWebSocketClient
     {
     }
 }

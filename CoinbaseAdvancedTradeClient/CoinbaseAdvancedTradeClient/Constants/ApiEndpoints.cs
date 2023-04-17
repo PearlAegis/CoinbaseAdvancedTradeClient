@@ -13,5 +13,6 @@
         public const string CandlesEndpoint = "candles";
         public const string TickerEndpoint = "ticker";
         public const string TransactionSummaryEndpoint = "transaction_summary";
+        public const string WebSocketEndpoint = "wss://advanced-trade-ws.coinbase.com";
     }
 }
