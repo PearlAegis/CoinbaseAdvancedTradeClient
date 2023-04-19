@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace CoinbaseAdvancedTradeClient.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SubscriptionMessages
+    public enum SubscriptionTypes
     {
         [EnumMember(Value = "subscribe")]
         Subscribe,

@@ -14,9 +14,16 @@ namespace CoinbaseAdvancedTradeClient.Authentication
             return timestamp;
         }
 
-        public static string GenerateSignature(string apiSecret, string timestamp, string method, string requestPath, string body)
+        public static string GenerateApiSignature(string apiSecret, string timestamp, string method, string requestPath, string body)
         {
             return Sign(apiSecret, timestamp + method + requestPath + body);
+        }
+
+        public static string GenerateWebSocketSignature(string apiSecret, string timestamp, string channel, ICollection<string> productIds)
+        {
+            var products = string.Join(",", productIds);
+
+            return Sign(apiSecret, timestamp + channel + products);
         }
 
         private static string Sign(string apiSecret, string data)
