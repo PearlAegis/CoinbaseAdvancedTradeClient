@@ -33,41 +33,25 @@ namespace CoinbaseAdvancedTradeClient
             Config = config;
         }
 
-        public Task<ConnectResult> ConnectAsync()
+        public async Task<bool> ConnectAsync()
         {
             if (Socket != null) throw new InvalidOperationException("Socket already exists. TODO error message");
 
             Socket = new WebSocket(Config.WebSocketUrl);
-            Socket.Security.EnabledSslProtocols = SslProtocols.Tls13;
+            Socket.Security.EnabledSslProtocols = SslProtocols.Tls12;
 
             Socket.Opened += RawSocket_Opened;
             Socket.Error += RawSocket_Error;
-            Socket.Open();
 
-            return _connectionCompletionSource.Task;
-        }
-
-        private void RawSocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
-        {
-            TrySetConnectResult(false, sender, e);
+            return await Socket.OpenAsync();
         }
 
         private void RawSocket_Opened(object sender, EventArgs e)
         {
-            TrySetConnectResult(true, sender, e);
         }
 
-        protected void TrySetConnectResult(bool result, object sender, EventArgs args)
+        private void RawSocket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            var connectResult = new ConnectResult(result, sender, args);
-
-            if (sender is WebSocket socket)
-            {
-                socket.Opened -= RawSocket_Opened;
-                socket.Error -= RawSocket_Error;
-            }
-
-            Task.Run(() => _connectionCompletionSource.TrySetResult(connectResult));
         }
 
         public async Task SubscribeAsync(List<string> productIds, string channel)
@@ -87,7 +71,7 @@ namespace CoinbaseAdvancedTradeClient
                 ProductIds = productIds,
                 Signature = signature,
                 Timestamp = timestamp,
-                Type = SubscriptionTypes.Subscribe.ToString()
+                Type = SubscriptionTypes.Subscribe.ToString().ToLowerInvariant(),
             };
 
             var subscribeMessage = JsonConvert.SerializeObject(subscription);
@@ -97,9 +81,16 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Unsubscribe()
         {
+
+            var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
+            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(Config.ApiSecret, timestamp, channel, productIds);
+
             var unsubscribe = new Subscription
             {
-                Type = SubscriptionTypes.Unsubscribe.ToString()
+                ApiKey = Config.ApiKey,
+                Signature = signature,
+                Timestamp = timestamp,
+                Type = SubscriptionTypes.Unsubscribe.ToString().ToLowerInvariant()
             };
 
             var unsubscribeMessage = JsonConvert.SerializeObject(unsubscribe);
