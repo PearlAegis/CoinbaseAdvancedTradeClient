@@ -1,0 +1,113 @@
+﻿@page "/websockets"
+@inject IOptionsMonitor<WebSocketClientConfig> Config
+@using WebSocket4Net
+@using SuperSocket.ClientEngine
+
+<PageTitle>WebSocket Connection</PageTitle>
+
+<h1>WebSocket Connection</h1>
+
+<div class="row">
+    <div class="col-4">
+        <h3>Subscription</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product IDs</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductIds"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Channel</label>
+            <div class="col-8">
+                <InputSelect class="form-control" @bind-Value="@Channel">
+                    <option value="@WebSocketChannels.Level2">Level 2</option>
+                    <option value="@WebSocketChannels.MarketTrades">Market Trades</option>
+                    <option value="@WebSocketChannels.Status">Status</option>
+                    <option value="@WebSocketChannels.Ticker">Ticker</option>
+                    <option value="@WebSocketChannels.TickerBatch">Ticker Batch</option>
+                    <option value="@WebSocketChannels.User">User</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@ConnectAndSubscribeAsync">Connect and Subscribe</button>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@Unsubscribe">Unsubscribe</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-8">
+        <h3>Messages</h3>
+        @for (int i = (Messages.Count - 1); i >= 0; i--)
+        {
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Message @i</label>
+                <label class="col-11 col-form-label">@Messages.ElementAt(i)</label>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    public CoinbaseAdvancedTradeWebSocketClient Client { get; private set; }
+
+    public string ProductIds { get; set; } = string.Empty;
+
+    public string Channel { get; set; } = string.Empty;
+
+    public List<string> Messages { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        Client = new CoinbaseAdvancedTradeWebSocketClient(Config.CurrentValue);
+
+        base.OnInitialized();
+    }
+
+    public async Task ConnectAndSubscribeAsync()
+    {
+        await ConnectAsync();
+        await SubscribeAsync();
+    }
+
+    public async Task ConnectAsync()
+    {
+        var connected = await Client.ConnectAsync();
+
+        if (connected)
+        {
+            Client.Socket.MessageReceived += OnWebSocketMessageReceived;
+            Client.Socket.Closed += OnWebSocketClosed;
+            Client.Socket.Error += OnWebSocketError;
+        }
+    }
+
+    public async Task SubscribeAsync()
+    {
+        var productIdList = ProductIds?.Split(",").ToList();
+        await Client.SubscribeAsync(productIdList, Channel);
+    }
+
+    public void Unsubscribe()
+    {
+        Client.Unsubscribe();
+    }
+
+    private async void OnWebSocketMessageReceived(object sender, MessageReceivedEventArgs e)
+    {
+        Messages.Add(e.Message);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnWebSocketClosed(object sender, EventArgs e)
+    {
+    }
+
+    private void OnWebSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+    {
+    }
+}
