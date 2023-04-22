@@ -106,6 +106,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A channel is required..
+        /// </summary>
+        public static string ChannelRequired {
+            get {
+                return ResourceManager.GetString("ChannelRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An end date is required..
         /// </summary>
         public static string EndDateRequired {
@@ -219,6 +228,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         public static string StartDateRequired {
             get {
                 return ResourceManager.GetString("StartDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Socket must be connected..
+        /// </summary>
+        public static string WebSocketMustBeConnected {
+            get {
+                return ResourceManager.GetString("WebSocketMustBeConnected", resourceCulture);
             }
         }
     }

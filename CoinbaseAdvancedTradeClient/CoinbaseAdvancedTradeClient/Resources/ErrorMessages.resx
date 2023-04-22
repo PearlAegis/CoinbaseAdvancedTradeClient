@@ -132,6 +132,9 @@
   <data name="CandleGranularityInvalid" xml:space="preserve">
     <value>Invalid candle granularity.</value>
   </data>
+  <data name="ChannelRequired" xml:space="preserve">
+    <value>A channel is required.</value>
+  </data>
   <data name="EndDateRequired" xml:space="preserve">
     <value>An end date is required.</value>
   </data>
@@ -170,5 +173,8 @@
   </data>
   <data name="StartDateRequired" xml:space="preserve">
     <value>A start date is required.</value>
+  </data>
+  <data name="WebSocketMustBeConnected" xml:space="preserve">
+    <value>Web Socket must be connected.</value>
   </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CoinbaseAdvancedTradeClient.Models.WebSocket
@@ -6,13 +7,13 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket
     public class Subscription
     {
         [JsonProperty("type")]
-        public string Type { get; set; } = string.Empty;
+        public SubscriptionTypes Type { get; set; }
 
         [JsonProperty("channel")]
-        public string Channel { get; set; } = string.Empty;
+        public string Channel { get; set; }
 
         [JsonProperty("product_ids")]
-        public List<string> ProductIds { get; set; } = new List<string>();
+        public List<string> ProductIds { get; set; }
 
         [JsonProperty("api_key")]
         public string ApiKey { get; set; }
