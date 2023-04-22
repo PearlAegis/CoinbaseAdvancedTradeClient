@@ -6,8 +6,9 @@ namespace CoinbaseAdvancedTradeClient.Interfaces
     public interface ICoinbaseAdvancedTradeWebSocketClient
     {
         public WebSocket Socket { get; }
-        public Task<bool> ConnectAsync();
-        public Task SubscribeAsync(List<string> productIds, string channel);
+        public Task<bool> ConnectAsync(List<string> productIds, string channel);
+        public void Subscribe();
         public void Unsubscribe();
+        public void Disconnect();
     }
 }

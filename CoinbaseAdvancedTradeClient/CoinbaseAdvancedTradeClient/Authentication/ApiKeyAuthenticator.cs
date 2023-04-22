@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using CoinbaseAdvancedTradeClient.Resources;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -21,6 +22,8 @@ namespace CoinbaseAdvancedTradeClient.Authentication
 
         public static string GenerateWebSocketSignature(string apiSecret, string timestamp, string channel, ICollection<string> productIds)
         {
+            if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
+
             var products = string.Join(",", productIds);
 
             return Sign(apiSecret, timestamp + channel + products);

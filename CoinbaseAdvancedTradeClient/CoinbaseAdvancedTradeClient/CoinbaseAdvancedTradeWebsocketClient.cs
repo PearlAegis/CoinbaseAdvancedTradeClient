@@ -7,7 +7,6 @@ using CoinbaseAdvancedTradeClient.Models.WebSocket;
 using CoinbaseAdvancedTradeClient.Resources;
 using Newtonsoft.Json;
 using System.Security.Authentication;
-using System.Threading.Channels;
 using WebSocket4Net;
 
 namespace CoinbaseAdvancedTradeClient
@@ -17,7 +16,8 @@ namespace CoinbaseAdvancedTradeClient
         public WebSocketClientConfig Config { get; private set; }
         public WebSocket Socket { get; private set; }
 
-        private TaskCompletionSource<ConnectResult> _connectionCompletionSource;
+        private List<string> _productIds;
+        private string _channel;
 
         public CoinbaseAdvancedTradeWebSocketClient(WebSocketClientConfig config)
         {
@@ -33,9 +33,18 @@ namespace CoinbaseAdvancedTradeClient
             Config = config;
         }
 
-        public async Task<bool> ConnectAsync()
+        public async Task<bool> ConnectAsync(List<string> productIds, string channel)
         {
-            if (Socket != null) throw new InvalidOperationException("Socket already exists. TODO error message");
+            if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
+            if (string.IsNullOrWhiteSpace(channel) || !WebSocketChannels.WebSocketChannelList.Contains(channel)) throw new ArgumentNullException("Channel required TODO");
+
+            _productIds = productIds;
+            _channel = channel;
+
+            if (Socket != null)
+            {
+                Disconnect();
+            }    
 
             Socket = new WebSocket(Config.WebSocketUrl);
             Socket.Security.EnabledSslProtocols = SslProtocols.Tls12;
@@ -54,21 +63,18 @@ namespace CoinbaseAdvancedTradeClient
         {
         }
 
-        public async Task SubscribeAsync(List<string> productIds, string channel)
+        public void Subscribe()
         {
-            if (productIds == null || !productIds.Any()) throw new ArgumentException("ProductID required TODO");
-            if (string.IsNullOrWhiteSpace(channel) || !WebSocketChannels.WebSocketChannelList.Contains(channel)) throw new ArgumentNullException("Channel required TODO");
-
             if (Socket?.State != WebSocketState.Open) throw new InvalidOperationException("Socket must be connected.");
 
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(Config.ApiSecret, timestamp, channel, productIds);
+            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(Config.ApiSecret, timestamp, _channel, _productIds);
 
             var subscription = new Subscription
             {
                 ApiKey = Config.ApiKey,
-                Channel = channel,
-                ProductIds = productIds,
+                Channel = _channel,
+                ProductIds = _productIds,
                 Signature = signature,
                 Timestamp = timestamp,
                 Type = SubscriptionTypes.Subscribe.ToString().ToLowerInvariant(),
@@ -81,13 +87,16 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Unsubscribe()
         {
+            if (Socket?.State != WebSocketState.Open) throw new InvalidOperationException("Socket must be connected.");
 
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(Config.ApiSecret, timestamp, channel, productIds);
+            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(Config.ApiSecret, timestamp, _channel, _productIds);
 
             var unsubscribe = new Subscription
             {
                 ApiKey = Config.ApiKey,
+                Channel = _channel,
+                ProductIds = _productIds,
                 Signature = signature,
                 Timestamp = timestamp,
                 Type = SubscriptionTypes.Unsubscribe.ToString().ToLowerInvariant()
@@ -98,10 +107,27 @@ namespace CoinbaseAdvancedTradeClient
             Socket.Send(unsubscribeMessage);
         }
 
+        public void Disconnect()
+        {
+            if (Socket != null)
+            {
+                if (Socket.State == WebSocketState.Open)
+                {
+                    Unsubscribe();
+                }
+
+                Socket.Opened -= RawSocket_Opened;
+                Socket.Error -= RawSocket_Error;
+            }
+
+            Socket?.Close();
+            Socket?.Dispose();
+            Socket = null;
+        }
+
         public void Dispose()
         {
-            Socket.Dispose();
-            Socket = null;
+            Disconnect();
         }
     }
 }
