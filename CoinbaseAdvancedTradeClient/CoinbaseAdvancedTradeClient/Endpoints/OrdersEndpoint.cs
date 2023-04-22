@@ -1,4 +1,5 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Enums;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
@@ -156,6 +157,35 @@ namespace CoinbaseAdvancedTradeClient
 
             return response;
         }
+
+        #region Create Order Helper Methods
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateMarketOrderAsync(OrderSide orderSide, string productId, decimal amount, CancellationToken cancellationToken = default)
+        {
+            var createOrderParameters = new CreateOrderParameters { OrderConfiguration = new OrderConfiguration { MarketIoc = new MarketIoc() } };
+
+            createOrderParameters.Side = orderSide.ToString().ToLowerInvariant();
+            createOrderParameters.ProductId = productId;
+            
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, CancellationToken cancellationToken = default)
+        {
+            var createOrderParameters = new CreateOrderParameters();
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, CancellationToken cancellationToken = default)
+        {
+            var createOrderParameters = new CreateOrderParameters();
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        #endregion // Create Order Helper Methods
 
         private void ValidateCreateOrderConfiguration(CreateOrderParameters createOrder)
         {
