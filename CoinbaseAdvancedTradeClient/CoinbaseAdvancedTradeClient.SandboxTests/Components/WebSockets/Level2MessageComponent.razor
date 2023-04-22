@@ -1,0 +1,23 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Level 2 Messages</h3>
+    </div>
+    <div class="col-2 offset-4">
+        <button class="btn btn-primary" @onclick="@ClearMessages">Clear Messages</button>
+    </div>
+</div>
+
+@foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
+{
+    <WebSocketMessageComponent TItem="Level2Event" Message="@message" />
+}
+
+@code {
+    [Parameter]
+    public List<WebSocketMessage<Level2Event>> Messages { get; set; } = new List<WebSocketMessage<Level2Event>>();
+
+    public void ClearMessages()
+    {
+        Messages.Clear();
+    }
+}

@@ -1,7 +1,5 @@
 ﻿@page "/websockets"
 @inject IOptionsMonitor<WebSocketClientConfig> Config
-@using WebSocket4Net
-@using SuperSocket.ClientEngine
 
 <PageTitle>WebSocket Connection</PageTitle>
 
@@ -30,40 +28,64 @@
             </div>
         </div>
         <div class="form-group row p-2">
-            <div class="col-8 offset-4">
+            <div class="col-4 offset-4">
                 <button class="btn btn-primary" @onclick="@ConnectAsync">Connect</button>
             </div>
-        </div>
-        <div class="form-group row p-2">
-            <div class="col-8 offset-4">
-                <button class="btn btn-primary" @onclick="@Subscribe">Subscribe</button>
+            <div class="col-4">
+                @if(Client.IsConnected)
+                {
+                    <label class="col-form-label">Connected</label>
+                }
             </div>
         </div>
         <div class="form-group row p-2">
-            <div class="col-8 offset-4">
+            <div class="col-4 offset-4">
+                <button class="btn btn-primary" @onclick="@Subscribe">Subscribe</button>
+            </div>
+            <div class="col-4">
+                @if (Client.IsSubscribed)
+                {
+                    <label class="col-form-label">Subscribed</label>
+                }
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-4 offset-4">
                 <button class="btn btn-primary" @onclick="@Unsubscribe">Unsubscribe</button>
             </div>
         </div>
         <div class="form-group row p-2">
-            <div class="col-8 offset-4">
+            <div class="col-4 offset-4">
                 <button class="btn btn-primary" @onclick="@Disconnect">Disconnect</button>
             </div>
         </div>
         <div class="form-group row p-2">
-            <div class="col-8 offset-4">
+            <div class="col-4 offset-4">
                 <button class="btn btn-primary" @onclick="@DisposeClient">Dispose Client</button>
             </div>
         </div>
     </div>
     <div class="col-8">
         <h3>Messages</h3>
-        @for (int i = (Messages.Count - 1); i >= 0; i--)
-        {
-            <div class="form-group row p-2">
-                <label class="col-1 col-form-label">Message @i</label>
-                <label class="col-11 col-form-label">@Messages.ElementAt(i)</label>
-            </div>
-        }
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Level 2">
+                    <Level2MessageComponent Messages="@Level2Messages" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Market Trades">
+                    <MarketTradesMessageComponent Messages="@MarketTradesMessages" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Status">
+                    <StatusMessageComponent Messages="@StatusMessages" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Ticker">
+                    <TickerMessageComponent Messages="@TickerMessages" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="User">
+                    <UserMessageComponent Messages="@UserMessages" />
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
     </div>
 </div>
 
@@ -74,7 +96,11 @@
 
     public string Channel { get; set; } = string.Empty;
 
-    public List<string> Messages { get; set; } = new List<string>();
+    public List<WebSocketMessage<Level2Event>> Level2Messages { get; set; } = new List<WebSocketMessage<Level2Event>>();
+    public List<WebSocketMessage<MarketTradesEvent>> MarketTradesMessages { get; set; } = new List<WebSocketMessage<MarketTradesEvent>>();
+    public List<WebSocketMessage<StatusEvent>> StatusMessages { get; set; } = new List<WebSocketMessage<StatusEvent>>();
+    public List<WebSocketMessage<TickerEvent>> TickerMessages { get; set; } = new List<WebSocketMessage<TickerEvent>>();
+    public List<WebSocketMessage<UserEvent>> UserMessages { get; set; } = new List<WebSocketMessage<UserEvent>>();
 
     protected override void OnInitialized()
     {
@@ -86,14 +112,7 @@
     public async Task ConnectAsync()
     {
         var productIdList = ProductIds?.Split(",").ToList();
-        var connected = await Client.ConnectAsync(productIdList, Channel);
-
-        if (connected)
-        {
-            Client.Socket.MessageReceived += OnWebSocketMessageReceived;
-            Client.Socket.Closed += OnWebSocketClosed;
-            Client.Socket.Error += OnWebSocketError;
-        }
+        var connected = await Client.ConnectAsync(productIdList, Channel, MessageReceivedCallback);
     }
 
     public void Subscribe()
@@ -116,17 +135,30 @@
         Client.Dispose();
     }
 
-    private async void OnWebSocketMessageReceived(object sender, MessageReceivedEventArgs e)
+    private async void MessageReceivedCallback(object websocketMessage)
     {
-        Messages.Add(e.Message);
+        switch (websocketMessage)
+        {
+            case WebSocketMessage<Level2Event> level2:
+                Level2Messages.Add(level2);
+                break;
+            case WebSocketMessage<MarketTradesEvent> marketTrades:
+                MarketTradesMessages.Add(marketTrades);
+                break;
+            case WebSocketMessage<StatusEvent> status:
+                StatusMessages.Add(status);
+                break;
+            case WebSocketMessage<TickerEvent> ticker:
+                TickerMessages.Add(ticker);
+                break;
+            case WebSocketMessage<UserEvent> user:
+                UserMessages.Add(user);
+                break;
+            default:
+                break;
+        }
+
+        // For real-time UI updates
         await InvokeAsync(StateHasChanged);
-    }
-
-    private void OnWebSocketClosed(object sender, EventArgs e)
-    {
-    }
-
-    private void OnWebSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
-    {
     }
 }
