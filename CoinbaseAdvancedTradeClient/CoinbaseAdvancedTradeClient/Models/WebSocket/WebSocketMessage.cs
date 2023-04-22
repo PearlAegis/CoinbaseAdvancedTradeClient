@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.WebSocket
 {
-    public class WebSocketMessage
+    public class WebSocketMessage<T>  where T : WebSocketEvent
     {
         [JsonProperty("channel")]
         public string Channel { get; set; }
@@ -18,6 +18,6 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket
         public string SequenceNumber { get; set; }
 
         [JsonProperty("events")]
-        public List<WebSocketEvent> Events { get; set; }
+        public List<T> Events { get; set; }
     }
 }
