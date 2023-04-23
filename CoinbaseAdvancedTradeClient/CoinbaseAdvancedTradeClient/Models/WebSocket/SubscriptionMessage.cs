@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.WebSocket
 {
-    public class Subscription
+    public class SubscriptionMessage
     {
         [JsonProperty("type")]
         public SubscriptionTypes Type { get; set; }

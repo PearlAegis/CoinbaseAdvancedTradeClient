@@ -82,7 +82,7 @@ namespace CoinbaseAdvancedTradeClient
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
             var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
 
-            var subscription = new Subscription
+            var subscriptionMessage = new SubscriptionMessage
             {
                 ApiKey = _config.ApiKey,
                 Channel = channel,
@@ -92,9 +92,9 @@ namespace CoinbaseAdvancedTradeClient
                 Type = SubscriptionTypes.Subscribe,
             };
 
-            var subscribeMessage = JsonConvert.SerializeObject(subscription);
+            var subscribe = JsonConvert.SerializeObject(subscriptionMessage);
 
-            _socket.Send(subscribeMessage);
+            _socket.Send(subscribe);
         }
 
         public void Unsubscribe(string channel, List<string> productIds)
@@ -104,7 +104,7 @@ namespace CoinbaseAdvancedTradeClient
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
             var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
 
-            var unsubscribe = new Subscription
+            var unsubscribeMessage = new SubscriptionMessage
             {
                 ApiKey = _config.ApiKey,
                 Channel = channel,
@@ -114,9 +114,9 @@ namespace CoinbaseAdvancedTradeClient
                 Type = SubscriptionTypes.Unsubscribe
             };
 
-            var unsubscribeMessage = JsonConvert.SerializeObject(unsubscribe);
+            var unsubscribe = JsonConvert.SerializeObject(unsubscribeMessage);
 
-            _socket.Send(unsubscribeMessage);
+            _socket.Send(unsubscribe);
         }
 
         #endregion // Subscription
