@@ -11,26 +11,22 @@ namespace CoinbaseAdvancedTradeClient
 {
     public partial class CoinbaseAdvancedTradeApiClient : FlurlClient, ICoinbaseAdvancedTradeApiClient
     {
-        public ApiClientConfig? Config { get; private set; }
+        private ApiClientConfig _config;
 
         public CoinbaseAdvancedTradeApiClient(ApiClientConfig config)
-        {
-            ValidateConfig(config);
-            this.Configure(ApiKeyAuth);
-        }
-
-        #region Client Configuration
-
-        private void ValidateConfig(ApiClientConfig? config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
             if (string.IsNullOrWhiteSpace(config.ApiKey)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.ApiKey));
             if (string.IsNullOrWhiteSpace(config.ApiSecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.ApiSecret));
 
-            Config = config;
+            _config = config;
+
+            this.Configure(ApiKeyAuthentication);
         }
 
-        private void ApiKeyAuth(ClientFlurlHttpSettings settings)
+        #region Authentication
+
+        private void ApiKeyAuthentication(ClientFlurlHttpSettings settings)
         {
             async Task SetHeaders(FlurlCall http)
             {
@@ -38,10 +34,10 @@ namespace CoinbaseAdvancedTradeClient
                 var method = http.Request.Verb.Method.ToUpperInvariant();
                 var url = http.Request.Url.ToUri().AbsolutePath;
                 var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-                var signature = ApiKeyAuthenticator.GenerateApiSignature(Config.ApiSecret, timestamp, method, url, body);
+                var signature = ApiKeyAuthenticator.GenerateApiSignature(_config.ApiSecret, timestamp, method, url, body);
 
                 http.Request
-                   .WithHeader(RequestHeaders.AccessKey, Config.ApiKey)
+                   .WithHeader(RequestHeaders.AccessKey, _config.ApiKey)
                    .WithHeader(RequestHeaders.AccessSign, signature)
                    .WithHeader(RequestHeaders.AccessTimestamp, timestamp);
             }
@@ -49,7 +45,7 @@ namespace CoinbaseAdvancedTradeClient
             settings.BeforeCallAsync = SetHeaders;
         }
 
-        #endregion // Client Configuration
+        #endregion // Authentication
 
         #region Exception Response Handling
 

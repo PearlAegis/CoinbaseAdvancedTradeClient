@@ -22,7 +22,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
                 if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
-                var productsPage = await Config.ApiUrl
+                var productsPage = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
@@ -49,7 +49,7 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
 
-                var product = await Config.ApiUrl
+                var product = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
@@ -77,7 +77,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
                 if (!CandleGranularity.CandleGranularityList.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
 
-                var candlesPage = await Config.ApiUrl
+                var candlesPage = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
@@ -107,7 +107,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
-                var tradesPage = await Config.ApiUrl
+                var tradesPage = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
