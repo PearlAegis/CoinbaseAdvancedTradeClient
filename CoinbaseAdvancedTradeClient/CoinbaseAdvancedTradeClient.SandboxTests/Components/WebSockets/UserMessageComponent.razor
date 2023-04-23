@@ -9,7 +9,46 @@
 
 @foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
 {
+    <hr />
+
     <WebSocketMessageComponent TItem="UserEvent" Message="@message" />
+
+    @foreach (var messageEvent in message.Events)
+    {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Orders</label>
+        </div>
+
+        @foreach (var order in messageEvent.Orders)
+        {
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Average Price</label>
+                <label class="col-1 col-form-label">@order.AveragePrice</label>
+                <label class="col-1 col-form-label">Client Order ID</label>
+                <label class="col-1 col-form-label">@order.ClientOrderId</label>
+                <label class="col-1 col-form-label">Creation Time</label>
+                <label class="col-1 col-form-label">@order.CreationTime.ToString("T")</label>
+                <label class="col-1 col-form-label">Cumulative Quantity</label>
+                <label class="col-1 col-form-label">@order.CumulativeQuantity</label>
+                <label class="col-1 col-form-label">Leaves Quantity</label>
+                <label class="col-1 col-form-label">@order.LeavesQuantity</label>
+                <label class="col-1 col-form-label">Order ID</label>
+                <label class="col-1 col-form-label">@order.OrderId</label>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Order Side</label>
+                <label class="col-1 col-form-label">@order.OrderSide</label>
+                <label class="col-1 col-form-label">Order Type</label>
+                <label class="col-1 col-form-label">@order.OrderType</label>
+                <label class="col-1 col-form-label">Product ID</label>
+                <label class="col-1 col-form-label">@order.ProductId</label>
+                <label class="col-1 col-form-label">Status</label>
+                <label class="col-1 col-form-label">@order.Status</label>
+                <label class="col-1 col-form-label">Total Fees</label>
+                <label class="col-1 col-form-label">@order.TotalFees</label>
+            </div>
+        }
+    }
 }
 
 @code {

@@ -111,13 +111,13 @@
 
     public async Task ConnectAsync()
     {
-        var productIdList = ProductIds?.Split(",").ToList();
-        var connected = await Client.ConnectAsync(productIdList, Channel, MessageReceivedCallback);
+        var connected = await Client.ConnectAsync(MessageReceivedCallback);
     }
 
     public void Subscribe()
     {
-        Client.Subscribe();
+        var productIdList = ProductIds?.Split(",").ToList();
+        Client.Subscribe(productIdList, Channel);
     }
 
     public void Unsubscribe()

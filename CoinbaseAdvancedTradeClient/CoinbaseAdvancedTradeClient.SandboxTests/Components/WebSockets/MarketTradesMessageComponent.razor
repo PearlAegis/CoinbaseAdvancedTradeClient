@@ -9,7 +9,34 @@
 
 @foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
 {
+    <hr />
+
     <WebSocketMessageComponent TItem="MarketTradesEvent" Message="@message" />
+
+    @foreach (var messageEvent in message.Events)
+    {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Trades</label>
+        </div>
+
+        @foreach (var trade in messageEvent.Trades)
+        {
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Price</label>
+                <label class="col-1 col-form-label">@trade.Price</label>
+                <label class="col-1 col-form-label">Product ID</label>
+                <label class="col-1 col-form-label">@trade.ProductId</label>
+                <label class="col-1 col-form-label">Side</label>
+                <label class="col-1 col-form-label">@trade.Side</label>
+                <label class="col-1 col-form-label">Size</label>
+                <label class="col-1 col-form-label">@trade.Size</label>
+                <label class="col-1 col-form-label">Time</label>
+                <label class="col-1 col-form-label">@trade.Time.ToString("T")</label>
+                <label class="col-1 col-form-label">Trade ID</label>
+                <label class="col-1 col-form-label">@trade.TradeId</label>
+            </div>
+        }
+    }
 }
 
 @code {
