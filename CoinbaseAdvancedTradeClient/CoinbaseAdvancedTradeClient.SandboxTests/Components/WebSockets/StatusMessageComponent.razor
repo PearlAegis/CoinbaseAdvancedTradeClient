@@ -22,27 +22,37 @@
         @foreach (var product in messageEvent.Products)
         {
             <div class="form-group row p-2">
-                <label class="col-1 col-form-label">Product Type</label>
+                <label class="col-2 col-form-label">Product Type</label>
                 <label class="col-1 col-form-label">@product.ProductType</label>
-                <label class="col-1 col-form-label">ID</label>
+
+                <label class="col-2 col-form-label">ID</label>
                 <label class="col-1 col-form-label">@product.Id</label>
-                <label class="col-1 col-form-label">Display Name</label>
+
+                <label class="col-2 col-form-label">Display Name</label>
                 <label class="col-1 col-form-label">@product.DisplayName</label>
-                <label class="col-1 col-form-label">Base Currency</label>
+
+                <label class="col-2 col-form-label">Base Currency</label>
                 <label class="col-1 col-form-label">@product.BaseCurrency</label>
-                <label class="col-1 col-form-label">Quote Currency</label>
-                <label class="col-1 col-form-label">@product.QuoteCurrency</label>
+
             </div>
             <div class="form-group row p-2">
-                <label class="col-1 col-form-label">Base Increment</label>
+                <label class="col-2 col-form-label">Quote Currency</label>
+                <label class="col-1 col-form-label">@product.QuoteCurrency</label>
+
+                <label class="col-2 col-form-label">Base Increment</label>
                 <label class="col-1 col-form-label">@product.BaseIncrement</label>
-                <label class="col-1 col-form-label">Quote Increment</label>
+
+                <label class="col-2 col-form-label">Quote Increment</label>
                 <label class="col-1 col-form-label">@product.QuoteIncrement</label>
-                <label class="col-1 col-form-label">Status</label>
+
+                <label class="col-2 col-form-label">Status</label>
                 <label class="col-1 col-form-label">@product.Status</label>
-                <label class="col-1 col-form-label">Status Message</label>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-2 col-form-label">Status Message</label>
                 <label class="col-1 col-form-label">@product.StatusMessage</label>
-                <label class="col-1 col-form-label">Min Market Funds</label>
+
+                <label class="col-2 col-form-label">Min Market Funds</label>
                 <label class="col-1 col-form-label">@product.MinMarketFunds</label>
             </div>
         }

@@ -12,6 +12,7 @@
         //Not actual channels, but used in parsing messages.
         public const string Channel = "channel";
         public const string Level2Data = "l2_data";
+        public const string Subscriptions = "subscriptions";
 
         public readonly static ICollection<string> WebSocketChannelList = new List<string>
         {

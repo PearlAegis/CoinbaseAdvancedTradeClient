@@ -1,0 +1,42 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Subscription Messages</h3>
+    </div>
+    <div class="col-2 offset-4">
+        <button class="btn btn-primary" @onclick="@ClearMessages">Clear Messages</button>
+    </div>
+</div>
+
+@foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
+{
+    <hr />
+
+    <div class="form-group row p-2">
+        <label class="col-1 col-form-label">Channel</label>
+        <label class="col-1 col-form-label">@message.Channel</label>
+        <label class="col-1 col-form-label">ClientId</label>
+        <label class="col-2 col-form-label">@message.ClientId</label>
+        <label class="col-2 col-form-label">Sequence Number</label>
+        <label class="col-2 col-form-label">@message.SequenceNumber</label>
+        <label class="col-1 col-form-label">Timestamp</label>
+        <label class="col-2 col-form-label">@message.Timestamp</label>
+    </div>
+
+    @foreach (var messageEvent in message.Events)
+    {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Subscriptions</label>
+            <label class="col-11 col-form-label">@messageEvent.Subscriptions</label>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public List<WebSocketMessage<SubscriptionEvent>> Messages { get; set; } = new List<WebSocketMessage<SubscriptionEvent>>();
+
+    public void ClearMessages()
+    {
+        Messages.Clear();
+    }
+}

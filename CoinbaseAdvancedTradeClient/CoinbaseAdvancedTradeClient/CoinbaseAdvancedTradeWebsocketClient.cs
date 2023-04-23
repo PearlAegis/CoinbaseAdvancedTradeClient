@@ -18,12 +18,12 @@ namespace CoinbaseAdvancedTradeClient
         private WebSocketClientConfig _config;
         private WebSocket _socket;
 
-        private List<string> _productIds;
-        private string _channel;
-        private Action<object> _messageReceivedCallback;
+        private Action<object?, bool> _messageReceivedCallback;
+        private Action<object?, EventArgs>? _openedCallback;
+        private Action<object?, EventArgs>? _closedCallback;
+        private Action<Exception>? _errorCallback;
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
-        public bool IsSubscribed { get; private set; } = false;
 
         public CoinbaseAdvancedTradeWebSocketClient(WebSocketClientConfig config)
         {
@@ -36,11 +36,14 @@ namespace CoinbaseAdvancedTradeClient
 
         #region Connection
 
-        public async Task<bool> ConnectAsync(Action<object> messageReceivedCallback)
+        public async Task<bool> ConnectAsync(Action<object?, bool> messageReceivedCallback, Action<object?, EventArgs>? openedCallback = null, Action<object?, EventArgs>? closedCallback = null, Action<Exception>? errorCallback = null)
         {
             if (messageReceivedCallback == null) throw new ArgumentNullException(nameof(messageReceivedCallback), ErrorMessages.MessageReceivedCallbackRequired);
 
             _messageReceivedCallback = messageReceivedCallback;
+            _openedCallback = openedCallback;
+            _closedCallback = closedCallback;
+            _errorCallback = errorCallback;
 
             if (_socket != null)
             {
@@ -60,14 +63,6 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Disconnect()
         {
-            if (_socket != null)
-            {
-                if (_socket.State == WebSocketState.Open)
-                {
-                    Unsubscribe();
-                }
-            }
-
             _socket?.Close();
             _socket?.Dispose();
             _socket = null;
@@ -77,24 +72,21 @@ namespace CoinbaseAdvancedTradeClient
 
         #region Subscription
 
-        public void Subscribe(List<string> productIds, string channel)
+        public void Subscribe(string channel, List<string> productIds)
         {
             if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
             if (string.IsNullOrWhiteSpace(channel) || !WebSocketChannels.WebSocketChannelList.Contains(channel)) throw new ArgumentNullException(nameof(channel), ErrorMessages.ChannelRequired);
 
-            _productIds = productIds;
-            _channel = channel;
-
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, _channel, _productIds);
+            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
 
             var subscription = new Subscription
             {
                 ApiKey = _config.ApiKey,
-                Channel = _channel,
-                ProductIds = _productIds,
+                Channel = channel,
+                ProductIds = productIds,
                 Signature = signature,
                 Timestamp = timestamp,
                 Type = SubscriptionTypes.Subscribe,
@@ -103,22 +95,20 @@ namespace CoinbaseAdvancedTradeClient
             var subscribeMessage = JsonConvert.SerializeObject(subscription);
 
             _socket.Send(subscribeMessage);
-
-            IsSubscribed = true;
         }
 
-        public void Unsubscribe()
+        public void Unsubscribe(string channel, List<string> productIds)
         {
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, _channel, _productIds);
+            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
 
             var unsubscribe = new Subscription
             {
                 ApiKey = _config.ApiKey,
-                Channel = _channel,
-                ProductIds = _productIds,
+                Channel = channel,
+                ProductIds = productIds,
                 Signature = signature,
                 Timestamp = timestamp,
                 Type = SubscriptionTypes.Unsubscribe
@@ -127,73 +117,78 @@ namespace CoinbaseAdvancedTradeClient
             var unsubscribeMessage = JsonConvert.SerializeObject(unsubscribe);
 
             _socket.Send(unsubscribeMessage);
-
-            IsSubscribed = false;
         }
 
         #endregion // Subscription
 
         #region Event Handlers
 
-        private void Socket_Opened(object sender, EventArgs e)
+        private void Socket_Opened(object? sender, EventArgs e)
         {
-            //TODO Implement this
+            if (_openedCallback != null)
+            {
+                _openedCallback.Invoke(sender, e);
+            }
         }
 
         private void Socket_Closed(object? sender, EventArgs e)
         {
-            //TODO Implement this
+            if (_closedCallback != null)
+            {
+                _closedCallback.Invoke(sender, e);
+            }
         }
 
-        private void Socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
+        private void Socket_Error(object? sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
-            //TODO Implement this
+            if (_errorCallback != null)
+            {
+                _errorCallback.Invoke(e.Exception);
+            }
+            else
+            {
+                throw e.Exception;
+            }
         }
 
         private void Socket_MessageReceived(object? sender, MessageReceivedEventArgs e)
         {
-            var success = ParseWebSocketMessage(e.Message, out object parsedMessage);
+            var parsed = ParseWebSocketMessage(e.Message, out object message);
 
-            if (success)
-            {
-                _messageReceivedCallback.Invoke(parsedMessage);
-            }
-            else
-            {
-                //TODO Handle failure to parse.
-            }
+            _messageReceivedCallback.Invoke(message, parsed);
         }
 
-        private bool ParseWebSocketMessage(string json, out object websocketEvent)
+        private bool ParseWebSocketMessage(string json, out object message)
         {
             var obj = JObject.Parse(json);
 
-            var channel = obj[WebSocketChannels.Channel].Value<string>();
+            var channel = obj[WebSocketChannels.Channel]?.Value<string>();
 
             switch (channel)
             {
                 case WebSocketChannels.MarketTrades:
-                    websocketEvent = obj.ToObject<WebSocketMessage<MarketTradesEvent>>();
-                    break;
+                    message = obj.ToObject<WebSocketMessage<MarketTradesEvent>>();
+                    return true;
                 case WebSocketChannels.Status:
-                    websocketEvent = obj.ToObject<WebSocketMessage<StatusEvent>>();
-                    break;
+                    message = obj.ToObject<WebSocketMessage<StatusEvent>>();
+                    return true;
                 case WebSocketChannels.Ticker:
                 case WebSocketChannels.TickerBatch:
-                    websocketEvent = obj.ToObject<WebSocketMessage<TickerEvent>>();
-                    break;
+                    message = obj.ToObject<WebSocketMessage<TickerEvent>>();
+                    return true;
                 case WebSocketChannels.Level2Data:
-                    websocketEvent = obj.ToObject<WebSocketMessage<Level2Event>>();
-                    break;
+                    message = obj.ToObject<WebSocketMessage<Level2Event>>();
+                    return true;
                 case WebSocketChannels.User:
-                    websocketEvent = obj.ToObject<WebSocketMessage<UserEvent>>();
-                    break;
+                    message = obj.ToObject<WebSocketMessage<UserEvent>>();
+                    return true;
+                case WebSocketChannels.Subscriptions:
+                    message = obj.ToObject<WebSocketMessage<SubscriptionEvent>>();
+                    return true;
                 default:
-                    websocketEvent = null;
+                    message = json;
                     return false;
             }
-
-            return true;
         }
 
         #endregion // Event Handlers

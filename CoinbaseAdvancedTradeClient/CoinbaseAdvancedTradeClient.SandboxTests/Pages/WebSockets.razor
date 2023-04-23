@@ -32,7 +32,7 @@
                 <button class="btn btn-primary" @onclick="@ConnectAsync">Connect</button>
             </div>
             <div class="col-4">
-                @if(Client.IsConnected)
+                @if (Client.IsConnected)
                 {
                     <label class="col-form-label">Connected</label>
                 }
@@ -41,12 +41,6 @@
         <div class="form-group row p-2">
             <div class="col-4 offset-4">
                 <button class="btn btn-primary" @onclick="@Subscribe">Subscribe</button>
-            </div>
-            <div class="col-4">
-                @if (Client.IsSubscribed)
-                {
-                    <label class="col-form-label">Subscribed</label>
-                }
             </div>
         </div>
         <div class="form-group row p-2">
@@ -84,6 +78,12 @@
                 <RadzenTabsItem Text="User">
                     <UserMessageComponent Messages="@UserMessages" />
                 </RadzenTabsItem>
+                <RadzenTabsItem Text="Subscription">
+                    <SubscriptionMessageComponent Messages="@SubscriptionMessages" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Error">
+                    <ErrorMessageComponent Messages="@ErrorMessages" />
+                </RadzenTabsItem>
             </Tabs>
         </RadzenTabs>
     </div>
@@ -101,6 +101,8 @@
     public List<WebSocketMessage<StatusEvent>> StatusMessages { get; set; } = new List<WebSocketMessage<StatusEvent>>();
     public List<WebSocketMessage<TickerEvent>> TickerMessages { get; set; } = new List<WebSocketMessage<TickerEvent>>();
     public List<WebSocketMessage<UserEvent>> UserMessages { get; set; } = new List<WebSocketMessage<UserEvent>>();
+    public List<WebSocketMessage<SubscriptionEvent>> SubscriptionMessages { get; set; } = new List<WebSocketMessage<SubscriptionEvent>>();
+    public List<string> ErrorMessages { get; set; } = new List<string>();
 
     protected override void OnInitialized()
     {
@@ -117,12 +119,13 @@
     public void Subscribe()
     {
         var productIdList = ProductIds?.Split(",").ToList();
-        Client.Subscribe(productIdList, Channel);
+        Client.Subscribe(Channel, productIdList);
     }
 
     public void Unsubscribe()
     {
-        Client.Unsubscribe();
+        var productIdList = ProductIds?.Split(",").ToList();
+        Client.Unsubscribe(Channel, productIdList);
     }
 
     public void Disconnect()
@@ -135,27 +138,38 @@
         Client.Dispose();
     }
 
-    private async void MessageReceivedCallback(object websocketMessage)
+    private async void MessageReceivedCallback(object? message, bool parsed)
     {
-        switch (websocketMessage)
+        if (parsed)
         {
-            case WebSocketMessage<Level2Event> level2:
-                Level2Messages.Add(level2);
-                break;
-            case WebSocketMessage<MarketTradesEvent> marketTrades:
-                MarketTradesMessages.Add(marketTrades);
-                break;
-            case WebSocketMessage<StatusEvent> status:
-                StatusMessages.Add(status);
-                break;
-            case WebSocketMessage<TickerEvent> ticker:
-                TickerMessages.Add(ticker);
-                break;
-            case WebSocketMessage<UserEvent> user:
-                UserMessages.Add(user);
-                break;
-            default:
-                break;
+            switch (message)
+            {
+                case WebSocketMessage<Level2Event> level2:
+                    Level2Messages.Add(level2);
+                    break;
+                case WebSocketMessage<MarketTradesEvent> marketTrades:
+                    MarketTradesMessages.Add(marketTrades);
+                    break;
+                case WebSocketMessage<StatusEvent> status:
+                    StatusMessages.Add(status);
+                    break;
+                case WebSocketMessage<TickerEvent> ticker:
+                    TickerMessages.Add(ticker);
+                    break;
+                case WebSocketMessage<UserEvent> user:
+                    UserMessages.Add(user);
+                    break;
+                case WebSocketMessage<SubscriptionEvent> subscription:
+                    SubscriptionMessages.Add(subscription);
+                    break;
+                default:
+                    ErrorMessages.Add($"Failed to parse message: {message}");
+                    break;
+            }
+        }
+        else
+        {
+            ErrorMessages.Add($"Failed to parse message: {message}");
         }
 
         // For real-time UI updates
