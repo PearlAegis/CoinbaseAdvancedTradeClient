@@ -133,6 +133,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A message received callback is required. This is a method that will be invoked when a WebSocket message is received..
+        /// </summary>
+        public static string MessageReceivedCallbackRequired {
+            get {
+                return ResourceManager.GetString("MessageReceivedCallbackRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;offset&apos; parameter must be greater than zero..
         /// </summary>
         public static string OffsetParameterRange {

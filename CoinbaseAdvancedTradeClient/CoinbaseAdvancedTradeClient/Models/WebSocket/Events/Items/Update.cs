@@ -8,7 +8,7 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string Side { get; set; }
 
         [JsonProperty("event_time")]
-        public string EventTime { get; set; }
+        public DateTime EventTime { get; set; }
 
         [JsonProperty("price_level")]
         public string PriceLevel { get; set; }

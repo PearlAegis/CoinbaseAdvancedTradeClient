@@ -9,6 +9,10 @@
         public const string User = "user";
         public const string MarketTrades = "market_trades";
 
+        //Not actual channels, but used in parsing messages.
+        public const string Channel = "channel";
+        public const string Level2Data = "l2_data";
+
         public readonly static ICollection<string> WebSocketChannelList = new List<string>
         {
             Status, 

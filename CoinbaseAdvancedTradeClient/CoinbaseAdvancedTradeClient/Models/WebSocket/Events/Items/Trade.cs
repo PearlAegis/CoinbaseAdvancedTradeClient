@@ -20,6 +20,6 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string Side { get; set; }
 
         [JsonProperty("time")]
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
     }
 }
