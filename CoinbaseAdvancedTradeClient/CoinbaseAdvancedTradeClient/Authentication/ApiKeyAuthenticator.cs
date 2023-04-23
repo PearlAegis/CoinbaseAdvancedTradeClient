@@ -22,6 +22,7 @@ namespace CoinbaseAdvancedTradeClient.Authentication
 
         public static string GenerateWebSocketSignature(string apiSecret, string timestamp, string channel, ICollection<string> productIds)
         {
+            if (string.IsNullOrWhiteSpace(channel)) throw new ArgumentNullException(nameof(channel), ErrorMessages.ChannelRequired);
             if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
 
             var products = string.Join(",", productIds);
