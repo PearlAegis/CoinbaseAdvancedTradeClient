@@ -74,8 +74,8 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Subscribe(string channel, List<string> productIds)
         {
-            if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
             if (string.IsNullOrWhiteSpace(channel) || !WebSocketChannels.WebSocketChannelList.Contains(channel)) throw new ArgumentNullException(nameof(channel), ErrorMessages.ChannelRequired);
+            if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
 
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
@@ -99,6 +99,9 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Unsubscribe(string channel, List<string> productIds)
         {
+            if (string.IsNullOrWhiteSpace(channel) || !WebSocketChannels.WebSocketChannelList.Contains(channel)) throw new ArgumentNullException(nameof(channel), ErrorMessages.ChannelRequired);
+            if (productIds == null || !productIds.Any()) throw new ArgumentNullException(nameof(productIds), ErrorMessages.ProductIdRequired);
+
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
             var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
