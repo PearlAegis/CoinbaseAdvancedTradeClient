@@ -63,9 +63,10 @@ namespace CoinbaseAdvancedTradeClient
 
         public void Disconnect()
         {
-            _socket?.Close();
-            _socket?.Dispose();
-            _socket = null;
+            if (_socket != null && _socket.State != WebSocketState.Closed && _socket.State != WebSocketState.Closing)
+            {
+                _socket.Close();
+            }
         }
 
         #endregion // Connection
@@ -201,6 +202,8 @@ namespace CoinbaseAdvancedTradeClient
         public void Dispose()
         {
             Disconnect();
+
+            _socket?.Dispose();
         }
 
         #endregion // Dispose

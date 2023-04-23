@@ -113,7 +113,7 @@
 
     public async Task ConnectAsync()
     {
-        var connected = await Client.ConnectAsync(MessageReceivedCallback);
+        var connected = await Client.ConnectAsync(MessageReceivedCallback, OpenedCallback, ClosedCallback, ErrorCallback);
     }
 
     public void Subscribe()
@@ -173,6 +173,23 @@
         }
 
         // For real-time UI updates
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenedCallback(object? obj, EventArgs e)
+    {
+
+    }
+
+    private void ClosedCallback(object? obj, EventArgs e)
+    {
+
+    }
+
+    private async void ErrorCallback(Exception exception)
+    {
+        ErrorMessages.Add(exception.Message);
+
         await InvokeAsync(StateHasChanged);
     }
 }
