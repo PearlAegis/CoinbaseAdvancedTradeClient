@@ -137,14 +137,17 @@ namespace CoinbaseAdvancedTradeClient
 
         private void Socket_Opened(object sender, EventArgs e)
         {
+            //TODO Implement this
         }
 
         private void Socket_Closed(object? sender, EventArgs e)
         {
+            //TODO Implement this
         }
 
         private void Socket_Error(object sender, SuperSocket.ClientEngine.ErrorEventArgs e)
         {
+            //TODO Implement this
         }
 
         private void Socket_MessageReceived(object? sender, MessageReceivedEventArgs e)
