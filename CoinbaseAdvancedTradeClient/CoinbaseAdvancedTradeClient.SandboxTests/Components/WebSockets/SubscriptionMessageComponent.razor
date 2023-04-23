@@ -15,6 +15,10 @@
 
     @foreach (var messageEvent in message.Events)
     {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Subscriptions</label>
+        </div>
+
         <SubscriptionListComponent SubscriptionList="messageEvent.Subscriptions.Level2" Title="Level 2" />
         <SubscriptionListComponent SubscriptionList="messageEvent.Subscriptions.MarketTrades" Title="Market Trades" />
         <SubscriptionListComponent SubscriptionList="messageEvent.Subscriptions.Status" Title="Status" />
