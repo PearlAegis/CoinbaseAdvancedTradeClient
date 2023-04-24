@@ -1,0 +1,59 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Ticker Messages</h3>
+    </div>
+    <div class="col-2 offset-4">
+        <button class="btn btn-primary" @onclick="@ClearMessages">Clear Messages</button>
+    </div>
+</div>
+
+@foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
+{
+    <hr />
+
+    <WebSocketMessageComponent TItem="TickerEvent" Message="@message" />
+
+    @foreach (var messageEvent in message.Events)
+    {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Tickers</label>
+            <label class="col-1 col-form-label">@messageEvent.Tickers.Count</label>
+        </div>
+
+        @foreach (var ticker in messageEvent.Tickers)
+        {
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Type</label>
+                <label class="col-1 col-form-label">@ticker.Type</label>
+                <label class="col-1 col-form-label">Product ID</label>
+                <label class="col-1 col-form-label">@ticker.ProductId</label>
+                <label class="col-1 col-form-label">Price</label>
+                <label class="col-1 col-form-label">@ticker.Price</label>
+                <label class="col-1 col-form-label">Volume 24H</label>
+                <label class="col-1 col-form-label">@ticker.Volume24H</label>
+                <label class="col-2 col-form-label">Price Change 24H</label>
+                <label class="col-1 col-form-label">@ticker.PricePercentageChange24H</label>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-1 col-form-label">Low 24H</label>
+                <label class="col-1 col-form-label">@ticker.Low24H</label>
+                <label class="col-1 col-form-label">High 24H</label>
+                <label class="col-1 col-form-label">@ticker.High24H</label>
+                <label class="col-1 col-form-label">Low 52W</label>
+                <label class="col-1 col-form-label">@ticker.Low52W</label>
+                <label class="col-1 col-form-label">High 52W</label>
+                <label class="col-1 col-form-label">@ticker.High52W</label>
+            </div>
+        }
+    }
+}
+
+@code {
+    [Parameter]
+    public List<WebSocketMessage<TickerEvent>> Messages { get; set; } = new List<WebSocketMessage<TickerEvent>>();
+
+    public void ClearMessages()
+    {
+        Messages.Clear();
+    }
+}

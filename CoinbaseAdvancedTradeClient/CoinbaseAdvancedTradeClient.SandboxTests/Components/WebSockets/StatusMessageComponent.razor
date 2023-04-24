@@ -1,0 +1,71 @@
+﻿<div class="row">
+    <div class="col-6">
+        <h3>Status Messages</h3>
+    </div>
+    <div class="col-2 offset-4">
+        <button class="btn btn-primary" @onclick="@ClearMessages">Clear Messages</button>
+    </div>
+</div>
+
+@foreach (var message in Messages.OrderByDescending(m => m.Timestamp).Take(15))
+{
+    <hr />
+
+    <WebSocketMessageComponent TItem="StatusEvent" Message="@message" />
+
+    @foreach (var messageEvent in message.Events)
+    {
+        <div class="form-group row p-2">
+            <label class="col-1 col-form-label">Products</label>
+            <label class="col-1 col-form-label">@messageEvent.Products.Count</label>
+        </div>
+
+        @foreach (var product in messageEvent.Products)
+        {
+            <div class="form-group row p-2">
+                <label class="col-2 col-form-label">Product Type</label>
+                <label class="col-1 col-form-label">@product.ProductType</label>
+
+                <label class="col-2 col-form-label">ID</label>
+                <label class="col-1 col-form-label">@product.Id</label>
+
+                <label class="col-2 col-form-label">Display Name</label>
+                <label class="col-1 col-form-label">@product.DisplayName</label>
+
+                <label class="col-2 col-form-label">Base Currency</label>
+                <label class="col-1 col-form-label">@product.BaseCurrency</label>
+
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-2 col-form-label">Quote Currency</label>
+                <label class="col-1 col-form-label">@product.QuoteCurrency</label>
+
+                <label class="col-2 col-form-label">Base Increment</label>
+                <label class="col-1 col-form-label">@product.BaseIncrement</label>
+
+                <label class="col-2 col-form-label">Quote Increment</label>
+                <label class="col-1 col-form-label">@product.QuoteIncrement</label>
+
+                <label class="col-2 col-form-label">Status</label>
+                <label class="col-1 col-form-label">@product.Status</label>
+            </div>
+            <div class="form-group row p-2">
+                <label class="col-2 col-form-label">Status Message</label>
+                <label class="col-1 col-form-label">@product.StatusMessage</label>
+
+                <label class="col-2 col-form-label">Min Market Funds</label>
+                <label class="col-1 col-form-label">@product.MinMarketFunds</label>
+            </div>
+        }
+    }
+}
+
+@code {
+    [Parameter]
+    public List<WebSocketMessage<StatusEvent>> Messages { get; set; } = new List<WebSocketMessage<StatusEvent>>();
+
+    public void ClearMessages()
+    {
+        Messages.Clear();
+    }
+}

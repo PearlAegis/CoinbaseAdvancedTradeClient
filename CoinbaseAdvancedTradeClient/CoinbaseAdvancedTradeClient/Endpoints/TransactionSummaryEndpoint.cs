@@ -23,7 +23,7 @@ namespace CoinbaseAdvancedTradeClient
 
                 if (!ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
-                var transactionSummary = await Config.ApiUrl
+                var transactionSummary = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.TransactionSummaryEndpoint)
                     .SetQueryParam(RequestParameters.StartDate, startDate.ToUniversalTime())

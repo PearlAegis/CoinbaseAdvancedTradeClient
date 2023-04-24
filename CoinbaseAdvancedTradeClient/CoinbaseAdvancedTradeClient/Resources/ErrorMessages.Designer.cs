@@ -106,6 +106,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A valid channel is required..
+        /// </summary>
+        public static string ChannelRequired {
+            get {
+                return ResourceManager.GetString("ChannelRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An end date is required..
         /// </summary>
         public static string EndDateRequired {
@@ -120,6 +129,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         public static string LimitParameterRange {
             get {
                 return ResourceManager.GetString("LimitParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A message received callback is required. This is a method that will be invoked when a WebSocket message is received..
+        /// </summary>
+        public static string MessageReceivedCallbackRequired {
+            get {
+                return ResourceManager.GetString("MessageReceivedCallbackRequired", resourceCulture);
             }
         }
         
@@ -219,6 +237,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         public static string StartDateRequired {
             get {
                 return ResourceManager.GetString("StartDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Socket must be connected..
+        /// </summary>
+        public static string WebSocketMustBeConnected {
+            get {
+                return ResourceManager.GetString("WebSocketMustBeConnected", resourceCulture);
             }
         }
     }

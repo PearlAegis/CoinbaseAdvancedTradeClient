@@ -1,6 +1,11 @@
-﻿namespace CoinbaseAdvancedTradeClient.Models.Config
+﻿using CoinbaseAdvancedTradeClient.Constants;
+
+namespace CoinbaseAdvancedTradeClient.Models.Config
 {
-    public class WebsocketClientConfig
+    public class WebSocketClientConfig
     {
+        public string ApiKey { get; set; }
+        public string ApiSecret { get; set; }
+        public string WebSocketUrl { get; set; } = ApiEndpoints.WebSocketEndpoint;
     }
 }

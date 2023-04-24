@@ -7,6 +7,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.Configure<ApiClientConfig>(builder.Configuration.GetSection(nameof(ApiClientConfig)));
+builder.Services.Configure<WebSocketClientConfig>(builder.Configuration.GetSection(nameof(ApiClientConfig)));
 
 var app = builder.Build();
 

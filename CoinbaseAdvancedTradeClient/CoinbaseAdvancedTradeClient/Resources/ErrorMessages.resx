@@ -132,11 +132,17 @@
   <data name="CandleGranularityInvalid" xml:space="preserve">
     <value>Invalid candle granularity.</value>
   </data>
+  <data name="ChannelRequired" xml:space="preserve">
+    <value>A valid channel is required.</value>
+  </data>
   <data name="EndDateRequired" xml:space="preserve">
     <value>An end date is required.</value>
   </data>
   <data name="LimitParameterRange" xml:space="preserve">
     <value>The 'limit' parameter must be between 1 and 250.</value>
+  </data>
+  <data name="MessageReceivedCallbackRequired" xml:space="preserve">
+    <value>A message received callback is required. This is a method that will be invoked when a WebSocket message is received.</value>
   </data>
   <data name="OffsetParameterRange" xml:space="preserve">
     <value>The 'offset' parameter must be greater than zero.</value>
@@ -170,5 +176,8 @@
   </data>
   <data name="StartDateRequired" xml:space="preserve">
     <value>A start date is required.</value>
+  </data>
+  <data name="WebSocketMustBeConnected" xml:space="preserve">
+    <value>Web Socket must be connected.</value>
   </data>
 </root>
