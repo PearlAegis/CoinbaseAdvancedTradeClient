@@ -133,7 +133,7 @@
     <value>Invalid candle granularity.</value>
   </data>
   <data name="ChannelRequired" xml:space="preserve">
-    <value>A channel is required.</value>
+    <value>A valid channel is required.</value>
   </data>
   <data name="EndDateRequired" xml:space="preserve">
     <value>An end date is required.</value>

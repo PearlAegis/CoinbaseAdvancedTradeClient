@@ -106,7 +106,7 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A channel is required..
+        ///   Looks up a localized string similar to A valid channel is required..
         /// </summary>
         public static string ChannelRequired {
             get {
