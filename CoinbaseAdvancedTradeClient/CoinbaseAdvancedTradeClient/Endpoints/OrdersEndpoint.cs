@@ -1,5 +1,6 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Enums;
+using CoinbaseAdvancedTradeClient.Extensions;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
@@ -50,7 +51,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,
-            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null,
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, OrderSide? orderSide = null,
             string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
             var response = new ApiResponse<OrdersPage>();
@@ -77,7 +78,7 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.EndDate, endDate)
                     .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
                     .SetQueryParam(RequestParameters.OrderType, orderType)
-                    .SetQueryParam(RequestParameters.OrderSide, orderSide)
+                    .SetQueryParam(RequestParameters.OrderSide, orderSide?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.Cursor, cursor)
                     .SetQueryParam(RequestParameters.ProductType, productType)
                     .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
@@ -131,7 +132,6 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (createOrder == null) throw new ArgumentNullException(nameof(createOrder), ErrorMessages.OrderParametersRequired);
                 if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
-                if (!OrderSides.OrderSideList.Contains(createOrder.Side)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(createOrder.Side));
                 if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
                 if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))

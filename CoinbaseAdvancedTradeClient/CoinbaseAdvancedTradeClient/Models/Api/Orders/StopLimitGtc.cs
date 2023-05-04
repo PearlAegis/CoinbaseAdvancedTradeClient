@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
@@ -14,6 +15,6 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public string StopPrice { get; set; }
 
         [JsonProperty("stop_direction")]
-        public string StopDirection { get; set; }
+        public StopDirection StopDirection { get; set; }
     }
 }

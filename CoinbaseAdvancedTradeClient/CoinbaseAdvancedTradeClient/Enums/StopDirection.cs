@@ -5,12 +5,12 @@ using System.Runtime.Serialization;
 namespace CoinbaseAdvancedTradeClient.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum SubscriptionTypes
+    public enum StopDirection
     {
-        [EnumMember(Value = "subscribe")]
-        Subscribe,
+        [EnumMember(Value = "STOP_DIRECTION_STOP_UP")]
+        Up,
 
-        [EnumMember(Value = "unsubscribe")]
-        Unsubscribe
+        [EnumMember(Value = "STOP_DIRECTION_STOP_DOWN")]
+        Down
     }
 }

@@ -17,8 +17,8 @@
             <label class="col-4 col-form-label">Side</label>
             <div class="col-8">
                 <InputSelect class="form-control" @bind-Value="@OrderSide">
-                    <option value="@OrderSides.Buy">Buy</option>
-                    <option value="@OrderSides.Sell">Sell</option>
+                    <option value="@OrderSide.Buy">Buy</option>
+                    <option value="@OrderSide.Sell">Sell</option>
                 </InputSelect>
             </div>
         </div>
@@ -118,13 +118,16 @@
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Price</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtc.LimitPrice"></InputText>
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopPrice"></InputText>
                 </div>
             </div>
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Direction</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopDirection"></InputText>
+                    <InputSelect class="form-control" @bind-Value="@StopLimitGtc.StopDirection">
+                        <option value="@StopDirection.Up">Up</option>
+                        <option value="@StopDirection.Up">Down</option>
+                    </InputSelect>
                 </div>
             </div>
         }
@@ -146,13 +149,16 @@
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Price</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtd.LimitPrice"></InputText>
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.StopPrice"></InputText>
                 </div>
             </div>
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Direction</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtd.StopDirection"></InputText>
+                    <InputSelect class="form-control" @bind-Value="@StopLimitGtc.StopDirection">
+                        <option value="@StopDirection.Up">Up</option>
+                        <option value="@StopDirection.Up">Down</option>
+                    </InputSelect>
                 </div>
             </div>
             <div class="form-group row p-2">
@@ -248,7 +254,7 @@
 
     public string ProductId { get; set; } = null;
 
-    public string OrderSide { get; set; } = OrderSides.Buy;
+    public OrderSide OrderSide { get; set; } = OrderSide.Buy;
 
     public string OrderConfiguration { get; set; } = nameof(MarketIoc);
 
