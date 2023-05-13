@@ -1,0 +1,67 @@
+﻿@inherits ApiClientSandboxComponentBase
+
+<div class="row">
+    <div class="col-6">
+        <h3>Request</h3>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Side</label>
+            <div class="col-8">
+                <InputSelect class="form-control" @bind-Value="@OrderSide">
+                    <option value="@OrderSide.Buy">Buy</option>
+                    <option value="@OrderSide.Sell">Sell</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Product ID</label>
+            <div class="col-8">
+                <InputText class="form-control" @bind-Value="@ProductId"></InputText>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Amount</label>
+            <div class="col-8">
+                <InputNumber class="form-control" @bind-Value="@Amount"></InputNumber>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <label class="col-4 col-form-label">Client Order ID</label>
+            <div class="col-6">
+                <InputText class="form-control" @bind-Value="@ClientOrderId"></InputText>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" @onclick="@GenerateClientOrderId">Generate</button>
+            </div>
+        </div>
+        <div class="form-group row p-2">
+            <div class="col-8 offset-4">
+                <button class="btn btn-primary" @onclick="@PostCreateOrderAsync">POST</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <PostCreateOrderResponseComponent Result="Result" />
+    </div>
+</div>
+
+@code {
+    public OrderSide OrderSide { get; set; } = OrderSide.Buy;
+
+    public string ProductId { get; set; }
+
+    public decimal Amount { get; set; }
+
+    public string ClientOrderId { get; set; }
+
+    public ApiResponse<CreateOrderResponse> Result { get; set; } = null;
+
+    public async Task PostCreateOrderAsync()
+    {
+        Result = await Client.Orders.CreateMarketOrderAsync(OrderSide, ProductId, Amount, ClientOrderId);
+    }
+
+    public void GenerateClientOrderId()
+    {
+        ClientOrderId = Guid.NewGuid().ToString();
+    }
+}
