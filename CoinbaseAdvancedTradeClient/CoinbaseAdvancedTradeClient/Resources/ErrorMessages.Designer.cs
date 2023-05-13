@@ -70,6 +70,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The amount must be greater than zero..
+        /// </summary>
+        public static string AmountParameterRange {
+            get {
+                return ResourceManager.GetString("AmountParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An API Configuration is required..
         /// </summary>
         public static string ApiConfigRequired {
@@ -129,6 +138,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         public static string LimitParameterRange {
             get {
                 return ResourceManager.GetString("LimitParameterRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The limit price must be greater than zero..
+        /// </summary>
+        public static string LimitPriceParameterRange {
+            get {
+                return ResourceManager.GetString("LimitPriceParameterRange", resourceCulture);
             }
         }
         
@@ -237,6 +255,15 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         public static string StartDateRequired {
             get {
                 return ResourceManager.GetString("StartDateRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The stop price must be greater than zero..
+        /// </summary>
+        public static string StopPriceParameterRange {
+            get {
+                return ResourceManager.GetString("StopPriceParameterRange", resourceCulture);
             }
         }
         

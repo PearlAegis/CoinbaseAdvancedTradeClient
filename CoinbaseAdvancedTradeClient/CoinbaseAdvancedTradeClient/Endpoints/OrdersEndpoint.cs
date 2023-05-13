@@ -155,19 +155,41 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
+        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
+        {
+            var response = new ApiResponse<CancelOrdersResponse>();
+
+            try
+            {
+                if (cancelOrders == null) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderParametersRequired);
+                if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
+
+                var cancelOrderResponse = await _config.ApiUrl
+                    .WithClient(this)
+                    .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
+                    .PostJsonAsync(cancelOrders, cancellationToken)
+                    .ReceiveJson<CancelOrdersResponse>();
+
+                response.Data = cancelOrderResponse;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                await HandleExceptionResponseAsync(ex, response);
+            }
+
+            return response;
+        }
+
+
         #region Create Order Helper Methods
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateMarketOrderAsync(OrderSide orderSide,
             string productId, decimal amount,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(productId));
-            if (amount <= 0) throw new ArgumentException(nameof(amount), "Amount must be greater than zero."); //TODO Add to error messages
-
-            if (string.IsNullOrWhiteSpace(clientOrderId))
-            {
-                clientOrderId = Guid.NewGuid().ToString();
-            }
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
 
             var createOrderParameters = new CreateOrderParameters
             {
@@ -185,6 +207,10 @@ namespace CoinbaseAdvancedTradeClient
             string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
+            if (limitPrice <= 0) throw new ArgumentException(ErrorMessages.LimitPriceParameterRange, nameof(limitPrice));
+
             var createOrderParameters = new CreateOrderParameters
             {
                 ClientOrderId = clientOrderId,
@@ -208,6 +234,11 @@ namespace CoinbaseAdvancedTradeClient
             string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
+            if (limitPrice <= 0) throw new ArgumentException(ErrorMessages.LimitPriceParameterRange, nameof(limitPrice));
+            if (stopPrice <= 0) throw new ArgumentException(ErrorMessages.StopPriceParameterRange, nameof(stopPrice));
+
             var createOrderParameters = new CreateOrderParameters
             {
                 ClientOrderId = clientOrderId,
@@ -307,32 +338,6 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         #endregion // Build Order Configuration Methods
-
-        async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
-        {
-            var response = new ApiResponse<CancelOrdersResponse>();
-
-            try
-            {
-                if (cancelOrders == null) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderParametersRequired);
-                if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
-
-                var cancelOrderResponse = await _config.ApiUrl
-                    .WithClient(this)
-                    .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
-                    .PostJsonAsync(cancelOrders, cancellationToken)
-                    .ReceiveJson<CancelOrdersResponse>();
-
-                response.Data = cancelOrderResponse;
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionResponseAsync(ex, response);
-            }
-
-            return response;
-        }
 
         #endregion // POST
     }
