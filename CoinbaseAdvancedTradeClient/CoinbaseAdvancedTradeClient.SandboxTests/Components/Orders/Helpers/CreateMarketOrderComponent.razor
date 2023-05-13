@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="form-group row p-2">
-            <label class="col-4 col-form-label">Amount</label>
+            <label class="col-4 col-form-label">Amount (@AmountType)</label>
             <div class="col-8">
                 <InputNumber class="form-control" @bind-Value="@Amount"></InputNumber>
             </div>
@@ -54,6 +54,8 @@
     public string ClientOrderId { get; set; }
 
     public ApiResponse<CreateOrderResponse> Result { get; set; } = null;
+
+    public string AmountType => OrderSide.Equals(OrderSide.Buy) ? "Quote Size" : "Base Size";
 
     public async Task PostCreateOrderAsync()
     {
