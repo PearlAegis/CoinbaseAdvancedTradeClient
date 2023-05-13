@@ -1,5 +1,4 @@
 ﻿@page "/products"
-@inherits ApiClientSandboxPageBase
 
 <PageTitle>Product Endproints</PageTitle>
 
@@ -8,16 +7,16 @@
 <RadzenAccordion Multiple="true">
     <Items>
         <RadzenAccordionItem Text="Get List Products">
-            <GetListProductsComponent Client="Client" />
+            <GetListProductsComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get Product">
-            <GetProductComponent Client="Client" />
+            <GetProductComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get Product Candles">
-            <GetProductCandlesComponent Client="Client" />
+            <GetProductCandlesComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get Market Trades">
-            <GetMarketTradesComponent Client="Client" />
+            <GetMarketTradesComponent />
         </RadzenAccordionItem>
     </Items>
 </RadzenAccordion>

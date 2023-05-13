@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@inherits ApiClientSandboxComponentBase
+
+<div class="row">
     <div class="col-6">
         <h3>Request</h3>
         <div class="form-group row p-2">
@@ -74,9 +76,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
-
     public string ProductId { get; set; }
 
     public DateTime StartDate { get; set; } = DateTime.Today.AddDays(-2);

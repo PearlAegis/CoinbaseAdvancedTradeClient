@@ -1,5 +1,4 @@
 ﻿@page "/accounts"
-@inherits ApiClientSandboxPageBase
 
 <PageTitle>Account Endpoints</PageTitle>
 
@@ -8,10 +7,10 @@
 <RadzenAccordion Multiple="true">
     <Items>
         <RadzenAccordionItem Text="Get List Accounts">
-            <GetListAccountsComponent Client="Client" />
+            <GetListAccountsComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get Account">
-            <GetAccountComponent Client="Client" />
+            <GetAccountComponent />
         </RadzenAccordionItem>
     </Items>
 </RadzenAccordion>
