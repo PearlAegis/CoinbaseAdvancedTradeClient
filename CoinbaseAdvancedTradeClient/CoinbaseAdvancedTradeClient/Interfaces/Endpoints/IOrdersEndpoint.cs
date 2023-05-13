@@ -12,8 +12,8 @@ namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
         Task<ApiResponse<OrdersPage>> GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null, DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, OrderSide? orderSide = null, string? cursor = null, string? productType = null, string? orderPlacementSource = null);
         Task<ApiResponse<FillsPage>> GetListFillsAsync(string? orderId = null, string? productId = null, DateTimeOffset? start = null, DateTimeOffset? end = null, int? limit = null, string? cursor = null);
         Task<ApiResponse<Order>> GetOrderAsync(string orderId);
-        Task<ApiResponse<CreateOrderResponse>> CreateMarketOrderAsync(OrderSide orderSide, string productId, decimal amount, string clientOrderId, CancellationToken cancellationToken = default);
-        Task<ApiResponse<CreateOrderResponse>> CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, string productId, decimal amount, decimal limitPrice, DateTime endTime, bool postOnly, string clientOrderId, CancellationToken cancellationToken = default);
-        Task<ApiResponse<CreateOrderResponse>> CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime, string clientOrderId, CancellationToken cancellationToken = default);
+        Task<ApiResponse<CreateOrderResponse>> CreateMarketOrderAsync(OrderSide orderSide, string productId, decimal amount, string clientOrderId = null, CancellationToken cancellationToken = default);
+        Task<ApiResponse<CreateOrderResponse>> CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime, string clientOrderId = null, CancellationToken cancellationToken = default);
+        Task<ApiResponse<CreateOrderResponse>> CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide, string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime, string clientOrderId = null, CancellationToken cancellationToken = default);
     }
 }

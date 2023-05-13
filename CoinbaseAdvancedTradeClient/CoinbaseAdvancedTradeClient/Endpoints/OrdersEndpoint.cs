@@ -133,6 +133,11 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
                 if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
+                if (string.IsNullOrEmpty(createOrder.ClientOrderId))
+                {
+                    createOrder.ClientOrderId = Guid.NewGuid().ToString();
+                }
+
                 var createOrderResponse = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
@@ -154,7 +159,7 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateMarketOrderAsync(OrderSide orderSide,
             string productId, decimal amount,
-            string clientOrderId, CancellationToken cancellationToken = default)
+            string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(productId));
             if (amount <= 0) throw new ArgumentException(nameof(amount), "Amount must be greater than zero."); //TODO Add to error messages
@@ -177,8 +182,8 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
-            string productId, decimal amount, decimal limitPrice, DateTime endTime, bool postOnly,
-            string clientOrderId, CancellationToken cancellationToken = default)
+            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime,
+            string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             var createOrderParameters = new CreateOrderParameters
             {
@@ -201,7 +206,7 @@ namespace CoinbaseAdvancedTradeClient
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
             string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime,
-            string clientOrderId, CancellationToken cancellationToken = default)
+            string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             var createOrderParameters = new CreateOrderParameters
             {
