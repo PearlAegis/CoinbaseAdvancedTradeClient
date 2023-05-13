@@ -133,8 +133,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
                 if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
-                ValidateCreateOrderConfiguration(createOrder);
-
                 var createOrderResponse = await _config.ApiUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
@@ -269,7 +267,7 @@ namespace CoinbaseAdvancedTradeClient
             limitGtd.BaseSize = amount.ToString();
             limitGtd.LimitPrice = limitPrice.ToString();
             limitGtd.PostOnly = postOnly;
-            limitGtd.EndTime = endTime;
+            limitGtd.EndTime = endTime.ToUniversalTime();
 
             orderConfiguration.LimitGtd = limitGtd;
 
@@ -298,100 +296,12 @@ namespace CoinbaseAdvancedTradeClient
             stopLimitGtd.LimitPrice = limitPrice.ToString();
             stopLimitGtd.StopPrice = stopPrice.ToString();
             stopLimitGtd.StopDirection = stopDirection;
-            stopLimitGtd.EndTime = endTime;
+            stopLimitGtd.EndTime = endTime.ToUniversalTime();
 
             return orderConfiguration;
         }
 
         #endregion // Build Order Configuration Methods
-
-        #region Validate Order Configuration Methods
-
-        private void ValidateCreateOrderConfiguration(CreateOrderParameters createOrder)
-        {
-            if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))
-            {
-                createOrder.ClientOrderId = Guid.NewGuid().ToString();
-            }
-
-            if (createOrder.OrderConfiguration.MarketIoc != null)
-            {
-                ValidateMarketOrder(createOrder.OrderConfiguration.MarketIoc);
-            }
-
-            if (createOrder.OrderConfiguration.LimitGtc != null)
-            {
-                ValidateLimitGtcOrder(createOrder.OrderConfiguration.LimitGtc);
-            }
-
-            if (createOrder.OrderConfiguration.LimitGtd != null)
-            {
-                ValidateLimitGtdOrder(createOrder.OrderConfiguration.LimitGtd);
-            }
-
-            if (createOrder.OrderConfiguration.StopLimitGtc != null)
-            {
-                ValidateStopLimitGtcOrder(createOrder.OrderConfiguration.StopLimitGtc, createOrder.Side);
-            }
-
-            if (createOrder.OrderConfiguration.StopLimitGtd != null)
-            {
-                ValidateStopLimitGtdOrder(createOrder.OrderConfiguration.StopLimitGtd, createOrder.Side);
-            }
-        }
-
-        private void ValidateMarketOrder(MarketIoc marketOrder)
-        {
-
-        }
-
-        private void ValidateLimitGtcOrder(LimitGtc limitGtc)
-        {
-
-        }
-
-        private void ValidateLimitGtdOrder(LimitGtd limitGtd)
-        {
-            if (limitGtd.EndTime != null)
-            {
-                limitGtd.EndTime = limitGtd.EndTime.Value.ToUniversalTime();
-            }
-        }
-
-        private void ValidateStopLimitGtcOrder(StopLimitGtc stopLimitGtc, OrderSide orderSide)
-        {
-            ValidateStopLimitPricing(orderSide, stopLimitGtc);
-        }
-
-        private void ValidateStopLimitGtdOrder(StopLimitGtd stopLimitGtd, OrderSide orderSide)
-        {
-            ValidateStopLimitPricing(orderSide, stopLimitGtd);
-
-            if (stopLimitGtd.EndTime != null)
-            {
-                stopLimitGtd.EndTime = stopLimitGtd.EndTime.Value.ToUniversalTime();
-            }
-        }
-
-        private void ValidateStopLimitPricing(OrderSide orderSide, StopLimitGtc stopLimit)
-        {
-            var limitParsed = decimal.TryParse(stopLimit.LimitPrice, out decimal limitPrice);
-            var stopParsed = decimal.TryParse(stopLimit.StopPrice, out decimal stopPrice);
-
-            if (!limitParsed) throw new ArgumentException("Invalid limit price"); //TODO error message
-            if (!stopParsed) throw new ArgumentException("Invalid stop limit price"); //TODO error message
-
-            if (orderSide.Equals(OrderSide.Buy))
-            {
-                if (limitPrice > stopPrice) throw new ArgumentException("Pricing invalid"); //TODO error message
-            }
-            else
-            {
-                if (limitPrice < stopPrice) throw new ArgumentException("Pricing invalid"); //TODO error message
-            }
-        }
-
-        #endregion // Validate Order Configuration Methods
 
         async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
         {
