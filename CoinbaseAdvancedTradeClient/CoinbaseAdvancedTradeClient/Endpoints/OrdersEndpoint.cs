@@ -320,6 +320,8 @@ namespace CoinbaseAdvancedTradeClient
             stopLimitGtc.StopPrice = stopPrice.ToString();
             stopLimitGtc.StopDirection = stopDirection;
 
+            orderConfiguration.StopLimitGtc = stopLimitGtc;
+
             return orderConfiguration;
         }
 
@@ -333,6 +335,8 @@ namespace CoinbaseAdvancedTradeClient
             stopLimitGtd.StopPrice = stopPrice.ToString();
             stopLimitGtd.StopDirection = stopDirection;
             stopLimitGtd.EndTime = endTime.ToUniversalTime();
+
+            orderConfiguration.StopLimitGtd = stopLimitGtd;
 
             return orderConfiguration;
         }

@@ -183,7 +183,7 @@
   <data name="StartDateRequired" xml:space="preserve">
     <value>A start date is required.</value>
   </data>
-  <data name="StopPriceParamterRange" xml:space="preserve">
+  <data name="StopPriceParameterRange" xml:space="preserve">
     <value>The stop price must be greater than zero.</value>
   </data>
   <data name="WebSocketMustBeConnected" xml:space="preserve">
