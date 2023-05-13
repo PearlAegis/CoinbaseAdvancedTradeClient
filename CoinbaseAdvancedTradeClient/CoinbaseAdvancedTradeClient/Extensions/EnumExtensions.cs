@@ -2,9 +2,9 @@
 
 namespace CoinbaseAdvancedTradeClient.Extensions
 {
-    public static class EnumExtensions
+    internal static class EnumExtensions
     {
-        public static string? GetEnumMemberValue(this Enum member)
+        internal static string? GetEnumMemberValue(this Enum member)
         {
             if (member != null)
             {
