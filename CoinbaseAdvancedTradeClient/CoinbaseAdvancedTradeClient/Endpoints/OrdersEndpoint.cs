@@ -181,6 +181,7 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
+        #endregion // POST
 
         #region Create Order Helper Methods
 
@@ -198,7 +199,7 @@ namespace CoinbaseAdvancedTradeClient
                 Side = orderSide,
             };
 
-            createOrderParameters.OrderConfiguration = BuildMarketIocConfiguration(orderSide, amount);
+            createOrderParameters.BuildMarketIocConfiguration(amount, orderSide);
 
             return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
         }
@@ -220,11 +221,11 @@ namespace CoinbaseAdvancedTradeClient
 
             if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
             {
-                createOrderParameters.OrderConfiguration = BuildLimitGtcConfiguration(amount, limitPrice, postOnly);
+                createOrderParameters.BuildLimitGtcConfiguration(amount, limitPrice, postOnly);
             }
             else
             {
-                createOrderParameters.OrderConfiguration = BuildLimitGtdConfiguration(amount, limitPrice, postOnly, endTime);
+                createOrderParameters.BuildLimitGtdConfiguration(amount, limitPrice, postOnly, endTime);
             }
 
             return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
@@ -248,101 +249,16 @@ namespace CoinbaseAdvancedTradeClient
 
             if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
             {
-                createOrderParameters.OrderConfiguration = BuildStopLimitGtcConfiguration(orderSide, amount, limitPrice, stopPrice, stopDirection);
+                createOrderParameters.BuildStopLimitGtcConfiguration(amount, limitPrice, stopPrice, stopDirection);
             }
             else
             {
-                createOrderParameters.OrderConfiguration = BuildStopLimitGtdConfiguration(orderSide, amount, limitPrice, stopPrice, stopDirection, endTime);
+                createOrderParameters.BuildStopLimitGtdConfiguration(amount, limitPrice, stopPrice, stopDirection, endTime);
             }
 
             return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
         }
 
         #endregion // Create Order Helper Methods
-
-        #region Build Order Configuration Methods
-
-        private OrderConfiguration BuildMarketIocConfiguration(OrderSide orderSide, decimal amount)
-        {
-            var orderConfiguration = new OrderConfiguration();
-            var marketIoc = new MarketIoc();
-
-            if (orderSide.Equals(OrderSide.Buy))
-            {
-                marketIoc.QuoteSize = amount.ToString();
-            }
-            else
-            {
-                marketIoc.BaseSize = amount.ToString();
-            }
-
-            orderConfiguration.MarketIoc = marketIoc;
-
-            return orderConfiguration;
-        }
-
-        private OrderConfiguration BuildLimitGtcConfiguration(decimal amount, decimal limitPrice, bool postOnly)
-        {
-            var orderConfiguration = new OrderConfiguration();
-            var limitGtc = new LimitGtc();
-
-            limitGtc.BaseSize = amount.ToString();
-            limitGtc.LimitPrice = limitPrice.ToString();
-            limitGtc.PostOnly = postOnly;
-
-            orderConfiguration.LimitGtc = limitGtc;
-
-            return orderConfiguration;
-        }
-
-        private OrderConfiguration BuildLimitGtdConfiguration(decimal amount, decimal limitPrice, bool postOnly, DateTime endTime)
-        {
-            var orderConfiguration = new OrderConfiguration();
-            var limitGtd = new LimitGtd();
-
-            limitGtd.BaseSize = amount.ToString();
-            limitGtd.LimitPrice = limitPrice.ToString();
-            limitGtd.PostOnly = postOnly;
-            limitGtd.EndTime = endTime.ToUniversalTime();
-
-            orderConfiguration.LimitGtd = limitGtd;
-
-            return orderConfiguration;
-        }
-
-        private OrderConfiguration BuildStopLimitGtcConfiguration(OrderSide orderSide, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection)
-        {
-            var orderConfiguration = new OrderConfiguration();
-            var stopLimitGtc = new StopLimitGtc();
-
-            stopLimitGtc.BaseSize = amount.ToString();
-            stopLimitGtc.LimitPrice= limitPrice.ToString();
-            stopLimitGtc.StopPrice = stopPrice.ToString();
-            stopLimitGtc.StopDirection = stopDirection;
-
-            orderConfiguration.StopLimitGtc = stopLimitGtc;
-
-            return orderConfiguration;
-        }
-
-        private OrderConfiguration BuildStopLimitGtdConfiguration(OrderSide orderSide, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime)
-        {
-            var orderConfiguration = new OrderConfiguration();
-            var stopLimitGtd = new StopLimitGtd();
-
-            stopLimitGtd.BaseSize = amount.ToString();
-            stopLimitGtd.LimitPrice = limitPrice.ToString();
-            stopLimitGtd.StopPrice = stopPrice.ToString();
-            stopLimitGtd.StopDirection = stopDirection;
-            stopLimitGtd.EndTime = endTime.ToUniversalTime();
-
-            orderConfiguration.StopLimitGtd = stopLimitGtd;
-
-            return orderConfiguration;
-        }
-
-        #endregion // Build Order Configuration Methods
-
-        #endregion // POST
     }
 }
