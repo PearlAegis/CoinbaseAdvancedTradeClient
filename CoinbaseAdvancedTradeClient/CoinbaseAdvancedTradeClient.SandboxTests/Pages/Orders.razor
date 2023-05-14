@@ -1,5 +1,4 @@
 ﻿@page "/orders"
-@inherits ApiClientSandboxPageBase
 
 <PageTitle>Order Endpoints</PageTitle>
 
@@ -8,19 +7,37 @@
 <RadzenAccordion Multiple="true">
     <Items>
         <RadzenAccordionItem Text="Get List Orders">
-            <GetListOrdersComponent Client="Client" />
+            <GetListOrdersComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get List Fills">
-            <GetListFillsComponent Client="Client" />
+            <GetListFillsComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Get Order">
-            <GetOrderComponent Client="Client" />
+            <GetOrderComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Post Create Order">
-            <PostCreateOrderComponent Client="Client" />
+            <PostCreateOrderComponent />
         </RadzenAccordionItem>
         <RadzenAccordionItem Text="Post Cancel Orders">
-            <PostCancelOrdersComponent Client="Client" />
+            <PostCancelOrdersComponent />
+        </RadzenAccordionItem>
+    </Items>
+</RadzenAccordion>
+
+<br />
+
+<h1>Create Order Helper Methods</h1>
+
+<RadzenAccordion Multiple="true">
+    <Items>
+        <RadzenAccordionItem Text="Create Market Order">
+            <CreateMarketOrderComponent />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Create Limit Order">
+            <CreateLimitOrderComponent />
+        </RadzenAccordionItem>
+        <RadzenAccordionItem Text="Create Stop Limit Order">
+            <CreateStopLimitOrderComponent />
         </RadzenAccordionItem>
     </Items>
 </RadzenAccordion>

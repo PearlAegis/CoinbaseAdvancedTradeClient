@@ -1,10 +1,15 @@
-﻿<div class="row">
+﻿@inherits ApiClientSandboxComponentBase
+
+<div class="row">
     <div class="col-6">
         <h3>Request</h3>
         <div class="form-group row p-2">
-            <label class="col-4 col-form-label">Order ID</label>
-            <div class="col-8">
-                <InputText class="form-control" @bind-Value="@OrderId"></InputText>
+            <label class="col-4 col-form-label">Client Order ID</label>
+            <div class="col-6">
+                <InputText class="form-control" @bind-Value="@ClientOrderId"></InputText>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-primary" @onclick="@GenerateClientOrderId">Generate</button>
             </div>
         </div>
         <div class="form-group row p-2">
@@ -17,8 +22,8 @@
             <label class="col-4 col-form-label">Side</label>
             <div class="col-8">
                 <InputSelect class="form-control" @bind-Value="@OrderSide">
-                    <option value="@OrderSides.Buy">Buy</option>
-                    <option value="@OrderSides.Sell">Sell</option>
+                    <option value="@OrderSide.Buy">Buy</option>
+                    <option value="@OrderSide.Sell">Sell</option>
                 </InputSelect>
             </div>
         </div>
@@ -118,13 +123,16 @@
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Price</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtc.LimitPrice"></InputText>
+                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopPrice"></InputText>
                 </div>
             </div>
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Direction</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopDirection"></InputText>
+                    <InputSelect class="form-control" @bind-Value="@StopLimitGtc.StopDirection">
+                        <option value="@StopDirection.Up">Up</option>
+                        <option value="@StopDirection.Down">Down</option>
+                    </InputSelect>
                 </div>
             </div>
         }
@@ -146,13 +154,16 @@
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Price</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtd.LimitPrice"></InputText>
+                    <InputText class="form-control" @bind-Value="@StopLimitGtd.StopPrice"></InputText>
                 </div>
             </div>
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Direction</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtd.StopDirection"></InputText>
+                    <InputSelect class="form-control" @bind-Value="@StopLimitGtc.StopDirection">
+                        <option value="@StopDirection.Up">Up</option>
+                        <option value="@StopDirection.Down">Down</option>
+                    </InputSelect>
                 </div>
             </div>
             <div class="form-group row p-2">
@@ -170,85 +181,16 @@
         </div>
     </div>
     <div class="col-6">
-        <h3>Response</h3>
-        @if (Result != null)
-        {
-            <div class="form-group row p-2">
-                <label class="col-4 col-form-label">Success</label>
-                <label class="col-8 col-form-label">@Result.Success</label>
-            </div>
-
-            @if (Result.Success)
-            {
-                <div class="form-group row p-2">
-                    <label class="col-4 col-form-label">Create Order Success</label>
-                    <label class="col-8 col-form-label">@Result.Data.Success</label>
-                </div>
-
-                @if(Result.Data.Success)
-                {
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Order ID</label>
-                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.OrderId</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Product ID</label>
-                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.ProductId</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Side</label>
-                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.Side</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Client Order ID</label>
-                        <label class="col-8 col-form-label">@Result.Data.SuccessResponse.ClientOrderId</label>
-                    </div>
-                }
-                else
-                {
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Failure Reason</label>
-                        <label class="col-8 col-form-label">@Result.Data.FailureReason</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Error</label>
-                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse.Error</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Error Details</label>
-                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse.ErrorDetails</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Message</label>
-                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse.Message</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">New Order Failure Reason</label>
-                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse.NewOrderFailureReason</label>
-                    </div>
-                    <div class="form-group row p-2">
-                        <label class="col-4 col-form-label">Preview Failure Reason</label>
-                        <label class="col-8 col-form-label">@Result.Data.ErrorResponse.PreviewFailureReason</label>
-                    </div>
-                }
-            }
-            else
-            {
-                <ErrorResponseComponent TItem="CreateOrderResponse" Result="Result" />
-            }
-        }
+        <PostCreateOrderResponseComponent Result="Result" />
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
-
-    public string OrderId { get; set; }
+    public string ClientOrderId { get; set; }
 
     public string ProductId { get; set; } = null;
 
-    public string OrderSide { get; set; } = OrderSides.Buy;
+    public OrderSide OrderSide { get; set; } = OrderSide.Buy;
 
     public string OrderConfiguration { get; set; } = nameof(MarketIoc);
 
@@ -268,7 +210,7 @@
     {
         var createOrder = new CreateOrderParameters
             {
-                ClientOrderId = OrderId,
+                ClientOrderId = ClientOrderId,
                 ProductId = ProductId,
                 Side = OrderSide,
                 OrderConfiguration = GetOrderConfiguration(OrderConfiguration)
@@ -293,5 +235,10 @@
             default:
                 return new OrderConfiguration { MarketIoc = MarketIoc };
         }
+    }
+
+    public void GenerateClientOrderId()
+    {
+        ClientOrderId = Guid.NewGuid().ToString();
     }
 }

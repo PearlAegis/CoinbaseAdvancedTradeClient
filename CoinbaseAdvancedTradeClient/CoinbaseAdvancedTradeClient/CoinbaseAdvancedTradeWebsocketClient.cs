@@ -90,7 +90,7 @@ namespace CoinbaseAdvancedTradeClient
                 ProductIds = productIds,
                 Signature = signature,
                 Timestamp = timestamp,
-                Type = SubscriptionTypes.Subscribe,
+                Type = SubscriptionType.Subscribe,
             };
 
             var subscribe = JsonConvert.SerializeObject(subscriptionMessage);
@@ -115,7 +115,7 @@ namespace CoinbaseAdvancedTradeClient
                 ProductIds = productIds,
                 Signature = signature,
                 Timestamp = timestamp,
-                Type = SubscriptionTypes.Unsubscribe
+                Type = SubscriptionType.Unsubscribe
             };
 
             var unsubscribe = JsonConvert.SerializeObject(unsubscribeMessage);

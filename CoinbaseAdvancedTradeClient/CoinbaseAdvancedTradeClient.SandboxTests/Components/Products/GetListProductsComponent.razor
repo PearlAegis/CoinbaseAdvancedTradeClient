@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@inherits ApiClientSandboxComponentBase
+
+<div class="row">
     <div class="col-6">
         <h3>Request</h3>
         <div class="form-group row p-2">
@@ -62,9 +64,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public ICoinbaseAdvancedTradeApiClient Client { get; set; }
-
     public int Limit { get; set; } = 50;
 
     public int Offset { get; set; }

@@ -1,4 +1,6 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Enums;
+using CoinbaseAdvancedTradeClient.Extensions;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
@@ -49,7 +51,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,
-            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, string? orderSide = null,
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, OrderSide? orderSide = null,
             string? cursor = null, string? productType = null, string? orderPlacementSource = null)
         {
             var response = new ApiResponse<OrdersPage>();
@@ -57,7 +59,6 @@ namespace CoinbaseAdvancedTradeClient
             try
             {
                 if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
-                if (!string.IsNullOrWhiteSpace(orderSide) && !OrderSides.OrderSideList.Contains(orderSide)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(orderSide));
                 if (!string.IsNullOrWhiteSpace(orderType) && !OrderTypes.OrderTypeList.Contains(orderType)) throw new ArgumentException(ErrorMessages.OrderTypeInvalid, nameof(orderType));
                 if (!string.IsNullOrWhiteSpace(orderPlacementSource) && !OrderTypes.OrderTypeList.Contains(orderPlacementSource)) throw new ArgumentException(ErrorMessages.OrderPlacementSourceInvalid, nameof(orderPlacementSource));
                 if (limit != null && limit != 0 && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
@@ -76,7 +77,7 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.EndDate, endDate)
                     .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
                     .SetQueryParam(RequestParameters.OrderType, orderType)
-                    .SetQueryParam(RequestParameters.OrderSide, orderSide)
+                    .SetQueryParam(RequestParameters.OrderSide, orderSide?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.Cursor, cursor)
                     .SetQueryParam(RequestParameters.ProductType, productType)
                     .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
@@ -130,15 +131,12 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (createOrder == null) throw new ArgumentNullException(nameof(createOrder), ErrorMessages.OrderParametersRequired);
                 if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
-                if (!OrderSides.OrderSideList.Contains(createOrder.Side)) throw new ArgumentException(ErrorMessages.OrderSideInvalid, nameof(createOrder.Side));
                 if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
                 if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))
                 {
                     createOrder.ClientOrderId = Guid.NewGuid().ToString();
                 }
-
-                ValidateCreateOrderConfiguration(createOrder);
 
                 var createOrderResponse = await _config.ApiUrl
                     .WithClient(this)
@@ -155,19 +153,6 @@ namespace CoinbaseAdvancedTradeClient
             }
 
             return response;
-        }
-
-        private void ValidateCreateOrderConfiguration(CreateOrderParameters createOrder)
-        {
-            if (createOrder.OrderConfiguration?.LimitGtd?.EndTime != null)
-            {
-                createOrder.OrderConfiguration.LimitGtd.EndTime = createOrder.OrderConfiguration.LimitGtd?.EndTime.Value.ToUniversalTime();
-            }
-
-            if (createOrder.OrderConfiguration?.StopLimitGtd?.EndTime != null)
-            {
-                createOrder.OrderConfiguration.StopLimitGtd.EndTime = createOrder.OrderConfiguration.StopLimitGtd?.EndTime.Value.ToUniversalTime();
-            }
         }
 
         async Task<ApiResponse<CancelOrdersResponse>> IOrdersEndpoint.PostCancelOrdersAsync(CancelOrdersParameters cancelOrders, CancellationToken cancellationToken = default)
@@ -197,5 +182,83 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         #endregion // POST
+
+        #region Create Order Helper Methods
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateMarketOrderAsync(OrderSide orderSide,
+            string productId, decimal amount,
+            string clientOrderId = null, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
+
+            var createOrderParameters = new CreateOrderParameters
+            {
+                ClientOrderId = clientOrderId,
+                ProductId = productId,
+                Side = orderSide,
+            };
+
+            createOrderParameters.BuildMarketIocConfiguration(amount, orderSide);
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
+            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime,
+            string clientOrderId = null, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
+            if (limitPrice <= 0) throw new ArgumentException(ErrorMessages.LimitPriceParameterRange, nameof(limitPrice));
+
+            var createOrderParameters = new CreateOrderParameters
+            {
+                ClientOrderId = clientOrderId,
+                ProductId = productId,
+                Side = orderSide,
+            };
+
+            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            {
+                createOrderParameters.BuildLimitGtcConfiguration(amount, limitPrice, postOnly);
+            }
+            else
+            {
+                createOrderParameters.BuildLimitGtdConfiguration(amount, limitPrice, postOnly, endTime);
+            }
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
+            string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime,
+            string clientOrderId = null, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+            if (amount <= 0) throw new ArgumentException(ErrorMessages.AmountParameterRange, nameof(amount));
+            if (limitPrice <= 0) throw new ArgumentException(ErrorMessages.LimitPriceParameterRange, nameof(limitPrice));
+            if (stopPrice <= 0) throw new ArgumentException(ErrorMessages.StopPriceParameterRange, nameof(stopPrice));
+
+            var createOrderParameters = new CreateOrderParameters
+            {
+                ClientOrderId = clientOrderId,
+                ProductId = productId,
+                Side = orderSide,
+            };
+
+            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            {
+                createOrderParameters.BuildStopLimitGtcConfiguration(amount, limitPrice, stopPrice, stopDirection);
+            }
+            else
+            {
+                createOrderParameters.BuildStopLimitGtdConfiguration(amount, limitPrice, stopPrice, stopDirection, endTime);
+            }
+
+            return await Orders.PostCreateOrderAsync(createOrderParameters, cancellationToken);
+        }
+
+        #endregion // Create Order Helper Methods
     }
 }

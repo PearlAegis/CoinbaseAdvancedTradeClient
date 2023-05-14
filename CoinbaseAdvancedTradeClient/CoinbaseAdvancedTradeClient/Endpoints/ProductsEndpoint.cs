@@ -72,7 +72,7 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
                 if (!CandleGranularity.CandleGranularityList.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
@@ -104,7 +104,7 @@ namespace CoinbaseAdvancedTradeClient
 
             try
             {
-                if (string.IsNullOrWhiteSpace(productId) || string.IsNullOrEmpty(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
+                if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
                 var tradesPage = await _config.ApiUrl

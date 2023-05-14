@@ -6,7 +6,7 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket
     public class SubscriptionMessage
     {
         [JsonProperty("type")]
-        public SubscriptionTypes Type { get; set; }
+        public SubscriptionType Type { get; set; }
 
         [JsonProperty("channel")]
         public string Channel { get; set; }

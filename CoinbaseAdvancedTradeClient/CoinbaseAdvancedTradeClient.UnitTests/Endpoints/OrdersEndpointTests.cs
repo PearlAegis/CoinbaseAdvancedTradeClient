@@ -1,4 +1,4 @@
-﻿using CoinbaseAdvancedTradeClient.Constants;
+﻿using CoinbaseAdvancedTradeClient.Enums;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
@@ -121,12 +121,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Theory]
-        [InlineData(" ", "OrderSide", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", " ", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderSide", " ", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderSide", "OrderType", " ", 1)]
-        [InlineData("OrderType", "OrderSide", "OrderType", "OrderPlacementSource", -1)]
-        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string productType, string orderSide, string orderType, string orderPlacementSource, int limit)
+        [InlineData(" ", "OrderType", "OrderPlacementSource", 1)]
+        [InlineData("OrderType", "OrderType", "OrderPlacementSource", 1)]
+        [InlineData("OrderType", " ", "OrderPlacementSource", 1)]
+        [InlineData("OrderType", "OrderType", " ", 1)]
+        [InlineData("OrderType", "OrderType", "OrderPlacementSource", -1)]
+        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string productType, string orderType, string orderPlacementSource, int limit)
         {
             //Arrange
             ApiResponse<OrdersPage> result;
@@ -138,7 +138,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderSide: orderSide, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
+                result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
             }
 
             //Assert
@@ -385,13 +385,13 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("0.001", result.Data.OrderConfiguration.StopLimitGtc.BaseSize);
             Assert.Equal("10000.00", result.Data.OrderConfiguration.StopLimitGtc.LimitPrice);
             Assert.Equal("20000.00", result.Data.OrderConfiguration.StopLimitGtc.StopPrice);
-            Assert.Equal("UNKNOWN_STOP_DIRECTION", result.Data.OrderConfiguration.StopLimitGtc.StopDirection);
+            Assert.Equal(StopDirection.Up, result.Data.OrderConfiguration.StopLimitGtc.StopDirection);
             Assert.Equal("0.001", result.Data.OrderConfiguration.StopLimitGtd.BaseSize);
             Assert.Equal("10000.00", result.Data.OrderConfiguration.StopLimitGtd.LimitPrice);
             Assert.Equal("20000.00", result.Data.OrderConfiguration.StopLimitGtd.StopPrice);
             Assert.Equal(expectedDate, result.Data.OrderConfiguration.StopLimitGtd.EndTime);
-            Assert.Equal("UNKNOWN_STOP_DIRECTION", result.Data.OrderConfiguration.StopLimitGtd.StopDirection);
-            Assert.Equal("UNKNOWN_ORDER_SIDE", result.Data.Side);
+            Assert.Equal(StopDirection.Up, result.Data.OrderConfiguration.StopLimitGtd.StopDirection);
+            Assert.Equal("BUY", result.Data.Side);
             Assert.Equal("11111-000000-000000", result.Data.ClientOrderId);
             Assert.Equal("OPEN", result.Data.Status);
             Assert.Equal("UNKNOWN_TIME_IN_FORCE", result.Data.TimeInForce);
@@ -509,7 +509,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy,
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -541,7 +541,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy,
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -576,7 +576,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy,
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -642,39 +642,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = productId,
-                Side = OrderSides.Buy,
-                OrderConfiguration = A.Dummy<OrderConfiguration>()
-            };
-
-            var json = GetValidCreateOrderSuccessResponse();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Orders.PostCreateOrderAsync(createOrder);
-            }
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Null(result.Data);
-            Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
-            Assert.NotNull(result.ExceptionMessage);
-            Assert.NotNull(result.ExceptionDetails);
-        }
-
-        [Fact]
-        public async Task PostCreateOrderAsync_InvalidOrderSide_ThrowsArgumentException()
-        {
-            //Arrange
-            ApiResponse<CreateOrderResponse> result;
-
-            var createOrder = new CreateOrderParameters
-            {
-                ProductId = "BTC-USD",
-                Side = "Test",
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -706,7 +674,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy
+                Side = OrderSide.Buy
             };
 
             var json = GetValidCreateOrderSuccessResponse();
@@ -737,7 +705,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy,
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -769,7 +737,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var createOrder = new CreateOrderParameters
             {
                 ProductId = "BTC-USD",
-                Side = OrderSides.Buy,
+                Side = OrderSide.Buy,
                 OrderConfiguration = A.Dummy<OrderConfiguration>()
             };
 
@@ -995,6 +963,266 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         #endregion // PostCancelOrdersAsync
 
+        #region CreateMarketOrderAsync
+
+        [Fact]
+        public async Task CreateMarketOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateMarketOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateMarketOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount));
+        }
+
+        #endregion // CreateMarketOrderAsync
+
+        #region CreateLimitOrderAsync
+
+        [Fact]
+        public async Task CreateLimitOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        #endregion // CreateLimitOrderAsync
+
+        #region CreateStopLimitOrderAsync
+
+        [Fact]
+        public async Task CreateStopLimitOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateStopLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidStopPrice_ThrowsArgumentException(decimal stopPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        #endregion // CreateStopLimitOrderAsync
+
         #region Test Response Json
 
         private string GetOrdersListJsonString()
@@ -1027,17 +1255,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                                     "base_size": "0.001",
                                     "limit_price": "10000.00",
                                     "stop_price": "20000.00",
-                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                    "stop_direction": "STOP_DIRECTION_STOP_UP"
                                 },
                                 "stop_limit_stop_limit_gtd": {
                                     "base_size": 0.001,
                                     "limit_price": "10000.00",
                                     "stop_price": "20000.00",
                                     "end_time": "2021-05-31T09:59:59Z",
-                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                    "stop_direction": "STOP_DIRECTION_STOP_UP"
                                 }
                             },
-                            "side": "UNKNOWN_ORDER_SIDE",
+                            "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
                             "time_in_force": "UNKNOWN_TIME_IN_FORCE",
@@ -1102,17 +1330,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                                     "base_size": "0.001",
                                     "limit_price": "10000.00",
                                     "stop_price": "20000.00",
-                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                    "stop_direction": "STOP_DIRECTION_STOP_UP"
                                 },
                                 "stop_limit_stop_limit_gtd": {
                                     "base_size": 0.001,
                                     "limit_price": "10000.00",
                                     "stop_price": "20000.00",
                                     "end_time": "2021-05-31T09:59:59Z",
-                                    "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                    "stop_direction": "STOP_DIRECTION_STOP_UP"
                                 }
                             },
-                            "side": "UNKNOWN_ORDER_SIDE",
+                            "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
                             "time_in_force": "UNKNOWN_TIME_IN_FORCE",
@@ -1167,7 +1395,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "liquidity_indicator": "UNKNOWN_LIQUIDITY_INDICATOR",
                             "size_in_quote": false,
                             "user_id": "3333-333333-3333333",
-                            "side": "UNKNOWN_ORDER_SIDE"
+                            "side": "BUY"
                         }
                     ],
                     "cursor": "789100"
@@ -1197,7 +1425,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "liquidity_indicator": "UNKNOWN_LIQUIDITY_INDICATOR",
                             "size_in_quote": "INVALID",
                             "user_id": "3333-333333-3333333",
-                            "side": "UNKNOWN_ORDER_SIDE"
+                            "side": "BUY"
                         }
                     ],
                     "cursor": "789100"
@@ -1236,17 +1464,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                                 "base_size": "0.001",
                                 "limit_price": "10000.00",
                                 "stop_price": "20000.00",
-                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                "stop_direction": "STOP_DIRECTION_STOP_UP"
                             },
                             "stop_limit_stop_limit_gtd": {
                                 "base_size": 0.001,
                                 "limit_price": "10000.00",
                                 "stop_price": "20000.00",
                                 "end_time": "2021-05-31T09:59:59Z",
-                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                "stop_direction": "STOP_DIRECTION_STOP_UP"
                             }
                         },
-                        "side": "UNKNOWN_ORDER_SIDE",
+                        "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
                         "time_in_force": "UNKNOWN_TIME_IN_FORCE",
@@ -1306,17 +1534,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                                 "base_size": "0.001",
                                 "limit_price": "10000.00",
                                 "stop_price": "20000.00",
-                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                "stop_direction": "STOP_DIRECTION_STOP_UP"
                             },
                             "stop_limit_stop_limit_gtd": {
                                 "base_size": 0.001,
                                 "limit_price": "10000.00",
                                 "stop_price": "20000.00",
                                 "end_time": "2021-05-31T09:59:59Z",
-                                "stop_direction": "UNKNOWN_STOP_DIRECTION"
+                                "stop_direction": "STOP_DIRECTION_STOP_UP"
                             }
                         },
-                        "side": "UNKNOWN_ORDER_SIDE",
+                        "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
                         "time_in_force": "UNKNOWN_TIME_IN_FORCE",
