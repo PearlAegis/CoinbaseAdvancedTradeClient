@@ -963,6 +963,266 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         #endregion // PostCancelOrdersAsync
 
+        #region CreateMarketOrderAsync
+
+        [Fact]
+        public async Task CreateMarketOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateMarketOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateMarketOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateMarketOrderAsync(orderSide, productId, amount));
+        }
+
+        #endregion // CreateMarketOrderAsync
+
+        #region CreateLimitOrderAsync
+
+        [Fact]
+        public async Task CreateLimitOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var limitPrice = 123.45m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var postOnly = false;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, postOnly, endTime));
+        }
+
+        #endregion // CreateLimitOrderAsync
+
+        #region CreateStopLimitOrderAsync
+
+        [Fact]
+        public async Task CreateStopLimitOrderAsync_ValidParameters_ReturnsSuccessfulApiResponse()
+        {
+            //Arrange
+            ApiResponse<CreateOrderResponse> result;
+
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            var json = GetValidCreateOrderSuccessResponse();
+
+            //Act
+            using (var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(json);
+
+                result = await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime);
+            }
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.True(result.Success);
+            Assert.Null(result.ExceptionType);
+            Assert.Null(result.ExceptionMessage);
+            Assert.Null(result.ExceptionDetails);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        public async Task CreateStopLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var limitPrice = 123.45m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var stopPrice = 234.56m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1.23)]
+        public async Task CreateStopLimitOrderAsync_InvalidStopPrice_ThrowsArgumentException(decimal stopPrice)
+        {
+            //Arrange
+            var timeInForce = TimeInForce.GoodTilDate;
+            var orderSide = OrderSide.Buy;
+            var productId = "TEST-USD";
+            var amount = 1.23m;
+            var limitPrice = 123.45m;
+            var stopDirection = StopDirection.Up;
+            var endTime = DateTime.Now;
+
+            //Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(async () => await _testClient.Orders.CreateStopLimitOrderAsync(timeInForce, orderSide, productId, amount, limitPrice, stopPrice, stopDirection, endTime));
+        }
+
+        #endregion // CreateStopLimitOrderAsync
+
         #region Test Response Json
 
         private string GetOrdersListJsonString()
