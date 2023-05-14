@@ -133,7 +133,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(createOrder.ProductId)) throw new ArgumentException(ErrorMessages.ProductIdRequired, nameof(createOrder.ProductId));
                 if (createOrder.OrderConfiguration == null) throw new ArgumentException(ErrorMessages.OrderConfigurationInvalid, nameof(createOrder.OrderConfiguration));
 
-                if (string.IsNullOrEmpty(createOrder.ClientOrderId))
+                if (string.IsNullOrWhiteSpace(createOrder.ClientOrderId))
                 {
                     createOrder.ClientOrderId = Guid.NewGuid().ToString();
                 }
