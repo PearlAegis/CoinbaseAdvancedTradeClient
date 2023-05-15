@@ -85,12 +85,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal(1000, result.Data.TotalVolume);
             Assert.Equal(25, result.Data.TotalFees);
             Assert.Equal("<$10k", result.Data.FeeTier.PricingTier);
-            Assert.Equal("0", result.Data.FeeTier.UsdFrom);
-            Assert.Equal("10,000", result.Data.FeeTier.UsdTo);
-            Assert.Equal("0.0010", result.Data.FeeTier.TakerFeeRate);
-            Assert.Equal("0.0020", result.Data.FeeTier.MakerFeeRate);
-            Assert.Equal("string", result.Data.MarginRate.Value);
-            Assert.Equal("string", result.Data.GoodsAndServicesTax.Rate);
+            Assert.Equal(0m, result.Data.FeeTier.UsdFrom);
+            Assert.Equal(10000m, result.Data.FeeTier.UsdTo);
+            Assert.Equal(0.0010m, result.Data.FeeTier.TakerFeeRate);
+            Assert.Equal(0.0020m, result.Data.FeeTier.MakerFeeRate);
+            Assert.Equal(0m, result.Data.MarginRate.Value);
+            Assert.Equal(0m, result.Data.GoodsAndServicesTax.Rate);
             Assert.Equal("INCLUSIVE", result.Data.GoodsAndServicesTax.Type);
             Assert.Equal(1000, result.Data.AdvancedTradeOnlyVolume);
             Assert.Equal(25, result.Data.AdvancedTradeOnlyFees);
