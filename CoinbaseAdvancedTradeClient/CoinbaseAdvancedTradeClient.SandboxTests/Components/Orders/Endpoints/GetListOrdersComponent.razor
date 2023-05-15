@@ -103,8 +103,15 @@
                 <RadzenDataGrid TItem="Order" Data="Result.Data.Orders" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
                     <Columns>
                         <RadzenDataGridColumn TItem="Order" Property="Id" Title="Order ID" />
-                        <RadzenDataGridColumn TItem="Order" Property="ProductId" Title="Product ID" />
-                        <RadzenDataGridColumn TItem="Order" Property="Side" Title="Side" />
+                        <RadzenDataGridColumn TItem="Order" Property="ProductId" Title="Product ID" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="Side" Title="Side" Width="100px" />
+                        <RadzenDataGridColumn TItem="Order" Property="OrderType" Title="Order Type" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="Status" Title="Status" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="CreatedTime" Title="Created Time" Width="200px">
+                            <Template>
+                                @context.CreatedTime?.ToString("G")
+                            </Template>
+                        </RadzenDataGridColumn>
                     </Columns>
                 </RadzenDataGrid>
             }
