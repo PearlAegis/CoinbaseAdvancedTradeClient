@@ -11,11 +11,11 @@ namespace CoinbaseAdvancedTradeClient.Extensions
 
             if (orderSide.Equals(OrderSide.Buy))
             {
-                marketIoc.QuoteSize = amount.ToString();
+                marketIoc.QuoteSize = amount;
             }
             else
             {
-                marketIoc.BaseSize = amount.ToString();
+                marketIoc.BaseSize = amount;
             }
 
             order.OrderConfiguration = new OrderConfiguration
@@ -28,8 +28,8 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var limitGtc = new LimitGtc();
 
-            limitGtc.BaseSize = amount.ToString();
-            limitGtc.LimitPrice = limitPrice.ToString();
+            limitGtc.BaseSize = amount;
+            limitGtc.LimitPrice = limitPrice;
             limitGtc.PostOnly = postOnly;
 
             order.OrderConfiguration = new OrderConfiguration
@@ -42,8 +42,8 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var limitGtd = new LimitGtd();
 
-            limitGtd.BaseSize = amount.ToString();
-            limitGtd.LimitPrice = limitPrice.ToString();
+            limitGtd.BaseSize = amount;
+            limitGtd.LimitPrice = limitPrice;
             limitGtd.PostOnly = postOnly;
             limitGtd.EndTime = endTime.ToUniversalTime();
 
@@ -57,9 +57,9 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var stopLimitGtc = new StopLimitGtc();
 
-            stopLimitGtc.BaseSize = amount.ToString();
-            stopLimitGtc.LimitPrice = limitPrice.ToString();
-            stopLimitGtc.StopPrice = stopPrice.ToString();
+            stopLimitGtc.BaseSize = amount;
+            stopLimitGtc.LimitPrice = limitPrice;
+            stopLimitGtc.StopPrice = stopPrice;
             stopLimitGtc.StopDirection = stopDirection;
 
             order.OrderConfiguration = new OrderConfiguration
@@ -72,9 +72,9 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var stopLimitGtd = new StopLimitGtd();
 
-            stopLimitGtd.BaseSize = amount.ToString();
-            stopLimitGtd.LimitPrice = limitPrice.ToString();
-            stopLimitGtd.StopPrice = stopPrice.ToString();
+            stopLimitGtd.BaseSize = amount;
+            stopLimitGtd.LimitPrice = limitPrice;
+            stopLimitGtd.StopPrice = stopPrice;
             stopLimitGtd.StopDirection = stopDirection;
             stopLimitGtd.EndTime = endTime.ToUniversalTime();
 
