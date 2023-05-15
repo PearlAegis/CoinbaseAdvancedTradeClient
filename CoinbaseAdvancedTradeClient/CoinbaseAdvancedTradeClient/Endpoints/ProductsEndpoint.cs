@@ -1,4 +1,5 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Enums;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Products;
@@ -12,7 +13,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public IProductsEndpoint Products => this;
 
-        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProductsAsync(int? limit, int? offset, string productType)
+        async Task<ApiResponse<ProductsPage>> IProductsEndpoint.GetListProductsAsync(int? limit, int? offset, ProductType productType)
         {
             var response = new ApiResponse<ProductsPage>();
 
@@ -20,7 +21,6 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
                 if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
-                if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
                 var productsPage = await _config.ApiUrl
                     .WithClient(this)
