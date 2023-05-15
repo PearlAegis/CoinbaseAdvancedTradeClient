@@ -7,8 +7,8 @@
             <label class="col-4 col-form-label">Time In Force</label>
             <div class="col-8">
                 <InputSelect class="form-control" @bind-Value="@TimeInForce">
-                    <option value="@TimeInForce.GoodTilCancelled">Good Til Cancelled</option>
-                    <option value="@TimeInForce.GoodTilDate">Good Til Date</option>
+                    <option value="@TimeInForce.GoodUntilCancelled">Good Until Cancelled</option>
+                    <option value="@TimeInForce.GoodUntilDate">Good Until Date</option>
                 </InputSelect>
             </div>
         </div>
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        @if (TimeInForce.Equals(TimeInForce.GoodTilDate))
+        @if (TimeInForce.Equals(TimeInForce.GoodUntilDate))
         {
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">End Date</label>
@@ -87,7 +87,7 @@
 </div>
 
 @code {
-    public TimeInForce TimeInForce { get; set; } = TimeInForce.GoodTilCancelled;
+    public TimeInForce TimeInForce { get; set; } = TimeInForce.GoodUntilCancelled;
 
     public OrderSide OrderSide { get; set; } = OrderSide.Buy;
 

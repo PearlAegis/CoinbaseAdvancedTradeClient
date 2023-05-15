@@ -219,7 +219,7 @@ namespace CoinbaseAdvancedTradeClient
                 Side = orderSide,
             };
 
-            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            if (timeInForce.Equals(TimeInForce.GoodUntilCancelled))
             {
                 createOrderParameters.BuildLimitGtcConfiguration(amount, limitPrice, postOnly);
             }
@@ -247,7 +247,7 @@ namespace CoinbaseAdvancedTradeClient
                 Side = orderSide,
             };
 
-            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            if (timeInForce.Equals(TimeInForce.GoodUntilCancelled))
             {
                 createOrderParameters.BuildStopLimitGtcConfiguration(amount, limitPrice, stopPrice, stopDirection);
             }
