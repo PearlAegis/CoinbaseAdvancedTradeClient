@@ -6,13 +6,13 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
     public class StopLimitGtc
     {
         [JsonProperty("base_size")]
-        public string BaseSize { get; set; }
+        public decimal? BaseSize { get; set; }
 
         [JsonProperty("limit_price")]
-        public string LimitPrice { get; set; }
+        public decimal? LimitPrice { get; set; }
 
         [JsonProperty("stop_price")]
-        public string StopPrice { get; set; }
+        public decimal? StopPrice { get; set; }
 
         [JsonProperty("stop_direction")]
         public StopDirection StopDirection { get; set; }

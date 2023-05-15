@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Products
 {
@@ -11,21 +12,21 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
         public string ProductId { get; set; }
 
         [JsonProperty("price")]
-        public string Price { get; set; }
+        public decimal? Price { get; set; }
 
         [JsonProperty("size")]
-        public string Size { get; set; }
+        public decimal? Size { get; set; }
 
         [JsonProperty("time")]
         public DateTime? Time { get; set; }
 
         [JsonProperty("side")]
-        public string Side { get; set; }
+        public OrderSide Side { get; set; }
 
         [JsonProperty("bid")]
-        public string Bid { get; set; }
+        public decimal? Bid { get; set; }
 
         [JsonProperty("ask")]
-        public string Ask { get; set; }
+        public decimal? Ask { get; set; }
     }
 }

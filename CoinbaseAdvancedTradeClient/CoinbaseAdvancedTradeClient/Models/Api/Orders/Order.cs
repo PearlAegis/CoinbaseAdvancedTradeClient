@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
 {
@@ -17,7 +18,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public OrderConfiguration OrderConfiguration { get; set; }
 
         [JsonProperty("side")]
-        public string Side { get; set; }
+        public OrderSide Side { get; set; }
 
         [JsonProperty("client_order_id")]
         public string ClientOrderId { get; set; }
@@ -26,28 +27,28 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public string Status { get; set; }
 
         [JsonProperty("time_in_force")]
-        public string TimeInForce { get; set; }
+        public TimeInForce TimeInForce { get; set; }
 
         [JsonProperty("created_time")]
         public DateTime? CreatedTime { get; set; }
 
         [JsonProperty("completion_percentage")]
-        public string CompletionPercentage { get; set; }
+        public decimal? CompletionPercentage { get; set; }
 
         [JsonProperty("filled_size")]
-        public string FilledSize { get; set; }
+        public decimal? FilledSize { get; set; }
 
         [JsonProperty("average_filled_price")]
-        public string AverageFilledPrice { get; set; }
+        public decimal? AverageFilledPrice { get; set; }
 
         [JsonProperty("fee")]
-        public string Fee { get; set; }
+        public decimal? Fee { get; set; }
 
         [JsonProperty("number_of_fills")]
-        public string NumberOfFills { get; set; }
+        public decimal? NumberOfFills { get; set; }
 
         [JsonProperty("filled_value")]
-        public string FilledValue { get; set; }
+        public decimal? FilledValue { get; set; }
 
         [JsonProperty("pending_cancel")]
         public bool PendingCancel { get; set; }
@@ -56,13 +57,13 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public bool SizeInQuote { get; set; }
 
         [JsonProperty("total_fees")]
-        public string TotalFees { get; set; }
+        public decimal? TotalFees { get; set; }
 
         [JsonProperty("size_inclusive_of_fees")]
         public bool SizeInclusiveOfFees { get; set; }
 
         [JsonProperty("total_value_after_fees")]
-        public string TotalValueAfterFees { get; set; }
+        public decimal? TotalValueAfterFees { get; set; }
 
         [JsonProperty("trigger_status")]
         public string TriggerStatus { get; set; }

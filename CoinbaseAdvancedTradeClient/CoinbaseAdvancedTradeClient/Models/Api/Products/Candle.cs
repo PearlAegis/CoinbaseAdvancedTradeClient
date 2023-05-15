@@ -5,21 +5,21 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
     public class Candle
     {
         [JsonProperty("start")]
-        public string Start { get; set; }
+        public DateTime Start { get; set; }
 
         [JsonProperty("low")]
-        public string Low { get; set; }
+        public decimal? Low { get; set; }
 
         [JsonProperty("high")]
-        public string High { get; set; }
+        public decimal? High { get; set; }
 
         [JsonProperty("open")]
-        public string Open { get; set; }
+        public decimal? Open { get; set; }
 
         [JsonProperty("close")]
-        public string Close { get; set; }
+        public decimal? Close { get; set; }
 
         [JsonProperty("volume")]
-        public string Volume { get; set; }
+        public decimal? Volume { get; set; }
     }
 }

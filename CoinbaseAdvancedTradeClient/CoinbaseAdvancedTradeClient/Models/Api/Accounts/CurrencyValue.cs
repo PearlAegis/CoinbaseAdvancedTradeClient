@@ -8,6 +8,6 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Accounts
         public string Currency { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public decimal? Value { get; set; }
     }
 }
