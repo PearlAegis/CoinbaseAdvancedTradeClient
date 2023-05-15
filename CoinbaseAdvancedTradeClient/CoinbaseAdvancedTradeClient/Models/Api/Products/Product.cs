@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Products
 {
@@ -71,7 +72,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
         public bool AuctionMode { get; set; }
 
         [JsonProperty("product_type")]
-        public string ProductType { get; set; }
+        public ProductType ProductType { get; set; }
 
         [JsonProperty("quote_currency_id")]
         public string QuoteCurrencyId { get; set; }

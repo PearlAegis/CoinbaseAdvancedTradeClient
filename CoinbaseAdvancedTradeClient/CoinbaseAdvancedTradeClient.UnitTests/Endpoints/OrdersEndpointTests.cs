@@ -121,15 +121,17 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Theory]
-        [InlineData(" ", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", " ", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", " ", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", -1)]
-        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string productType, string orderType, string orderPlacementSource, int limit)
+        [InlineData("OrderType", "OrderPlacementSource", 1)]
+        [InlineData("OrderType", "OrderPlacementSource", 1)]
+        [InlineData(" ", "OrderPlacementSource", 1)]
+        [InlineData("OrderType", " ", 1)]
+        [InlineData("OrderType", "OrderPlacementSource", -1)]
+        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string orderType, string orderPlacementSource, int limit)
         {
             //Arrange
             ApiResponse<OrdersPage> result;
+
+
 
             var json = GetOrdersListJsonString();
 
@@ -138,7 +140,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
+                result = await _testClient.Orders.GetListOrdersAsync(orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
             }
 
             //Assert
