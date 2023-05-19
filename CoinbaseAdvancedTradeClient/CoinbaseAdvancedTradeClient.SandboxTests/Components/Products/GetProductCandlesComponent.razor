@@ -82,7 +82,7 @@
 
     public DateTime EndDate { get; set; } = DateTime.Today.AddDays(-1);
 
-    public string Granularity { get; set; } = CandleGranularity.TwoHour;
+    public CandleGranularity Granularity { get; set; } = CandleGranularity.TwoHour;
 
     public ApiResponse<CandlesPage> Result { get; set; } = null;
 
