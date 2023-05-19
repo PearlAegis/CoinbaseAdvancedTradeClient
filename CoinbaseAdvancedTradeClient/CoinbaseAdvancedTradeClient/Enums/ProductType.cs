@@ -4,7 +4,7 @@ namespace CoinbaseAdvancedTradeClient.Enums
 {
     public enum ProductType
     {
-        [EnumMember(Value = "spot")]
+        [EnumMember(Value = "SPOT")]
         Spot
     }
 }

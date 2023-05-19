@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Products
 {
     public class Candle
     {
+        [JsonConverter(typeof(UnixDateTimeConverter))]
         [JsonProperty("start")]
         public DateTime Start { get; set; }
 

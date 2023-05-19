@@ -1,4 +1,6 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Enums;
+using CoinbaseAdvancedTradeClient.Extensions;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries;
@@ -11,7 +13,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public ITransactionSummaryEndpoint TransactionSummary => this;
 
-        async Task<ApiResponse<TransactionSummary>> ITransactionSummaryEndpoint.GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, string productType)
+        async Task<ApiResponse<TransactionSummary>> ITransactionSummaryEndpoint.GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, ProductType productType)
         {
             var response = new ApiResponse<TransactionSummary>();
 
@@ -19,9 +21,6 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (startDate.Equals(DateTime.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(startDate));
                 if (endDate.Equals(DateTime.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(endDate));
-                if (string.IsNullOrWhiteSpace(productType)) throw new ArgumentNullException(nameof(productType), ErrorMessages.ProductTypeRequired);
-
-                if (!ProductTypes.ProductTypeList.Contains(productType, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
 
                 var transactionSummary = await _config.ApiUrl
                     .WithClient(this)
@@ -29,7 +28,7 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.StartDate, startDate.ToUniversalTime())
                     .SetQueryParam(RequestParameters.EndDate, endDate.ToUniversalTime())
                     .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
-                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .SetQueryParam(RequestParameters.ProductType, productType.GetEnumMemberValue())
                     .GetJsonAsync<TransactionSummary>();
 
                 response.Data = transactionSummary;

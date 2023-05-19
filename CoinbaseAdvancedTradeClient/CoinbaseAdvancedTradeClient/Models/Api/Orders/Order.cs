@@ -69,7 +69,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public string TriggerStatus { get; set; }
 
         [JsonProperty("order_type")]
-        public string OrderType { get; set; }
+        public OrderType OrderType { get; set; }
 
         [JsonProperty("reject_reason")]
         public string RejectReason { get; set; }
@@ -78,7 +78,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public bool Settled { get; set; }
 
         [JsonProperty("product_type")]
-        public string ProductType { get; set; }
+        public ProductType ProductType { get; set; }
 
         [JsonProperty("reject_message")]
         public string RejectMessage { get; set; }
@@ -87,7 +87,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public string CancelMessage { get; set; }
 
         [JsonProperty("order_placement_source")]
-        public string OrderPlacementSource { get; set; }
+        public OrderPlacementSource OrderPlacementSource { get; set; }
 
         [JsonProperty("outstanding_hold_amount")]
         public string OutstandingHoldAmount { get; set; }

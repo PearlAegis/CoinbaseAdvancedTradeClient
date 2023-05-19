@@ -1,5 +1,6 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Enums;
+using CoinbaseAdvancedTradeClient.Extensions;
 using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Products;
@@ -27,7 +28,7 @@ namespace CoinbaseAdvancedTradeClient
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
                     .SetQueryParam(RequestParameters.Offset, offset)
-                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .SetQueryParam(RequestParameters.ProductType, productType.GetEnumMemberValue())
                     .GetJsonAsync<ProductsPage>();
 
                 response.Data = productsPage;
@@ -66,7 +67,7 @@ namespace CoinbaseAdvancedTradeClient
             return response;
         }
 
-        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandlesAsync(string productId, DateTimeOffset start, DateTimeOffset end, string granularity)
+        async Task<ApiResponse<CandlesPage>> IProductsEndpoint.GetProductCandlesAsync(string productId, DateTimeOffset start, DateTimeOffset end, CandleGranularity granularity)
         {
             var response = new ApiResponse<CandlesPage>();
 
@@ -75,7 +76,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
-                if (!CandleGranularity.CandleGranularityList.Contains(granularity, StringComparer.InvariantCultureIgnoreCase)) throw new ArgumentException(ErrorMessages.CandleGranularityInvalid, nameof(granularity));
 
                 var candlesPage = await _config.ApiUrl
                     .WithClient(this)
@@ -84,7 +84,7 @@ namespace CoinbaseAdvancedTradeClient
                     .AppendPathSegment(ApiEndpoints.CandlesEndpoint)
                     .SetQueryParam(RequestParameters.Start, start.ToUnixTimeSeconds())
                     .SetQueryParam(RequestParameters.End, end.ToUnixTimeSeconds())
-                    .SetQueryParam(RequestParameters.Granularity, granularity)
+                    .SetQueryParam(RequestParameters.Granularity, granularity.GetEnumMemberValue())
                     .GetJsonAsync<CandlesPage>();
 
                 response.Data = candlesPage;
