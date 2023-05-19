@@ -299,7 +299,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.True(result.Data.PostOnly);
             Assert.False(result.Data.TradingDisabled);
             Assert.True(result.Data.AuctionMode);
-            Assert.Equal("SPOT", result.Data.ProductType);
+            Assert.Equal(ProductType.Spot, result.Data.ProductType);
             Assert.Equal("USD", result.Data.QuoteCurrencyId);
             Assert.Equal("BTC", result.Data.BaseCurrencyId);
             Assert.Equal(140.22m, result.Data.MidMarketPrice);
