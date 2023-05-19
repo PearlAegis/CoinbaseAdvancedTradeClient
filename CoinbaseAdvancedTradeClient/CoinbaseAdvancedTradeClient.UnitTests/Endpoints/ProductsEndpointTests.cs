@@ -1,4 +1,4 @@
-﻿using CoinbaseAdvancedTradeClient.Constants;
+﻿using CoinbaseAdvancedTradeClient.Enums;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Products;
@@ -36,7 +36,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetProductsListJsonString();
 
@@ -65,7 +65,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetProductsListJsonString();
 
@@ -90,7 +90,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetProductsListJsonString();
 
@@ -116,7 +116,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetInvalidProductsListJsonString();
 
@@ -148,7 +148,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             ApiResponse<ProductsPage> result;
 
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetProductsListJsonString();
 
@@ -178,7 +178,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = -1;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             var json = GetProductsListJsonString();
 
@@ -201,36 +201,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Fact]
-        public async Task GetListProductsAsync_InvalidProductType_ReturnsUnsuccessfulApiResponse()
-        {
-            //Arrange
-            ApiResponse<ProductsPage> result;
-
-            var limit = 1;
-            var offset = 0;
-            var productType = "TEST";
-
-            var json = GetProductsListJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Products.GetListProductsAsync(limit, offset, productType);
-            }
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Null(result.Data);
-            Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
-            Assert.NotNull(result.ExceptionMessage);
-            Assert.NotNull(result.ExceptionDetails);
-            Assert.Contains(ErrorMessages.ProductTypeInvalid, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        [Fact]
         public async Task GetListProductsAsync_UnauthorizedResponseStatus_ReturnsUnsuccessfulApiResponse()
         {
             //Arrange
@@ -238,7 +208,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var limit = 1;
             var offset = 0;
-            var productType = "SPOT";
+            var productType = ProductType.Spot;
 
             //Act
             using (var httpTest = new HttpTest())
@@ -309,9 +279,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Assert
             Assert.Equal("BTC-USD", result.Data.ProductId);
             Assert.Equal(140.21m, result.Data.Price);
-            Assert.Equal(0.0943m, result.Data.PricePercentageChange24H);
+            Assert.Equal(9.43m, result.Data.PricePercentageChange24H);
             Assert.Equal(1908432m, result.Data.Volume24H);
-            Assert.Equal(0.0943m, result.Data.VolumePercentageChange24H);
+            Assert.Equal(9.43m, result.Data.VolumePercentageChange24H);
             Assert.Equal(0.00000001m, result.Data.BaseIncrement);
             Assert.Equal(0.00000001m, result.Data.QuoteIncrement);
             Assert.Equal(0.00000001m, result.Data.QuoteMinSize);
@@ -474,8 +444,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                 result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
             }
 
-            var candle = result.Data.Candles.FirstOrDefault();
-
             //Assert
             Assert.NotNull(result.Data.Candles);
             Assert.NotEmpty(result.Data.Candles);
@@ -494,6 +462,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             var json = GetCandlesListJsonString();
 
+            var expectedDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(1639508050);
+
             //Act
             using (var httpTest = new HttpTest())
             {
@@ -504,7 +474,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
             //Assert
             Assert.NotNull(result.Data.Candles);
-            //Assert.Contains(result.Data.Candles, c => c.Start.Equals("1639508050", StringComparison.InvariantCultureIgnoreCase)); //TODO Fix date test
+            Assert.Contains(result.Data.Candles, c => c.Start.Equals(expectedDate));
         }
 
         [Fact]
@@ -632,37 +602,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
             Assert.Contains(ErrorMessages.EndDateRequired, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        [Fact]
-        public async Task GetProductCandlesAsync_InvalidGranularity_ReturnsUnsuccessfulApiResponse()
-        {
-            //Arrange
-            ApiResponse<CandlesPage> result;
-
-            var productId = "TEST";
-            var start = DateTimeOffset.UtcNow.AddDays(-2);
-            var end = DateTimeOffset.UtcNow.AddDays(-1);
-            var granularity = "INVALID";
-
-            var json = GetCandlesListJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(json);
-
-                result = await _testClient.Products.GetProductCandlesAsync(productId, start, end, granularity);
-            }
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Null(result.Data);
-            Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
-            Assert.NotNull(result.ExceptionMessage);
-            Assert.NotNull(result.ExceptionDetails);
-            Assert.Contains(ErrorMessages.CandleGranularityInvalid, result.ExceptionMessage, StringComparison.InvariantCultureIgnoreCase);
         }
 
         [Fact]
@@ -881,9 +820,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                     {
                         "product_id": "BTC-USD",
                         "price": "140.21",
-                        "price_percentage_change_24h": "9.43%",
+                        "price_percentage_change_24h": "9.43",
                         "volume_24h": "1908432",
-                        "volume_percentage_change_24h": "9.43%",
+                        "volume_percentage_change_24h": "9.43",
                         "base_increment": "0.00000001",
                         "quote_increment": "0.00000001",
                         "quote_min_size": "0.00000001",
@@ -925,9 +864,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                     {
                         "product_id": "BTC-USD",
                         "price": "140.21",
-                        "price_percentage_change_24h": "9.43%",
+                        "price_percentage_change_24h": "9.43",
                         "volume_24h": "1908432",
-                        "volume_percentage_change_24h": "9.43%",
+                        "volume_percentage_change_24h": "9.43",
                         "base_increment": "0.00000001",
                         "quote_increment": "0.00000001",
                         "quote_min_size": "0.00000001",
@@ -967,9 +906,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 "product_id": "BTC-USD",
                 "price": "140.21",
-                "price_percentage_change_24h": "9.43%",
+                "price_percentage_change_24h": "9.43",
                 "volume_24h": "1908432",
-                "volume_percentage_change_24h": "9.43%",
+                "volume_percentage_change_24h": "9.43",
                 "base_increment": "0.00000001",
                 "quote_increment": "0.00000001",
                 "quote_min_size": "0.00000001",
@@ -1006,9 +945,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 "product_id": "BTC-USD",
                 "price": "140.21",
-                "price_percentage_change_24h": "9.43%",
+                "price_percentage_change_24h": "9.43",
                 "volume_24h": "1908432",
-                "volume_percentage_change_24h": "9.43%",
+                "volume_percentage_change_24h": "9.43",
                 "base_increment": "0.00000001",
                 "quote_increment": "0.00000001",
                 "quote_min_size": "0.00000001",
@@ -1091,7 +1030,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "price": "140.91",
                         "size": "4",
                         "time": "2021-05-31T09:59:59Z",
-                        "side": "UNKNOWN_ORDER_SIDE",
+                        "side": "BUY",
                         "bid": "291.13",
                         "ask": "292.40"
                     }
@@ -1116,7 +1055,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "price": "INVALID",
                         "size": "4",
                         "time": "2021-05-31T09:59:59Z",
-                        "side": "UNKNOWN_ORDER_SIDE",
+                        "side": "SELL",
                         "bid": "291.13",
                         "ask": "292.40"
                     },

@@ -1,4 +1,5 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
+using CoinbaseAdvancedTradeClient.Enums;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries;
@@ -35,7 +36,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.UtcNow.AddDays(-7);
             var endDate = DateTime.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetTransactionSummaryJsonString();
 
@@ -65,7 +66,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.UtcNow.AddDays(-7);
             var endDate = DateTime.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetTransactionSummaryJsonString();
 
@@ -89,8 +90,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal(10000m, result.Data.FeeTier.UsdTo);
             Assert.Equal(0.0010m, result.Data.FeeTier.TakerFeeRate);
             Assert.Equal(0.0020m, result.Data.FeeTier.MakerFeeRate);
-            Assert.Equal(0m, result.Data.MarginRate.Value);
-            Assert.Equal(0m, result.Data.GoodsAndServicesTax.Rate);
+            Assert.Equal(0.0030m, result.Data.MarginRate.Value);
+            Assert.Equal(0.0040m, result.Data.GoodsAndServicesTax.Rate);
             Assert.Equal("INCLUSIVE", result.Data.GoodsAndServicesTax.Type);
             Assert.Equal(1000, result.Data.AdvancedTradeOnlyVolume);
             Assert.Equal(25, result.Data.AdvancedTradeOnlyFees);
@@ -107,7 +108,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.UtcNow.AddDays(-7);
             var endDate = DateTime.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetInvalidTransactionSummaryJsonString();
 
@@ -136,7 +137,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.MinValue;
             var endDate = DateTime.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetTransactionSummaryJsonString();
 
@@ -165,7 +166,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.UtcNow.AddDays(-7);
             var endDate = DateTime.MinValue;
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetTransactionSummaryJsonString();
 
@@ -182,65 +183,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Null(result.Data);
             Assert.False(result.Success);
             Assert.Equal(nameof(ArgumentException), result.ExceptionType);
-            Assert.NotNull(result.ExceptionMessage);
-            Assert.NotNull(result.ExceptionDetails);
-        }
-
-        [Fact]
-        public async Task GetTransactionSummaryAsync_InvalidProductTypeValue_ReturnsUnsuccessfulApiResponse()
-        {
-            ApiResponse<TransactionSummary> result;
-
-            var startDate = DateTime.UtcNow.AddDays(-7);
-            var endDate = DateTime.UtcNow.AddDays(7);
-            var userNativeCurrency = "TEST";
-            var productType = "Invalid";
-
-            var transactionSummaryJson = GetTransactionSummaryJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(transactionSummaryJson);
-
-                result = await _testClient.TransactionSummary.GetTransactionSummaryAsync(startDate, endDate, userNativeCurrency, productType);
-            }
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Null(result.Data);
-            Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentException), result.ExceptionType);
-            Assert.NotNull(result.ExceptionMessage);
-            Assert.NotNull(result.ExceptionDetails);
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task GetTransactionSummaryAsync_NullOrEmptyProductType_ReturnsUnsuccessfulApiResponse(string productType)
-        {
-            ApiResponse<TransactionSummary> result;
-
-            var startDate = DateTime.UtcNow.AddDays(-7);
-            var endDate = DateTime.UtcNow.AddDays(7);
-            var userNativeCurrency = "TEST";
-
-            var transactionSummaryJson = GetTransactionSummaryJsonString();
-
-            //Act
-            using (var httpTest = new HttpTest())
-            {
-                httpTest.RespondWith(transactionSummaryJson);
-
-                result = await _testClient.TransactionSummary.GetTransactionSummaryAsync(startDate, endDate, userNativeCurrency, productType);
-            }
-
-            //Assert
-            Assert.NotNull(result);
-            Assert.Null(result.Data);
-            Assert.False(result.Success);
-            Assert.Equal(nameof(ArgumentNullException), result.ExceptionType);
             Assert.NotNull(result.ExceptionMessage);
             Assert.NotNull(result.ExceptionDetails);
         }
@@ -254,7 +196,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             var startDate = DateTime.UtcNow.AddDays(-7);
             var endDate = DateTime.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
-            var productType = ProductTypes.Spot;
+            var productType = ProductType.Spot;
 
             var transactionSummaryJson = GetTransactionSummaryJsonString();
 
@@ -294,10 +236,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                     "maker_fee_rate": "0.0020"
                 },
                 "margin_rate": {
-                    "value": "string"
+                    "value": "0.0030"
                 },
                 "goods_and_services_tax": {
-                    "rate": "string",
+                    "rate": "0.0040",
                     "type": "INCLUSIVE"
                 },
                 "advanced_trade_only_volume": 1000,
@@ -325,10 +267,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                     "maker_fee_rate": "0.0020"
                 },
                 "margin_rate": {
-                    "value": "string"
+                    "value": "0.0030"
                 },
                 "goods_and_services_tax": {
-                    "rate": "string",
+                    "rate": "0.0040",
                     "type": "INCLUSIVE"
                 },
                 "advanced_trade_only_volume": 1000,

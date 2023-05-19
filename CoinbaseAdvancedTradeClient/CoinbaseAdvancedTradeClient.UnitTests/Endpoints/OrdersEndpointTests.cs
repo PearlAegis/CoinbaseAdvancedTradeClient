@@ -121,12 +121,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Theory]
-        [InlineData(" ", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", " ", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", " ", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", -1)]
-        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string productType, string orderType, string orderPlacementSource, int limit)
+        [InlineData(251)]
+        [InlineData(-1)]
+        public async Task GetListOrdersAsync_InvalidLimitParameter_ReturnsUnsuccessfulApiResponse(int limit)
         {
             //Arrange
             ApiResponse<OrdersPage> result;
@@ -138,7 +135,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
+                result = await _testClient.Orders.GetListOrdersAsync(limit: limit);
             }
 
             //Assert
@@ -394,10 +391,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal(OrderSide.Buy, result.Data.Side);
             Assert.Equal("11111-000000-000000", result.Data.ClientOrderId);
             Assert.Equal("OPEN", result.Data.Status);
-            Assert.Equal(TimeInForce.GoodUntilCancelled, result.Data.TimeInForce);
+            Assert.Equal(TimeInForce.ImmediateOrCancel, result.Data.TimeInForce);
             Assert.Equal(expectedDate, result.Data.CreatedTime);
             Assert.Equal(50m, result.Data.CompletionPercentage);
-            Assert.Equal(0.00m, result.Data.FilledSize);
+            Assert.Equal(0.001m, result.Data.FilledSize);
             Assert.Equal(50m, result.Data.AverageFilledPrice);
             Assert.Equal(1.23m, result.Data.Fee);
             Assert.Equal(2m, result.Data.NumberOfFills);
@@ -408,13 +405,13 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.False(result.Data.SizeInclusiveOfFees);
             Assert.Equal(123.45m, result.Data.TotalValueAfterFees);
             Assert.Equal("UNKNOWN_TRIGGER_STATUS", result.Data.TriggerStatus);
-            Assert.Equal("UNKNOWN_ORDER_TYPE", result.Data.OrderType);
+            Assert.Equal(OrderType.Market, result.Data.OrderType);
             Assert.Equal("REJECT_REASON_UNSPECIFIED", result.Data.RejectReason);
             Assert.True(result.Data.Settled);
-            Assert.Equal("SPOT", result.Data.ProductType);
+            Assert.Equal(ProductType.Spot, result.Data.ProductType);
             Assert.Equal("string", result.Data.RejectMessage);
             Assert.Equal("string", result.Data.CancelMessage);
-            Assert.Equal("RETAIL_ADVANCED", result.Data.OrderPlacementSource);
+            Assert.Equal(OrderPlacementSource.RetailAdvanced, result.Data.OrderPlacementSource);
         }
 
         [Fact]
@@ -1268,7 +1265,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
-                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "time_in_force": "IMMEDIATE_OR_CANCEL",
                             "created_time": "2021-05-31T09:59:59Z",
                             "completion_percentage": "50",
                             "filled_size": "0.001",
@@ -1280,9 +1277,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "size_in_quote": false,
                             "total_fees": "5.00",
                             "size_inclusive_of_fees": false,
-                            "total_value_after_fees": "string",
+                            "total_value_after_fees": "123.45",
                             "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "order_type": "MARKET",
                             "reject_reason": "REJECT_REASON_UNSPECIFIED",
                             "settled": true,
                             "product_type": "SPOT",
@@ -1343,7 +1340,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
-                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "time_in_force": "IMMEDIATE_OR_CANCEL",
                             "created_time": "2021-05-31T09:59:59Z",
                             "completion_percentage": "50",
                             "filled_size": "0.001",
@@ -1355,9 +1352,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "size_in_quote": false,
                             "total_fees": "5.00",
                             "size_inclusive_of_fees": false,
-                            "total_value_after_fees": "string",
+                            "total_value_after_fees": "123.45",
                             "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "order_type": "MARKET",
                             "reject_reason": "REJECT_REASON_UNSPECIFIED",
                             "settled": true,
                             "product_type": "SPOT",
@@ -1477,7 +1474,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
-                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "time_in_force": "IMMEDIATE_OR_CANCEL",
                         "created_time": "2021-05-31T09:59:59Z",
                         "completion_percentage": "50",
                         "filled_size": "0.001",
@@ -1491,7 +1488,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "size_inclusive_of_fees": false,
                         "total_value_after_fees": "123.45",
                         "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "order_type": "MARKET",
                         "reject_reason": "REJECT_REASON_UNSPECIFIED",
                         "settled": true,
                         "product_type": "SPOT",
@@ -1547,21 +1544,21 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
-                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "time_in_force": "IMMEDIATE_OR_CANCEL",
                         "created_time": "2021-05-31T09:59:59Z",
                         "completion_percentage": "50",
                         "filled_size": "0.001",
                         "average_filled_price": "50",
-                        "fee": "string",
+                        "fee": "1.23",
                         "number_of_fills": "2",
                         "filled_value": "10000",
                         "pending_cancel": true,
                         "size_in_quote": false,
                         "total_fees": "5.00",
                         "size_inclusive_of_fees": false,
-                        "total_value_after_fees": "string",
+                        "total_value_after_fees": "123.45",
                         "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "order_type": "MARKET",
                         "reject_reason": "REJECT_REASON_UNSPECIFIED",
                         "settled": "boolean",
                         "product_type": "SPOT",
