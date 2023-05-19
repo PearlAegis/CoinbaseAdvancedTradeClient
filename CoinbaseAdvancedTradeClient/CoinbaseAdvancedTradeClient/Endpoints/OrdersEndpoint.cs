@@ -73,10 +73,10 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.StartDate, startDate)
                     .SetQueryParam(RequestParameters.EndDate, endDate)
                     .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
-                    .SetQueryParam(RequestParameters.OrderType, orderType)
+                    .SetQueryParam(RequestParameters.OrderType, orderType?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.OrderSide, orderSide?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.Cursor, cursor)
-                    .SetQueryParam(RequestParameters.ProductType, productType)
+                    .SetQueryParam(RequestParameters.ProductType, productType?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
                     .GetJsonAsync<OrdersPage>();
 
