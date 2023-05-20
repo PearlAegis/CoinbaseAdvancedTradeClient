@@ -77,7 +77,7 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.OrderSide, orderSide?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.Cursor, cursor)
                     .SetQueryParam(RequestParameters.ProductType, productType?.GetEnumMemberValue())
-                    .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
+                    .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource?.GetEnumMemberValue())
                     .GetJsonAsync<OrdersPage>();
 
                 response.Data = ordersPage;
