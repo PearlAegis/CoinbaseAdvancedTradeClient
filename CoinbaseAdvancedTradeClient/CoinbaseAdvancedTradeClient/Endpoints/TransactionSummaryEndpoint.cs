@@ -13,7 +13,7 @@ namespace CoinbaseAdvancedTradeClient
     {
         public ITransactionSummaryEndpoint TransactionSummary => this;
 
-        async Task<ApiResponse<TransactionSummary>> ITransactionSummaryEndpoint.GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, ProductType productType)
+        async Task<ApiResponse<TransactionSummary>> ITransactionSummaryEndpoint.GetTransactionSummaryAsync(DateTimeOffset startDate, DateTimeOffset endDate, string userNativeCurrency, ProductType productType)
         {
             var response = new ApiResponse<TransactionSummary>();
 

@@ -202,7 +202,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
-            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime,
+            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTimeOffset endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
@@ -229,7 +229,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
-            string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime,
+            string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTimeOffset endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);

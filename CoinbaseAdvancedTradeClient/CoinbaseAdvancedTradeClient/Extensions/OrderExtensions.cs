@@ -38,7 +38,7 @@ namespace CoinbaseAdvancedTradeClient.Extensions
             };
         }
 
-        internal static void BuildLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime)
+        internal static void BuildLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, bool postOnly, DateTimeOffset endTime)
         {
             var limitGtd = new LimitGtd();
 
@@ -68,7 +68,7 @@ namespace CoinbaseAdvancedTradeClient.Extensions
             };
         }
 
-        internal static void BuildStopLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime)
+        internal static void BuildStopLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTimeOffset endTime)
         {
             var stopLimitGtd = new StopLimitGtd();
 

@@ -7,7 +7,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
     {
         [JsonConverter(typeof(UnixDateTimeConverter))]
         [JsonProperty("start")]
-        public DateTime Start { get; set; }
+        public DateTimeOffset Start { get; set; }
 
         [JsonProperty("low")]
         public decimal? Low { get; set; }

@@ -29,7 +29,7 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string ProductId { get; set; }
 
         [JsonProperty("creation_time")]
-        public DateTime CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
 
         [JsonProperty("order_side")]
         public string OrderSide { get; set; }

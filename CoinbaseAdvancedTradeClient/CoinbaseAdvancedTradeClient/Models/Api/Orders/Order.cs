@@ -30,7 +30,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
         public TimeInForce TimeInForce { get; set; }
 
         [JsonProperty("created_time")]
-        public DateTime? CreatedTime { get; set; }
+        public DateTimeOffset? CreatedTime { get; set; }
 
         [JsonProperty("completion_percentage")]
         public decimal? CompletionPercentage { get; set; }

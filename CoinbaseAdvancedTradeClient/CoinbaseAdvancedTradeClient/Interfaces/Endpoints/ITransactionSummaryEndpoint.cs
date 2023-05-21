@@ -6,6 +6,6 @@ namespace CoinbaseAdvancedTradeClient.Interfaces.Endpoints
 {
     public interface ITransactionSummaryEndpoint
     {
-        Task<ApiResponse<TransactionSummary>> GetTransactionSummaryAsync(DateTime startDate, DateTime endDate, string userNativeCurrency, ProductType productType);
+        Task<ApiResponse<TransactionSummary>> GetTransactionSummaryAsync(DateTimeOffset startDate, DateTimeOffset endDate, string userNativeCurrency, ProductType productType);
     }
 }
