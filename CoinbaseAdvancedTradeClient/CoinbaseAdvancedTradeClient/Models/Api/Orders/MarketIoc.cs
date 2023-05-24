@@ -5,9 +5,9 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Orders
     public class MarketIoc
     {
         [JsonProperty("quote_size")]
-        public decimal? QuoteSize { get; set; }
+        public string QuoteSize { get; set; }
 
         [JsonProperty("base_size")]
-        public decimal? BaseSize { get; set; }
+        public string BaseSize { get; set; }
     }
 }

@@ -11,11 +11,11 @@ namespace CoinbaseAdvancedTradeClient.Extensions
 
             if (orderSide.Equals(OrderSide.Buy))
             {
-                marketIoc.QuoteSize = amount;
+                marketIoc.QuoteSize = amount.ToString();
             }
             else
             {
-                marketIoc.BaseSize = amount;
+                marketIoc.BaseSize = amount.ToString();
             }
 
             order.OrderConfiguration = new OrderConfiguration
@@ -28,8 +28,8 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var limitGtc = new LimitGtc();
 
-            limitGtc.BaseSize = amount;
-            limitGtc.LimitPrice = limitPrice;
+            limitGtc.BaseSize = amount.ToString();
+            limitGtc.LimitPrice = limitPrice.ToString();
             limitGtc.PostOnly = postOnly;
 
             order.OrderConfiguration = new OrderConfiguration
@@ -42,10 +42,10 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var limitGtd = new LimitGtd();
 
-            limitGtd.BaseSize = amount;
-            limitGtd.LimitPrice = limitPrice;
+            limitGtd.BaseSize = amount.ToString();
+            limitGtd.LimitPrice = limitPrice.ToString();
             limitGtd.PostOnly = postOnly;
-            limitGtd.EndTime = endTime.ToUniversalTime();
+            limitGtd.EndTime = endTime.DateTime.ToUniversalTime();
 
             order.OrderConfiguration = new OrderConfiguration
             {
@@ -57,9 +57,9 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var stopLimitGtc = new StopLimitGtc();
 
-            stopLimitGtc.BaseSize = amount;
-            stopLimitGtc.LimitPrice = limitPrice;
-            stopLimitGtc.StopPrice = stopPrice;
+            stopLimitGtc.BaseSize = amount.ToString();
+            stopLimitGtc.LimitPrice = limitPrice.ToString();
+            stopLimitGtc.StopPrice = stopPrice.ToString();
             stopLimitGtc.StopDirection = stopDirection;
 
             order.OrderConfiguration = new OrderConfiguration
@@ -72,11 +72,11 @@ namespace CoinbaseAdvancedTradeClient.Extensions
         {
             var stopLimitGtd = new StopLimitGtd();
 
-            stopLimitGtd.BaseSize = amount;
-            stopLimitGtd.LimitPrice = limitPrice;
-            stopLimitGtd.StopPrice = stopPrice;
+            stopLimitGtd.BaseSize = amount.ToString();
+            stopLimitGtd.LimitPrice = limitPrice.ToString();
+            stopLimitGtd.StopPrice = stopPrice.ToString();
             stopLimitGtd.StopDirection = stopDirection;
-            stopLimitGtd.EndTime = endTime.ToUniversalTime();
+            stopLimitGtd.EndTime = endTime.DateTime.ToUniversalTime();
 
             order.OrderConfiguration = new OrderConfiguration
             {
