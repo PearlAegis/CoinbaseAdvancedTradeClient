@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.Api.Products
 {
@@ -8,34 +9,34 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
         public string ProductId { get; set; }
 
         [JsonProperty("price")]
-        public string Price { get; set; }
+        public decimal? Price { get; set; }
 
         [JsonProperty("price_percentage_change_24h")]
-        public string PricePercentageChange24H { get; set; }
+        public decimal? PricePercentageChange24H { get; set; }
 
         [JsonProperty("volume_24h")]
-        public string Volume24H { get; set; }
+        public decimal? Volume24H { get; set; }
 
         [JsonProperty("volume_percentage_change_24h")]
-        public string VolumePercentageChange24H { get; set; }
+        public decimal? VolumePercentageChange24H { get; set; }
 
         [JsonProperty("base_increment")]
-        public string BaseIncrement { get; set; }
+        public decimal? BaseIncrement { get; set; }
 
         [JsonProperty("quote_increment")]
-        public string QuoteIncrement { get; set; }
+        public decimal? QuoteIncrement { get; set; }
 
         [JsonProperty("quote_min_size")]
-        public string QuoteMinSize { get; set; }
+        public decimal? QuoteMinSize { get; set; }
 
         [JsonProperty("quote_max_size")]
-        public string QuoteMaxSize { get; set; }
+        public decimal? QuoteMaxSize { get; set; }
 
         [JsonProperty("base_min_size")]
-        public string BaseMinSize { get; set; }
+        public decimal? BaseMinSize { get; set; }
 
         [JsonProperty("base_max_size")]
-        public string BaseMaxSize { get; set; }
+        public decimal? BaseMaxSize { get; set; }
 
         [JsonProperty("base_name")]
         public string BaseName { get; set; }
@@ -71,7 +72,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
         public bool AuctionMode { get; set; }
 
         [JsonProperty("product_type")]
-        public string ProductType { get; set; }
+        public ProductType ProductType { get; set; }
 
         [JsonProperty("quote_currency_id")]
         public string QuoteCurrencyId { get; set; }
@@ -80,7 +81,7 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.Products
         public string BaseCurrencyId { get; set; }
 
         [JsonProperty("mid_market_price")]
-        public string MidMarketPrice { get; set; }
+        public decimal? MidMarketPrice { get; set; }
 
         [JsonProperty("base_display_symbol")]
         public string BaseDisplaySymbol { get; set; }

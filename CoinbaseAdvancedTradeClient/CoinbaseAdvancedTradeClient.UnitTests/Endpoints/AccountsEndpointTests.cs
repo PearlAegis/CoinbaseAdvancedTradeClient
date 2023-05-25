@@ -229,7 +229,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("8bfc20d7-f7c6-4422-bf07-8243ca4169fe", result.Data.Id);
             Assert.Equal("BTC Wallet", result.Data.Name);
             Assert.Equal("BTC", result.Data.Currency);
-            Assert.Equal("1.23", result.Data.AvailableBalance.Value);
+            Assert.Equal(1.23m, result.Data.AvailableBalance.Value);
             Assert.Equal("BTC", result.Data.AvailableBalance.Currency);
             Assert.False(result.Data.Default);
             Assert.True(result.Data.Active);
@@ -238,7 +238,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("2021-05-31T09:59:59", result.Data.DeletedAt.Value.ToString("s", new CultureInfo("en-US")));
             Assert.Equal("ACCOUNT_TYPE_UNSPECIFIED", result.Data.Type);
             Assert.True(result.Data.Ready);
-            Assert.Equal("1.23", result.Data.Hold.Value);
+            Assert.Equal(1.23m, result.Data.Hold.Value);
             Assert.Equal("BTC", result.Data.Hold.Currency);
         }
 

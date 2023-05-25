@@ -17,10 +17,10 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string QuoteCurrency { get; set; }
 
         [JsonProperty("base_increment")]
-        public string BaseIncrement { get; set; }
+        public decimal? BaseIncrement { get; set; }
 
         [JsonProperty("quote_increment")]
-        public string QuoteIncrement { get; set; }
+        public decimal? QuoteIncrement { get; set; }
 
         [JsonProperty("display_name")]
         public string DisplayName { get; set; }
@@ -32,6 +32,6 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string StatusMessage { get; set; }
 
         [JsonProperty("min_market_funds")]
-        public string MinMarketFunds { get; set; }
+        public decimal? MinMarketFunds { get; set; }
     }
 }

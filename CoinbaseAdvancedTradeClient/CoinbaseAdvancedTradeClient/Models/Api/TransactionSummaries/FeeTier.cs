@@ -8,15 +8,15 @@ namespace CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries
         public string PricingTier { get; set; }
 
         [JsonProperty("usd_from")]
-        public string UsdFrom { get; set; }
+        public decimal? UsdFrom { get; set; }
 
         [JsonProperty("usd_to")]
-        public string UsdTo { get; set; }
+        public decimal? UsdTo { get; set; }
 
         [JsonProperty("taker_fee_rate")]
-        public string TakerFeeRate { get; set; }
+        public decimal? TakerFeeRate { get; set; }
 
         [JsonProperty("maker_fee_rate")]
-        public string MakerFeeRate { get; set; }
+        public decimal? MakerFeeRate { get; set; }
     }
 }

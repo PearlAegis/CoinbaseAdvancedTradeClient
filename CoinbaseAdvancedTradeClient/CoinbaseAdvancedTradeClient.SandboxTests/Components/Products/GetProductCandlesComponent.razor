@@ -78,11 +78,11 @@
 @code {
     public string ProductId { get; set; }
 
-    public DateTime StartDate { get; set; } = DateTime.Today.AddDays(-2);
+    public DateTimeOffset StartDate { get; set; }
 
-    public DateTime EndDate { get; set; } = DateTime.Today.AddDays(-1);
+    public DateTimeOffset EndDate { get; set; }
 
-    public string Granularity { get; set; } = CandleGranularity.TwoHour;
+    public CandleGranularity Granularity { get; set; } = CandleGranularity.TwoHour;
 
     public ApiResponse<CandlesPage> Result { get; set; } = null;
 

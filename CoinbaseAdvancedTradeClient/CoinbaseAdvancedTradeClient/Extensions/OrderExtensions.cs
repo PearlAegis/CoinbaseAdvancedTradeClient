@@ -38,14 +38,14 @@ namespace CoinbaseAdvancedTradeClient.Extensions
             };
         }
 
-        internal static void BuildLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime)
+        internal static void BuildLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, bool postOnly, DateTimeOffset endTime)
         {
             var limitGtd = new LimitGtd();
 
             limitGtd.BaseSize = amount.ToString();
             limitGtd.LimitPrice = limitPrice.ToString();
             limitGtd.PostOnly = postOnly;
-            limitGtd.EndTime = endTime.ToUniversalTime();
+            limitGtd.EndTime = endTime.DateTime.ToUniversalTime();
 
             order.OrderConfiguration = new OrderConfiguration
             {
@@ -68,7 +68,7 @@ namespace CoinbaseAdvancedTradeClient.Extensions
             };
         }
 
-        internal static void BuildStopLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime)
+        internal static void BuildStopLimitGtdConfiguration(this CreateOrderParameters order, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTimeOffset endTime)
         {
             var stopLimitGtd = new StopLimitGtd();
 
@@ -76,7 +76,7 @@ namespace CoinbaseAdvancedTradeClient.Extensions
             stopLimitGtd.LimitPrice = limitPrice.ToString();
             stopLimitGtd.StopPrice = stopPrice.ToString();
             stopLimitGtd.StopDirection = stopDirection;
-            stopLimitGtd.EndTime = endTime.ToUniversalTime();
+            stopLimitGtd.EndTime = endTime.DateTime.ToUniversalTime();
 
             order.OrderConfiguration = new OrderConfiguration
             {

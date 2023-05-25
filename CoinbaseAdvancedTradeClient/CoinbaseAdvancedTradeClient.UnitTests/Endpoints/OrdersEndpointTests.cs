@@ -121,12 +121,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         }
 
         [Theory]
-        [InlineData(" ", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", " ", "OrderPlacementSource", 1)]
-        [InlineData("OrderType", "OrderType", " ", 1)]
-        [InlineData("OrderType", "OrderType", "OrderPlacementSource", -1)]
-        public async Task GetListOrdersAsync_InvalidParameters_ReturnsUnsuccessfulApiResponse(string productType, string orderType, string orderPlacementSource, int limit)
+        [InlineData(251)]
+        [InlineData(-1)]
+        public async Task GetListOrdersAsync_InvalidLimitParameter_ReturnsUnsuccessfulApiResponse(int limit)
         {
             //Arrange
             ApiResponse<OrdersPage> result;
@@ -138,7 +135,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             {
                 httpTest.RespondWith(json);
 
-                result = await _testClient.Orders.GetListOrdersAsync(productType: productType, orderType: orderType, orderPlacementSource: orderPlacementSource, limit: limit);
+                result = await _testClient.Orders.GetListOrdersAsync(limit: limit);
             }
 
             //Assert
@@ -391,30 +388,30 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Equal("20000.00", result.Data.OrderConfiguration.StopLimitGtd.StopPrice);
             Assert.Equal(expectedDate, result.Data.OrderConfiguration.StopLimitGtd.EndTime);
             Assert.Equal(StopDirection.Up, result.Data.OrderConfiguration.StopLimitGtd.StopDirection);
-            Assert.Equal("BUY", result.Data.Side);
+            Assert.Equal(OrderSide.Buy, result.Data.Side);
             Assert.Equal("11111-000000-000000", result.Data.ClientOrderId);
             Assert.Equal("OPEN", result.Data.Status);
-            Assert.Equal("UNKNOWN_TIME_IN_FORCE", result.Data.TimeInForce);
+            Assert.Equal(TimeInForce.ImmediateOrCancel, result.Data.TimeInForce);
             Assert.Equal(expectedDate, result.Data.CreatedTime);
-            Assert.Equal("50", result.Data.CompletionPercentage);
-            Assert.Equal("0.001", result.Data.FilledSize);
-            Assert.Equal("50", result.Data.AverageFilledPrice);
-            Assert.Equal("1.23", result.Data.Fee);
-            Assert.Equal("2", result.Data.NumberOfFills);
-            Assert.Equal("10000", result.Data.FilledValue);
+            Assert.Equal(50m, result.Data.CompletionPercentage);
+            Assert.Equal(0.001m, result.Data.FilledSize);
+            Assert.Equal(50m, result.Data.AverageFilledPrice);
+            Assert.Equal(1.23m, result.Data.Fee);
+            Assert.Equal(2m, result.Data.NumberOfFills);
+            Assert.Equal(10000m, result.Data.FilledValue);
             Assert.True(result.Data.PendingCancel);
             Assert.False(result.Data.SizeInQuote);
-            Assert.Equal("5.00", result.Data.TotalFees);
+            Assert.Equal(5.00m, result.Data.TotalFees);
             Assert.False(result.Data.SizeInclusiveOfFees);
-            Assert.Equal("123.45", result.Data.TotalValueAfterFees);
+            Assert.Equal(123.45m, result.Data.TotalValueAfterFees);
             Assert.Equal("UNKNOWN_TRIGGER_STATUS", result.Data.TriggerStatus);
-            Assert.Equal("UNKNOWN_ORDER_TYPE", result.Data.OrderType);
+            Assert.Equal(OrderType.Market, result.Data.OrderType);
             Assert.Equal("REJECT_REASON_UNSPECIFIED", result.Data.RejectReason);
             Assert.True(result.Data.Settled);
-            Assert.Equal("SPOT", result.Data.ProductType);
+            Assert.Equal(ProductType.Spot, result.Data.ProductType);
             Assert.Equal("string", result.Data.RejectMessage);
             Assert.Equal("string", result.Data.CancelMessage);
-            Assert.Equal("RETAIL_ADVANCED", result.Data.OrderPlacementSource);
+            Assert.Equal(OrderPlacementSource.RetailAdvanced, result.Data.OrderPlacementSource);
         }
 
         [Fact]
@@ -563,7 +560,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             Assert.Null(result.Data.ErrorResponse);
             Assert.Equal("Test123", result.Data.OrderId, true);
             Assert.Equal("BTC-USD", result.Data.SuccessResponse.ProductId, true);
-            Assert.Equal("BUY", result.Data.SuccessResponse.Side, true);
+            Assert.Equal(OrderSide.Buy, result.Data.SuccessResponse.Side);
             Assert.Equal("Client123", result.Data.SuccessResponse.ClientOrderId, true);
         }
 
@@ -1031,7 +1028,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Arrange
             ApiResponse<CreateOrderResponse> result;
 
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var amount = 1.23m;
@@ -1065,7 +1062,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var amount = 1.23m;
             var limitPrice = 123.45m;
@@ -1082,7 +1079,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var limitPrice = 123.45m;
@@ -1099,7 +1096,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var amount = 1.23m;
@@ -1120,7 +1117,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
             //Arrange
             ApiResponse<CreateOrderResponse> result;
 
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var amount = 1.23m;
@@ -1155,7 +1152,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateStopLimitOrderAsync_InvalidProductId_ThrowsArgumentNullException(string productId)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var amount = 1.23m;
             var limitPrice = 123.45m;
@@ -1173,7 +1170,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateStopLimitOrderAsync_InvalidAmount_ThrowsArgumentException(decimal amount)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var limitPrice = 123.45m;
@@ -1191,7 +1188,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateStopLimitOrderAsync_InvalidLimitPrice_ThrowsArgumentException(decimal limitPrice)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var amount = 1.23m;
@@ -1209,7 +1206,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         public async Task CreateStopLimitOrderAsync_InvalidStopPrice_ThrowsArgumentException(decimal stopPrice)
         {
             //Arrange
-            var timeInForce = TimeInForce.GoodTilDate;
+            var timeInForce = TimeInForce.GoodUntilDate;
             var orderSide = OrderSide.Buy;
             var productId = "TEST-USD";
             var amount = 1.23m;
@@ -1268,7 +1265,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
-                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "time_in_force": "IMMEDIATE_OR_CANCEL",
                             "created_time": "2021-05-31T09:59:59Z",
                             "completion_percentage": "50",
                             "filled_size": "0.001",
@@ -1280,9 +1277,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "size_in_quote": false,
                             "total_fees": "5.00",
                             "size_inclusive_of_fees": false,
-                            "total_value_after_fees": "string",
+                            "total_value_after_fees": "123.45",
                             "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "order_type": "MARKET",
                             "reject_reason": "REJECT_REASON_UNSPECIFIED",
                             "settled": true,
                             "product_type": "SPOT",
@@ -1343,7 +1340,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "side": "BUY",
                             "client_order_id": "11111-000000-000000",
                             "status": "OPEN",
-                            "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                            "time_in_force": "IMMEDIATE_OR_CANCEL",
                             "created_time": "2021-05-31T09:59:59Z",
                             "completion_percentage": "50",
                             "filled_size": "0.001",
@@ -1355,9 +1352,9 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                             "size_in_quote": false,
                             "total_fees": "5.00",
                             "size_inclusive_of_fees": false,
-                            "total_value_after_fees": "string",
+                            "total_value_after_fees": "123.45",
                             "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                            "order_type": "UNKNOWN_ORDER_TYPE",
+                            "order_type": "MARKET",
                             "reject_reason": "REJECT_REASON_UNSPECIFIED",
                             "settled": true,
                             "product_type": "SPOT",
@@ -1477,7 +1474,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
-                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "time_in_force": "IMMEDIATE_OR_CANCEL",
                         "created_time": "2021-05-31T09:59:59Z",
                         "completion_percentage": "50",
                         "filled_size": "0.001",
@@ -1491,7 +1488,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "size_inclusive_of_fees": false,
                         "total_value_after_fees": "123.45",
                         "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "order_type": "MARKET",
                         "reject_reason": "REJECT_REASON_UNSPECIFIED",
                         "settled": true,
                         "product_type": "SPOT",
@@ -1547,21 +1544,21 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
                         "side": "BUY",
                         "client_order_id": "11111-000000-000000",
                         "status": "OPEN",
-                        "time_in_force": "UNKNOWN_TIME_IN_FORCE",
+                        "time_in_force": "IMMEDIATE_OR_CANCEL",
                         "created_time": "2021-05-31T09:59:59Z",
                         "completion_percentage": "50",
                         "filled_size": "0.001",
                         "average_filled_price": "50",
-                        "fee": "string",
+                        "fee": "1.23",
                         "number_of_fills": "2",
                         "filled_value": "10000",
                         "pending_cancel": true,
                         "size_in_quote": false,
                         "total_fees": "5.00",
                         "size_inclusive_of_fees": false,
-                        "total_value_after_fees": "string",
+                        "total_value_after_fees": "123.45",
                         "trigger_status": "UNKNOWN_TRIGGER_STATUS",
-                        "order_type": "UNKNOWN_ORDER_TYPE",
+                        "order_type": "MARKET",
                         "reject_reason": "REJECT_REASON_UNSPECIFIED",
                         "settled": "boolean",
                         "product_type": "SPOT",

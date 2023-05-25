@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinbaseAdvancedTradeClient.Enums;
+using Newtonsoft.Json;
 
 namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
 {
@@ -11,16 +12,16 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string ClientOrderId { get; set; }
 
         [JsonProperty("cumulative_quantity")]
-        public string CumulativeQuantity { get; set; }
+        public decimal? CumulativeQuantity { get; set; }
 
         [JsonProperty("leaves_quantity")]
-        public string LeavesQuantity { get; set; }
+        public decimal? LeavesQuantity { get; set; }
 
         [JsonProperty("avg_price")]
-        public string AveragePrice { get; set; }
+        public decimal? AveragePrice { get; set; }
 
         [JsonProperty("total_fees")]
-        public string TotalFees { get; set; }
+        public decimal? TotalFees { get; set; }
 
         [JsonProperty("status")]
         public string Status { get; set; }
@@ -29,10 +30,10 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string ProductId { get; set; }
 
         [JsonProperty("creation_time")]
-        public DateTime CreationTime { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
 
         [JsonProperty("order_side")]
-        public string OrderSide { get; set; }
+        public OrderSide OrderSide { get; set; }
 
         [JsonProperty("order_type")]
         public string OrderType { get; set; }

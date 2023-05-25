@@ -51,16 +51,13 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<OrdersPage>> IOrdersEndpoint.GetListOrdersAsync(string? productId = null, ICollection<string>? orderStatuses = null, int? limit = null,
-            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, string? orderType = null, OrderSide? orderSide = null,
-            string? cursor = null, string? productType = null, string? orderPlacementSource = null)
+            DateTimeOffset? startDate = null, DateTimeOffset? endDate = null, string? userNativeCurrency = null, OrderType? orderType = null, OrderSide? orderSide = null,
+            string? cursor = null, ProductType? productType = null, OrderPlacementSource? orderPlacementSource = null)
         {
             var response = new ApiResponse<OrdersPage>();
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(productType) && !ProductTypes.ProductTypeList.Contains(productType)) throw new ArgumentException(ErrorMessages.ProductTypeInvalid, nameof(productType));
-                if (!string.IsNullOrWhiteSpace(orderType) && !OrderTypes.OrderTypeList.Contains(orderType)) throw new ArgumentException(ErrorMessages.OrderTypeInvalid, nameof(orderType));
-                if (!string.IsNullOrWhiteSpace(orderPlacementSource) && !OrderTypes.OrderTypeList.Contains(orderPlacementSource)) throw new ArgumentException(ErrorMessages.OrderPlacementSourceInvalid, nameof(orderPlacementSource));
                 if (limit != null && limit != 0 && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
                 if (orderStatuses != null && !orderStatuses.Any()) orderStatuses = null;
@@ -76,11 +73,11 @@ namespace CoinbaseAdvancedTradeClient
                     .SetQueryParam(RequestParameters.StartDate, startDate)
                     .SetQueryParam(RequestParameters.EndDate, endDate)
                     .SetQueryParam(RequestParameters.UserNativeCurrency, userNativeCurrency)
-                    .SetQueryParam(RequestParameters.OrderType, orderType)
+                    .SetQueryParam(RequestParameters.OrderType, orderType?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.OrderSide, orderSide?.GetEnumMemberValue())
                     .SetQueryParam(RequestParameters.Cursor, cursor)
-                    .SetQueryParam(RequestParameters.ProductType, productType)
-                    .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource)
+                    .SetQueryParam(RequestParameters.ProductType, productType?.GetEnumMemberValue())
+                    .SetQueryParam(RequestParameters.OrderPlacementSource, orderPlacementSource?.GetEnumMemberValue())
                     .GetJsonAsync<OrdersPage>();
 
                 response.Data = ordersPage;
@@ -205,7 +202,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
-            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTime endTime,
+            string productId, decimal amount, decimal limitPrice, bool postOnly, DateTimeOffset endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
@@ -219,7 +216,7 @@ namespace CoinbaseAdvancedTradeClient
                 Side = orderSide,
             };
 
-            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            if (timeInForce.Equals(TimeInForce.GoodUntilCancelled))
             {
                 createOrderParameters.BuildLimitGtcConfiguration(amount, limitPrice, postOnly);
             }
@@ -232,7 +229,7 @@ namespace CoinbaseAdvancedTradeClient
         }
 
         async Task<ApiResponse<CreateOrderResponse>> IOrdersEndpoint.CreateStopLimitOrderAsync(TimeInForce timeInForce, OrderSide orderSide,
-            string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTime endTime,
+            string productId, decimal amount, decimal limitPrice, decimal stopPrice, StopDirection stopDirection, DateTimeOffset endTime,
             string clientOrderId = null, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
@@ -247,7 +244,7 @@ namespace CoinbaseAdvancedTradeClient
                 Side = orderSide,
             };
 
-            if (timeInForce.Equals(TimeInForce.GoodTilCancelled))
+            if (timeInForce.Equals(TimeInForce.GoodUntilCancelled))
             {
                 createOrderParameters.BuildStopLimitGtcConfiguration(amount, limitPrice, stopPrice, stopDirection);
             }

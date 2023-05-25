@@ -42,7 +42,12 @@
         <div class="form-group row p-2">
             <label class="col-4 col-form-label">Order Type</label>
             <div class="col-8">
-                <InputText class="form-control" @bind-Value="@OrderType"></InputText>
+                <InputSelect class="form-control" @bind-Value="@OrderType">
+                    <option value="@OrderType.Limit">Limit</option>
+                    <option value="@OrderType.Market">Market</option>
+                    <option value="@OrderType.Stop">Stop</option>
+                    <option value="@OrderType.StopLimit">Stop Limit</option>
+                </InputSelect>
             </div>
         </div>
         <div class="form-group row p-2">
@@ -63,13 +68,17 @@
         <div class="form-group row p-2">
             <label class="col-4 col-form-label">Product Type</label>
             <div class="col-8">
-                <InputText class="form-control" @bind-Value="@ProductType"></InputText>
+                <InputSelect class="form-control" @bind-Value="@ProductType">
+                    <option value="@ProductType.Spot">Spot</option>
+                </InputSelect>
             </div>
         </div>
         <div class="form-group row p-2">
             <label class="col-4 col-form-label">Order Placement Source</label>
             <div class="col-8">
-                <InputText class="form-control" @bind-Value="@OrderPlacementSource"></InputText>
+                <InputSelect class="form-control" @bind-Value="@OrderPlacementSource">
+                    <option value="@OrderPlacementSource.RetailAdvanced">Retail Advanced</option>
+                </InputSelect>
             </div>
         </div>
         <div class="form-group row p-2">
@@ -103,8 +112,15 @@
                 <RadzenDataGrid TItem="Order" Data="Result.Data.Orders" PageSize="10" AllowPaging="true" ShowPagingSummary="true">
                     <Columns>
                         <RadzenDataGridColumn TItem="Order" Property="Id" Title="Order ID" />
-                        <RadzenDataGridColumn TItem="Order" Property="ProductId" Title="Product ID" />
-                        <RadzenDataGridColumn TItem="Order" Property="Side" Title="Side" />
+                        <RadzenDataGridColumn TItem="Order" Property="ProductId" Title="Product ID" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="Side" Title="Side" Width="100px" />
+                        <RadzenDataGridColumn TItem="Order" Property="OrderType" Title="Order Type" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="Status" Title="Status" Width="150px" />
+                        <RadzenDataGridColumn TItem="Order" Property="CreatedTime" Title="Created Time" Width="200px">
+                            <Template>
+                                @context.CreatedTime?.ToString("G")
+                            </Template>
+                        </RadzenDataGridColumn>
                     </Columns>
                 </RadzenDataGrid>
             }
@@ -130,15 +146,15 @@
 
     public string UserNativeCurrency { get; set; }
 
-    public string OrderType { get; set; }
+    public OrderType OrderType { get; set; }
 
     public OrderSide OrderSide { get; set; }
 
     public string Cursor { get; set; }
 
-    public string ProductType { get; set; }
+    public ProductType ProductType { get; set; } = ProductType.Spot;
 
-    public string OrderPlacementSource { get; set; }
+    public OrderPlacementSource OrderPlacementSource { get; set; } = OrderPlacementSource.RetailAdvanced;
 
     public ApiResponse<OrdersPage> Result { get; set; } = null;
 

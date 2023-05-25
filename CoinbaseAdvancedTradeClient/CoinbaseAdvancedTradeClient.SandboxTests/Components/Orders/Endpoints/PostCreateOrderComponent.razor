@@ -123,7 +123,7 @@
             <div class="form-group row p-2">
                 <label class="col-4 col-form-label">Stop Price</label>
                 <div class="col-8">
-                    <InputText class="form-control" @bind-Value="@StopLimitGtc.StopPrice"></InputText>
+                    <InputNumber class="form-control" @bind-Value="@StopLimitGtc.StopPrice"></InputNumber>
                 </div>
             </div>
             <div class="form-group row p-2">
@@ -226,10 +226,12 @@
             case nameof(LimitGtc):
                 return new OrderConfiguration { LimitGtc = LimitGtc };
             case nameof(LimitGtd):
+                LimitGtd.EndTime = LimitGtd.EndTime.Value.ToUniversalTime();
                 return new OrderConfiguration { LimitGtd = LimitGtd };
             case nameof(StopLimitGtc):
                 return new OrderConfiguration { StopLimitGtc = StopLimitGtc };
             case nameof(StopLimitGtd):
+                StopLimitGtd.EndTime = StopLimitGtd.EndTime.Value.ToUniversalTime();
                 return new OrderConfiguration { StopLimitGtd = StopLimitGtd };
             case nameof(MarketIoc):
             default:

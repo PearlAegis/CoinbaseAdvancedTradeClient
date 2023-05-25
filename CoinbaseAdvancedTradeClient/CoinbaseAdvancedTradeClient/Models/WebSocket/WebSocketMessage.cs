@@ -12,7 +12,7 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket
         public string ClientId { get; set; }
 
         [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
 
         [JsonProperty("sequence_num")]
         public string SequenceNumber { get; set; }
