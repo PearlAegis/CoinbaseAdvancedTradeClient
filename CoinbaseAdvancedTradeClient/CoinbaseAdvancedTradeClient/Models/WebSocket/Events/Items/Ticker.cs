@@ -11,24 +11,24 @@ namespace CoinbaseAdvancedTradeClient.Models.WebSocket.Events.Items
         public string ProductId { get; set; }
 
         [JsonProperty("price")]
-        public string Price { get; set; }
+        public decimal? Price { get; set; }
 
         [JsonProperty("volume_24_h")]
-        public string Volume24H { get; set; }
+        public decimal? Volume24H { get; set; }
 
         [JsonProperty("low_24_h")]
-        public string Low24H { get; set; }
+        public decimal? Low24H { get; set; }
 
         [JsonProperty("high_24_h")]
-        public string High24H { get; set; }
+        public decimal? High24H { get; set; }
 
         [JsonProperty("low_52_w")]
-        public string Low52W { get; set; }
+        public decimal? Low52W { get; set; }
 
         [JsonProperty("high_52_w")]
-        public string High52W { get; set; }
+        public decimal? High52W { get; set; }
 
         [JsonProperty("price_percent_chg_24_h")]
-        public string PricePercentageChange24H { get; set; }
+        public decimal? PricePercentageChange24H { get; set; }
     }
 }
