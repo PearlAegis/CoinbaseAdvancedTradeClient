@@ -9,6 +9,7 @@ env:
   DOTNET_VERSION: '9.0.x'
   SOLUTION_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.sln'
   PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
+  UNIT_TEST_PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj'
 
 permissions:
   contents: write
@@ -35,36 +36,14 @@ jobs:
       run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
     
     - name: Run tests
-      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
+      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
+    
+    - name: Make RC version script executable
+      run: chmod +x ./scripts/generate-rc-version.sh
     
     - name: Generate RC version
       id: version
-      run: |
-        # Get the latest tag (including lightweight tags)
-        LATEST_TAG=$(git tag -l --sort=-version:refname | head -n 1)
-        echo "Latest tag: ${LATEST_TAG}"
-        
-        # Remove 'v' prefix if present
-        VERSION=${LATEST_TAG#v}
-        echo "Raw version: ${VERSION}"
-        
-        # Remove -rc suffix if present to get base version
-        BASE_VERSION=${VERSION%-rc}
-        echo "Base version: ${BASE_VERSION}"
-        
-        # Split version into components
-        IFS='.' read -ra VERSION_PARTS <<< "$BASE_VERSION"
-        MAJOR=${VERSION_PARTS[0]}
-        MINOR=${VERSION_PARTS[1]}
-        PATCH=${VERSION_PARTS[2]}
-        
-        # Increment patch version
-        PATCH=$((PATCH + 1))
-        
-        # Generate RC version
-        RC_VERSION="${MAJOR}.${MINOR}.${PATCH}-rc"
-        echo "version=${RC_VERSION}" >> $GITHUB_OUTPUT
-        echo "Generated RC version: ${RC_VERSION}"
+      run: ./scripts/generate-rc-version.sh
     
     - name: Pack NuGet package
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}

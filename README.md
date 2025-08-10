@@ -5,6 +5,17 @@
 
 A comprehensive .NET client library for the Coinbase Advanced Trade API, providing both REST API and WebSocket functionality for cryptocurrency trading applications.
 
+## ⚠️ Beta Software Notice
+
+**This software is currently in beta (version 0.x.x) and is not yet considered a stable release.**
+
+- API may change without notice in future versions
+- Some features may be incomplete or under development  
+- Use in production environments at your own risk
+- Please report issues and provide feedback to help improve the library
+
+We are actively working toward a 1.0.0 stable release. Check the [CHANGELOG.md](CHANGELOG.md) for the latest updates and breaking changes.
+
 ## Features
 
 - **Complete API Coverage**: Support for all Coinbase Advanced Trade endpoints including accounts, orders, products, and transaction summaries

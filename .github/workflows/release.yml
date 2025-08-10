@@ -8,6 +8,7 @@ env:
   DOTNET_VERSION: '9.0.x'
   SOLUTION_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.sln'
   PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
+  UNIT_TEST_PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj'
 
 permissions:
   contents: read
@@ -34,17 +35,14 @@ jobs:
       run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
     
     - name: Run tests
-      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
+      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
+    
+    - name: Make version extraction script executable
+      run: chmod +x ./scripts/extract-version-from-tag.sh
     
     - name: Extract version from tag
       id: version
-      run: |
-        # Extract version from the release tag
-        TAG_NAME="${{ github.event.release.tag_name }}"
-        # Remove 'v' prefix if present
-        VERSION=${TAG_NAME#v}
-        echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        echo "Release version: ${VERSION}"
+      run: ./scripts/extract-version-from-tag.sh "${{ github.event.release.tag_name }}"
     
     - name: Pack NuGet package
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
