@@ -38,6 +38,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
             {
                 var result = new CoinbaseAdvancedTradeApiClient(config); 
             });
+
+            Assert.Fail("Validate that the CI/CD Pipeline fails the unit test step."); // TODO: Remove this line after validation.
         }
     }
 }
