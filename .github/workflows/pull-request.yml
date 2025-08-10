@@ -1,0 +1,80 @@
+name: Pull Request Build
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    
+    - name: Build
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+    
+    - name: Run tests
+      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
+    
+    - name: Generate RC version
+      id: version
+      run: |
+        # Get the latest tag, default to 0.1.0 if no tags exist
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0")
+        echo "Latest tag: ${LATEST_TAG}"
+        
+        # Remove 'v' prefix if present
+        VERSION=${LATEST_TAG#v}
+        echo "Base version: ${VERSION}"
+        
+        # Split version into components
+        IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
+        MAJOR=${VERSION_PARTS[0]}
+        MINOR=${VERSION_PARTS[1]}
+        PATCH=${VERSION_PARTS[2]}
+        
+        # Increment patch version
+        PATCH=$((PATCH + 1))
+        
+        # Generate RC version
+        RC_VERSION="${MAJOR}.${MINOR}.${PATCH}-rc"
+        echo "version=${RC_VERSION}" >> $GITHUB_OUTPUT
+        echo "Generated RC version: ${RC_VERSION}"
+    
+    - name: Pack NuGet package
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+    
+    - name: Create tag
+      run: |
+        gh api --method POST /repos/${{ github.repository }}/git/refs \
+          --field ref="refs/tags/v${{ steps.version.outputs.version }}" \
+          --field sha="${{ github.sha }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Publish to GitHub Packages
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg \
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json \
+          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --skip-duplicate
