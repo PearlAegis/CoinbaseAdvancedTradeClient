@@ -37,18 +37,12 @@ jobs:
     - name: Run tests
       run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
     
-    - name: Make version extraction script executable
-      run: chmod +x ./scripts/extract-version-from-tag.sh
-    
     - name: Extract version from tag
       id: version
       run: ./scripts/extract-version-from-tag.sh "${{ github.event.release.tag_name }}"
     
     - name: Pack NuGet package
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
-    
-    - name: Make package publishing script executable
-      run: chmod +x ./scripts/publish-package.sh
     
     - name: Publish to GitHub Packages
       run: ./scripts/publish-package.sh
