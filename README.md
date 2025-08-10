@@ -1,20 +1,163 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Coinbase Advanced Trade Client
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+[![Pull Request Build](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient/actions/workflows/pull-request.yml/badge.svg)](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient/actions/workflows/pull-request.yml)
+[![Release Build](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient/actions/workflows/release.yml/badge.svg)](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient/actions/workflows/release.yml)
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+A comprehensive .NET client library for the Coinbase Advanced Trade API, providing both REST API and WebSocket functionality for cryptocurrency trading applications.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## ⚠️ Beta Software Notice
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+**This software is currently in beta (version 0.x.x) and is not yet considered a stable release.**
+
+- API may change without notice in future versions
+- Some features may be incomplete or under development  
+- Use in production environments at your own risk
+- Please report issues and provide feedback to help improve the library
+
+We are actively working toward a 1.0.0 stable release. Check the [CHANGELOG.md](CHANGELOG.md) for the latest updates and breaking changes.
+
+## Features
+
+- **Complete API Coverage**: Support for all Coinbase Advanced Trade endpoints including accounts, orders, products, and transaction summaries
+- **WebSocket Support**: Real-time market data streaming with support for multiple channels
+- **Authentication**: Secure API key-based authentication with HMAC signature generation
+- **Type Safety**: Strongly-typed models for all API requests and responses
+- **Testing**: Comprehensive unit test suite and interactive Blazor test application
+- **Modern .NET**: Built for .NET 9.0 with nullable reference types and implicit usings
+
+## Installation
+
+Install via GitHub Packages:
+
+```bash
+dotnet add package CoinbaseAdvancedTradeClient --source https://nuget.pkg.github.com/PearlAegis/index.json
+```
+
+Or add to your `.csproj` file:
+
+```xml
+<PackageReference Include="CoinbaseAdvancedTradeClient" Version="0.2.0" />
+```
+
+## Quick Start
+
+### API Client Setup
+
+```csharp
+using CoinbaseAdvancedTradeClient;
+using CoinbaseAdvancedTradeClient.Models.Config;
+
+var config = new ApiClientConfig
+{
+    ApiKey = "your-api-key",
+    ApiSecret = "your-api-secret"
+};
+
+using var client = new CoinbaseAdvancedTradeApiClient(config);
+
+// Get account information
+var accounts = await client.GetAccountsAsync();
+
+// Place a market order
+var orderResponse = await client.CreateOrderAsync(new CreateOrderParameters
+{
+    // Order configuration here
+});
+```
+
+### WebSocket Client Setup
+
+```csharp
+using CoinbaseAdvancedTradeClient;
+using CoinbaseAdvancedTradeClient.Models.Config;
+
+var config = new WebsocketClientConfig
+{
+    ApiKey = "your-api-key",
+    ApiSecret = "your-api-secret"
+};
+
+using var wsClient = new CoinbaseAdvancedTradeWebsocketClient(config);
+
+// Subscribe to market data
+await wsClient.SubscribeAsync("BTC-USD", SubscriptionType.Ticker);
+```
+
+## API Reference
+
+### Endpoints
+
+- **Accounts**: Get account information and balances
+- **Orders**: Create, cancel, and retrieve order information
+- **Products**: Get product details, market data, and trading pairs
+- **Transaction Summary**: Retrieve fee tiers and transaction summaries
+
+### WebSocket Channels
+
+- **Ticker**: Real-time price updates
+- **Level2**: Order book data
+- **Market Trades**: Recent trade information
+- **User**: Account-specific updates
+
+## Build and Test
+
+### Prerequisites
+
+- .NET 9.0 SDK
+- Visual Studio 2022 or VS Code
+
+### Building
+
+```bash
+git clone https://github.com/PearlAegis/CoinbaseAdvancedTradeClient.git
+cd CoinbaseAdvancedTradeClient
+dotnet build
+```
+
+### Running Tests
+
+```bash
+dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/
+```
+
+### Interactive Testing
+
+The project includes a Blazor Server application for interactive API testing:
+
+```bash
+dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.SandboxTests/
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Versioning
+
+This project uses semantic versioning:
+- **RC packages**: Generated automatically on pull requests with `-rc` suffix
+- **Release packages**: Created when GitHub releases are published
+- All packages are published to GitHub Packages
+
+## Documentation
+
+- **[CHANGELOG.md](CHANGELOG.md)**: Version history and migration notes
+- **[CLAUDE.md](CLAUDE.md)**: Development configuration and commands for Claude Code
+- **GitHub Actions**: Automated CI/CD with pull request and release workflows
+
+## Recent Updates
+
+### v0.2.0 (Latest)
+- ✅ **Migrated from Azure DevOps to GitHub Actions** - Complete CI/CD pipeline migration
+- ✅ **Upgraded to .NET 9.0** - Full compatibility with latest .NET runtime
+- ✅ **Updated dependencies** - All packages compatible with .NET 9
+- ✅ **Enhanced testing** - All 142+ unit tests passing
+- ✅ **Automated versioning** - Semantic versioning with RC packages on pull requests
+
+## License
+
+Copyright © 2025 Pearl Aegis. All rights reserved.
