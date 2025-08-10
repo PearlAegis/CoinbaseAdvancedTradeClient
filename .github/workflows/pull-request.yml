@@ -64,6 +64,14 @@ jobs:
     - name: Pack NuGet package
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
     
+    - name: Create tag
+      run: |
+        gh api --method POST /repos/${{ github.repository }}/git/refs \
+          --field ref="refs/tags/v${{ steps.version.outputs.version }}" \
+          --field sha="${{ github.sha }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
     - name: Publish to GitHub Packages
       run: |
         dotnet nuget push ./artifacts/*.nupkg \
