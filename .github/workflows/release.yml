@@ -8,6 +8,10 @@ env:
   DOTNET_VERSION: '9.0.x'
   PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
