@@ -25,7 +25,7 @@ dotnet add package CoinbaseAdvancedTradeClient --source https://nuget.pkg.github
 Or add to your `.csproj` file:
 
 ```xml
-<PackageReference Include="CoinbaseAdvancedTradeClient" Version="1.0.0" />
+<PackageReference Include="CoinbaseAdvancedTradeClient" Version="0.2.0" />
 ```
 
 ## Quick Start
@@ -131,6 +131,21 @@ This project uses semantic versioning:
 - **RC packages**: Generated automatically on pull requests with `-rc` suffix
 - **Release packages**: Created when GitHub releases are published
 - All packages are published to GitHub Packages
+
+## Documentation
+
+- **[CHANGELOG.md](CHANGELOG.md)**: Version history and migration notes
+- **[CLAUDE.md](CLAUDE.md)**: Development configuration and commands for Claude Code
+- **GitHub Actions**: Automated CI/CD with pull request and release workflows
+
+## Recent Updates
+
+### v0.2.0 (Latest)
+- ✅ **Migrated from Azure DevOps to GitHub Actions** - Complete CI/CD pipeline migration
+- ✅ **Upgraded to .NET 9.0** - Full compatibility with latest .NET runtime
+- ✅ **Updated dependencies** - All packages compatible with .NET 9
+- ✅ **Enhanced testing** - All 142+ unit tests passing
+- ✅ **Automated versioning** - Semantic versioning with RC packages on pull requests
 
 ## License
 
