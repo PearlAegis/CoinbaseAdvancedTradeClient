@@ -7,6 +7,7 @@ on:
 
 env:
   DOTNET_VERSION: '9.0.x'
+  SOLUTION_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.sln'
   PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
 
 permissions:
@@ -28,10 +29,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
     
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
     
     - name: Run tests
       run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
