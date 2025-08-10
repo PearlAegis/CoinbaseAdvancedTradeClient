@@ -10,7 +10,7 @@ env:
   PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
