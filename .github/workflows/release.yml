@@ -1,0 +1,57 @@
+name: Release Build
+
+on:
+  release:
+    types: [created]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  SOLUTION_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.sln'
+  PROJECT_PATH: 'CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.csproj'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
+    
+    - name: Build
+      run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
+    
+    - name: Run tests
+      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
+    
+    - name: Extract version from tag
+      id: version
+      run: |
+        # Extract version from the release tag
+        TAG_NAME="${{ github.event.release.tag_name }}"
+        # Remove 'v' prefix if present
+        VERSION=${TAG_NAME#v}
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Release version: ${VERSION}"
+    
+    - name: Pack NuGet package
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+    
+    - name: Publish to GitHub Packages
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg \
+          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json \
+          --api-key ${{ secrets.GITHUB_TOKEN }} \
+          --skip-duplicate
