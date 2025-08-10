@@ -34,7 +34,7 @@ jobs:
       run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
     
     - name: Run tests
-      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal
+      run: dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release --no-build --verbosity normal --logger trx --results-directory TestResults
     
     - name: Generate RC version
       id: version
