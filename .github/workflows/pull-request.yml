@@ -48,17 +48,18 @@ jobs:
     - name: Pack NuGet package
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
     
+    - name: Make tag creation script executable
+      run: chmod +x ./scripts/create-tag.sh
+    
     - name: Create tag
-      run: |
-        gh api --method POST /repos/${{ github.repository }}/git/refs \
-          --field ref="refs/tags/v${{ steps.version.outputs.version }}" \
-          --field sha="${{ github.sha }}"
+      run: ./scripts/create-tag.sh "${{ steps.version.outputs.version }}" "${{ github.sha }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
+    - name: Make package publishing script executable
+      run: chmod +x ./scripts/publish-package.sh
+    
     - name: Publish to GitHub Packages
-      run: |
-        dotnet nuget push ./artifacts/*.nupkg \
-          --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json \
-          --api-key ${{ secrets.GITHUB_TOKEN }} \
-          --skip-duplicate
+      run: ./scripts/publish-package.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
