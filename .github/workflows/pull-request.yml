@@ -46,10 +46,14 @@ jobs:
         
         # Remove 'v' prefix if present
         VERSION=${LATEST_TAG#v}
-        echo "Base version: ${VERSION}"
+        echo "Raw version: ${VERSION}"
+        
+        # Remove -rc suffix if present to get base version
+        BASE_VERSION=${VERSION%-rc}
+        echo "Base version: ${BASE_VERSION}"
         
         # Split version into components
-        IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
+        IFS='.' read -ra VERSION_PARTS <<< "$BASE_VERSION"
         MAJOR=${VERSION_PARTS[0]}
         MINOR=${VERSION_PARTS[1]}
         PATCH=${VERSION_PARTS[2]}
