@@ -134,8 +134,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             ApiResponse<TransactionSummary> result;
 
-            var startDate = DateTime.MinValue;
-            var endDate = DateTime.UtcNow.AddDays(7);
+            var startDate = DateTimeOffset.MinValue;
+            var endDate = DateTimeOffset.UtcNow.AddDays(7);
             var userNativeCurrency = "TEST";
             var productType = ProductType.Spot;
 
@@ -163,8 +163,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
         {
             ApiResponse<TransactionSummary> result;
 
-            var startDate = DateTime.UtcNow.AddDays(-7);
-            var endDate = DateTime.MinValue;
+            var startDate = DateTimeOffset.UtcNow.AddDays(-7);
+            var endDate = DateTimeOffset.MinValue;
             var userNativeCurrency = "TEST";
             var productType = ProductType.Spot;
 
