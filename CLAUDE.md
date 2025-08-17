@@ -16,8 +16,8 @@ dotnet build CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdv
 # Run unit tests
 dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release
 
-# Run interactive Blazor test app
-dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.SandboxTests/
+# Run interactive Blazor sandbox (see standalone sandbox repository)
+# https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox
 ```
 
 ### Packaging
@@ -43,7 +43,6 @@ CoinbaseAdvancedTradeClient/
 │   ├── Models/                 # Data models
 │   └── Resources/              # Resource files
 ├── CoinbaseAdvancedTradeClient.UnitTests/     # Unit tests
-├── CoinbaseAdvancedTradeClient.SandboxTests/  # Interactive Blazor app
 ├── README.md                   # Main documentation
 ├── CHANGELOG.md               # Version history
 └── CLAUDE.md                  # This file
@@ -84,7 +83,7 @@ CoinbaseAdvancedTradeClient/
 2. Implement in `Endpoints/`
 3. Add models in `Models/Api/`
 4. Create unit tests in `UnitTests/Endpoints/`
-5. Add to sandbox app for manual testing
+5. Test with standalone [sandbox app](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) for manual testing
 
 ### Updating Dependencies
 1. Check compatibility with .NET 9
@@ -94,7 +93,7 @@ CoinbaseAdvancedTradeClient/
 
 ### Testing
 - **Unit Tests**: 140+ tests covering all functionality
-- **Integration Tests**: Blazor sandbox app for manual testing
+- **Integration Tests**: Standalone [Blazor sandbox app](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) for manual testing
 - **CI Tests**: Automated testing on every PR
 
 ## Authentication
@@ -112,6 +111,6 @@ The client uses API key authentication with HMAC-SHA256 signatures:
 ## Getting Help
 
 - Check existing unit tests for usage examples
-- Use the Blazor sandbox app for interactive testing
+- Use the standalone [Blazor sandbox app](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) for interactive testing
 - Review the comprehensive README.md for API documentation
 - Check CHANGELOG.md for recent changes and migration notes
