@@ -22,7 +22,7 @@ We are actively working toward a 1.0.0 stable release. Check the [CHANGELOG.md](
 - **WebSocket Support**: Real-time market data streaming with support for multiple channels
 - **Authentication**: Secure API key-based authentication with HMAC signature generation
 - **Type Safety**: Strongly-typed models for all API requests and responses
-- **Testing**: Comprehensive unit test suite and interactive Blazor test application
+- **Testing**: Comprehensive unit test suite with 142+ passing tests
 - **Modern .NET**: Built for .NET 9.0 with nullable reference types and implicit usings
 
 ## Installation
@@ -122,11 +122,7 @@ dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/
 
 ### Interactive Testing
 
-The project includes a Blazor Server application for interactive API testing:
-
-```bash
-dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.SandboxTests/
-```
+For interactive API testing, use the separate [CoinbaseAdvancedTradeClient-Sandbox](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) project, which provides a comprehensive Blazor Server application with full WebSocket support.
 
 ## Contributing
 

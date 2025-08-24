@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- **BREAKING**: Removed embedded SandboxTests project from solution
+- Interactive Blazor test application moved to separate [CoinbaseAdvancedTradeClient-Sandbox](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) repository
+
+### Changed
+- Streamlined solution to focus on core library and unit tests only
+- Updated documentation to reference separate sandbox project
+- All 142 unit tests now passing (previously had 2 failing tests)
+
 ## [0.2.0] - 2025-08-10
 
 ### Added
@@ -50,6 +59,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Complete API Coverage**: All Coinbase Advanced Trade endpoints
 - **WebSocket Support**: Real-time ticker, level2, market trades, and user data
 - **Authentication**: Secure API key-based authentication
-- **Testing**: 140+ unit tests covering all functionality
-- **Interactive Testing**: Blazor Server app for manual API testing
+- **Testing**: 142+ unit tests covering all functionality
+- **Interactive Testing**: Separate Blazor Server project for manual API testing
 - **Type Safety**: Strongly-typed models with nullable reference types
