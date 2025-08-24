@@ -16,8 +16,8 @@ dotnet build CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient/CoinbaseAdv
 # Run unit tests
 dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/CoinbaseAdvancedTradeClient.UnitTests.csproj --configuration Release
 
-# Run interactive Blazor test app
-dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.SandboxTests/
+# Build the complete solution
+dotnet build CoinbaseAdvancedTradeClient.sln --configuration Release
 ```
 
 ### Packaging
@@ -42,8 +42,7 @@ CoinbaseAdvancedTradeClient/
 │   ├── Interfaces/             # Interface definitions
 │   ├── Models/                 # Data models
 │   └── Resources/              # Resource files
-├── CoinbaseAdvancedTradeClient.UnitTests/     # Unit tests
-├── CoinbaseAdvancedTradeClient.SandboxTests/  # Interactive Blazor app
+├── CoinbaseAdvancedTradeClient.UnitTests/     # Unit tests (142+ tests)
 ├── README.md                   # Main documentation
 ├── CHANGELOG.md               # Version history
 └── CLAUDE.md                  # This file
@@ -56,7 +55,7 @@ CoinbaseAdvancedTradeClient/
 - **Newtonsoft.Json**: JSON serialization
 - **WebSocket4Net**: WebSocket connections
 - **xUnit + FakeItEasy**: Unit testing
-- **Blazor Server**: Interactive testing application
+- **Separate Sandbox**: Interactive testing via standalone CoinbaseAdvancedTradeClient-Sandbox project
 
 ## CI/CD Pipeline
 
@@ -84,7 +83,7 @@ CoinbaseAdvancedTradeClient/
 2. Implement in `Endpoints/`
 3. Add models in `Models/Api/`
 4. Create unit tests in `UnitTests/Endpoints/`
-5. Add to sandbox app for manual testing
+5. Test manually using the separate CoinbaseAdvancedTradeClient-Sandbox project
 
 ### Updating Dependencies
 1. Check compatibility with .NET 9
@@ -93,8 +92,8 @@ CoinbaseAdvancedTradeClient/
 4. Update documentation if needed
 
 ### Testing
-- **Unit Tests**: 140+ tests covering all functionality
-- **Integration Tests**: Blazor sandbox app for manual testing
+- **Unit Tests**: 142+ tests covering all functionality
+- **Integration Tests**: Separate CoinbaseAdvancedTradeClient-Sandbox project for manual testing
 - **CI Tests**: Automated testing on every PR
 
 ## Authentication
@@ -106,12 +105,12 @@ The client uses API key authentication with HMAC-SHA256 signatures:
 
 ## Known Issues
 
-- 2 unit tests currently failing (unrelated to .NET 9 migration)
 - Build produces warnings for nullable reference types (expected with .NET 9)
+- All unit tests now passing (142 tests)
 
 ## Getting Help
 
 - Check existing unit tests for usage examples
-- Use the Blazor sandbox app for interactive testing
+- Use the separate CoinbaseAdvancedTradeClient-Sandbox project for interactive testing
 - Review the comprehensive README.md for API documentation
 - Check CHANGELOG.md for recent changes and migration notes
