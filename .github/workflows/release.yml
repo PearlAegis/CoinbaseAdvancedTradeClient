@@ -42,7 +42,7 @@ jobs:
       run: ./scripts/extract-version-from-tag.sh "${{ github.event.release.tag_name }}"
     
     - name: Pack NuGet package
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+      run: ./scripts/pack-with-version.sh "${{ env.PROJECT_PATH }}" "${{ steps.version.outputs.version }}"
     
     - name: Publish to GitHub Packages
       run: ./scripts/publish-package.sh
