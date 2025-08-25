@@ -10,7 +10,7 @@ set -e
 
 PROJECT_PATH=${1:-}
 PACKAGE_VERSION=${2:-}
-OUTPUT_DIR=${3:-./artifacts}
+OUTPUT_DIR=${3:-artifacts}
 
 if [ -z "$PROJECT_PATH" ]; then
     echo "Error: Project path is required as first argument"
@@ -36,6 +36,9 @@ else
     ASSEMBLY_VERSION="${BASE_VERSION}.0"
     echo "Release build - Assembly version: ${ASSEMBLY_VERSION}"
 fi
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
 
 # Pack with all version properties set
 echo "Executing dotnet pack..."
