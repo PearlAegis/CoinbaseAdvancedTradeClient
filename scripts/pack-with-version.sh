@@ -40,15 +40,13 @@ fi
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
-# Pack with all version properties set (rebuild to apply version properties)
+# Pack with package version (assembly version already set during build)
 echo "Executing dotnet pack..."
 dotnet pack "$PROJECT_PATH" \
     --configuration Release \
+    --no-build \
     --output "$OUTPUT_DIR" \
-    -p:PackageVersion="$PACKAGE_VERSION" \
-    -p:AssemblyVersion="$ASSEMBLY_VERSION" \
-    -p:FileVersion="$ASSEMBLY_VERSION" \
-    -p:AssemblyInformationalVersion="$PACKAGE_VERSION"
+    -p:PackageVersion="$PACKAGE_VERSION"
 
 echo "Package created successfully with:"
 echo "  Package Version: $PACKAGE_VERSION"
