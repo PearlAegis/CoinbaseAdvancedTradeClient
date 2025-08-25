@@ -134,10 +134,19 @@ For interactive API testing, use the separate [CoinbaseAdvancedTradeClient-Sandb
 
 ## Versioning
 
-This project uses semantic versioning:
-- **RC packages**: Generated automatically on pull requests with `-rc` suffix
-- **Release packages**: Created when GitHub releases are published
+This project uses semantic versioning with synchronized assembly versions:
+
+### Package Versioning
+- **RC packages**: Generated automatically on pull requests with `-rc` suffix (e.g., `1.2.3-rc`)
+- **Release packages**: Created when GitHub releases are published (e.g., `1.2.3`)
 - All packages are published to GitHub Packages
+
+### Assembly Versioning
+Assembly versions are automatically synchronized with package versions using a numeric scheme:
+- **Release packages** (`1.2.3`): Assembly version = `1.2.3.0`
+- **RC packages** (`1.2.3-rc`): Assembly version = `1.2.3.1` 
+
+This ensures that `Assembly.GetName().Version` returns the correct version in consuming applications, with the revision number indicating release (0) vs RC (1) builds.
 
 ## Documentation
 

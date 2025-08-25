@@ -73,8 +73,15 @@ CoinbaseAdvancedTradeClient/
 
 ### Versioning Strategy
 - **RC Packages**: `X.Y.Z-rc` (auto-generated on PRs)
+  - Package Version: `X.Y.Z-rc`
+  - Assembly Version: `X.Y.Z.1`
 - **Release Packages**: `X.Y.Z` (from GitHub releases)
+  - Package Version: `X.Y.Z`
+  - Assembly Version: `X.Y.Z.0`
 - **Current Version**: 0.2.0 (includes .NET 9 upgrade and GitHub Actions migration)
+
+### Assembly Versioning
+Assembly versions are automatically synchronized with package versions using the `pack-with-version.sh` script, ensuring `Assembly.GetName().Version` returns the correct version in consuming applications.
 
 ## Common Development Tasks
 
