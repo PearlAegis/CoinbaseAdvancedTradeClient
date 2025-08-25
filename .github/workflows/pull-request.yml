@@ -43,7 +43,7 @@ jobs:
       run: ./scripts/generate-rc-version.sh
     
     - name: Pack NuGet package
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+      run: ./scripts/pack-with-version.sh "${{ env.PROJECT_PATH }}" "${{ steps.version.outputs.version }}"
     
     - name: Create tag
       run: ./scripts/create-tag.sh "${{ steps.version.outputs.version }}" "${{ github.sha }}"

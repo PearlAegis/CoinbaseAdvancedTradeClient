@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-08-25
+
+### Added
+- **Assembly Version Synchronization**: Assembly versions now match package versions for better version tracking
+- New `pack-with-version.sh` script for automated assembly versioning in CI/CD
+- Enhanced version documentation in README and CLAUDE.md
+
+### Changed
+- **Assembly Versioning Scheme**: 
+  - Release packages (`X.Y.Z`): Assembly version = `X.Y.Z.0`
+  - RC packages (`X.Y.Z-rc`): Assembly version = `X.Y.Z.1`
+- CI/CD workflows now set `AssemblyVersion`, `FileVersion`, and `AssemblyInformationalVersion` properties
+- Cleaner GitHub Actions workflows with versioning logic moved to reusable script
+
+### Removed
+- **BREAKING**: Removed embedded SandboxTests project from solution
+- Interactive Blazor test application moved to separate [CoinbaseAdvancedTradeClient-Sandbox](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) repository
+
+### Fixed
+- `Assembly.GetName().Version` now returns correct package version in consuming applications
+- All 142 unit tests now passing (previously had 2 failing tests)
+
 ## [0.2.0] - 2025-08-10
 
 ### Added
@@ -50,6 +72,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Complete API Coverage**: All Coinbase Advanced Trade endpoints
 - **WebSocket Support**: Real-time ticker, level2, market trades, and user data
 - **Authentication**: Secure API key-based authentication
-- **Testing**: 140+ unit tests covering all functionality
-- **Interactive Testing**: Blazor Server app for manual API testing
+- **Testing**: 142+ unit tests covering all functionality
+- **Interactive Testing**: Separate Blazor Server project for manual API testing
 - **Type Safety**: Strongly-typed models with nullable reference types
