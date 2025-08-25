@@ -40,11 +40,10 @@ fi
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
-# Pack with all version properties set
+# Pack with all version properties set (rebuild to apply version properties)
 echo "Executing dotnet pack..."
 dotnet pack "$PROJECT_PATH" \
     --configuration Release \
-    --no-build \
     --output "$OUTPUT_DIR" \
     -p:PackageVersion="$PACKAGE_VERSION" \
     -p:AssemblyVersion="$ASSEMBLY_VERSION" \
