@@ -29,21 +29,21 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
-    - name: Restore dependencies
-      run: dotnet restore ${{ env.SOLUTION_PATH }}
-    
-    - name: Build
-      run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
-    
-    - name: Run tests
-      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
-    
     - name: Generate RC version
       id: version
       run: ./scripts/generate-rc-version.sh
     
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
+    
+    - name: Build with version
+      run: ./scripts/build-with-version.sh "${{ env.SOLUTION_PATH }}" "${{ steps.version.outputs.version }}"
+    
+    - name: Run tests
+      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --configuration Release --no-build --verbosity normal
+    
     - name: Pack NuGet package
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts -p:PackageVersion=${{ steps.version.outputs.version }}
+      run: ./scripts/pack-with-version.sh "${{ env.PROJECT_PATH }}" "${{ steps.version.outputs.version }}"
     
     - name: Create tag
       run: ./scripts/create-tag.sh "${{ steps.version.outputs.version }}" "${{ github.sha }}"

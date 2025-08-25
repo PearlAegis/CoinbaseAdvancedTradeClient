@@ -22,7 +22,7 @@ We are actively working toward a 1.0.0 stable release. Check the [CHANGELOG.md](
 - **WebSocket Support**: Real-time market data streaming with support for multiple channels
 - **Authentication**: Secure API key-based authentication with HMAC signature generation
 - **Type Safety**: Strongly-typed models for all API requests and responses
-- **Testing**: Comprehensive unit test suite and interactive Blazor test application
+- **Testing**: Comprehensive unit test suite with 142+ passing tests
 - **Modern .NET**: Built for .NET 9.0 with nullable reference types and implicit usings
 
 ## Installation
@@ -122,11 +122,7 @@ dotnet test CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.UnitTests/
 
 ### Interactive Testing
 
-The project includes a Blazor Server application for interactive API testing:
-
-```bash
-dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.SandboxTests/
-```
+For interactive API testing, use the separate [CoinbaseAdvancedTradeClient-Sandbox](https://github.com/PearlAegis/CoinbaseAdvancedTradeClient-Sandbox) project, which provides a comprehensive Blazor Server application with full WebSocket support.
 
 ## Contributing
 
@@ -138,10 +134,19 @@ dotnet run --project CoinbaseAdvancedTradeClient/CoinbaseAdvancedTradeClient.San
 
 ## Versioning
 
-This project uses semantic versioning:
-- **RC packages**: Generated automatically on pull requests with `-rc` suffix
-- **Release packages**: Created when GitHub releases are published
+This project uses semantic versioning with synchronized assembly versions:
+
+### Package Versioning
+- **RC packages**: Generated automatically on pull requests with `-rc` suffix (e.g., `1.2.3-rc`)
+- **Release packages**: Created when GitHub releases are published (e.g., `1.2.3`)
 - All packages are published to GitHub Packages
+
+### Assembly Versioning
+Assembly versions are automatically synchronized with package versions using a numeric scheme:
+- **Release packages** (`1.2.3`): Assembly version = `1.2.3.0`
+- **RC packages** (`1.2.3-rc`): Assembly version = `1.2.3.1` 
+
+This ensures that `Assembly.GetName().Version` returns the correct version in consuming applications, with the revision number indicating release (0) vs RC (1) builds.
 
 ## Documentation
 
