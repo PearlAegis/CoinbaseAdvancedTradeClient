@@ -5,6 +5,7 @@ using CoinbaseAdvancedTradeClient.Interfaces.Endpoints;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries;
 using CoinbaseAdvancedTradeClient.Resources;
+using Flurl;
 using Flurl.Http;
 
 namespace CoinbaseAdvancedTradeClient
@@ -23,7 +24,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (endDate.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(endDate));
 
                 var transactionSummary = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.TransactionSummaryEndpoint)
                     .SetQueryParam(RequestParameters.StartDate, startDate.ToUniversalTime())
                     .SetQueryParam(RequestParameters.EndDate, endDate.ToUniversalTime())

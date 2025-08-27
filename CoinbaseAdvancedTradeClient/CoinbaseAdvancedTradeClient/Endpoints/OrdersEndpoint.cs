@@ -6,6 +6,7 @@ using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Orders;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 using CoinbaseAdvancedTradeClient.Resources;
+using Flurl;
 using Flurl.Http;
 
 namespace CoinbaseAdvancedTradeClient
@@ -29,7 +30,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (end.Equals(DateTimeOffset.MinValue)) end = null;
 
                 var fillsPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalFillsEndpoint)
                     .SetQueryParam(RequestParameters.OrderId, orderId)
                     .SetQueryParam(RequestParameters.ProductId, productId)
@@ -65,7 +65,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (endDate.Equals(DateTimeOffset.MinValue)) endDate = null;
 
                 var ordersPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalBatchEndpoint)
                     .SetQueryParam(RequestParameters.ProductId, productId)
                     .SetQueryParam(RequestParameters.OrderStatus, orderStatuses?.ToArray())
@@ -100,7 +99,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(orderId)) throw new ArgumentNullException(nameof(orderId), ErrorMessages.OrderIdRequired);
 
                 var ordersPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalEndpoint)
                     .AppendPathSegment(orderId)
                     .GetJsonAsync<OrdersPage>();
@@ -136,9 +134,8 @@ namespace CoinbaseAdvancedTradeClient
                 }
 
                 var createOrderResponse = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
-                    .PostJsonAsync(createOrder, cancellationToken)
+                    .PostJsonAsync(createOrder, HttpCompletionOption.ResponseContentRead, cancellationToken)
                     .ReceiveJson<CreateOrderResponse>();
 
                 response.Data = createOrderResponse;
@@ -162,9 +159,8 @@ namespace CoinbaseAdvancedTradeClient
                 if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
 
                 var cancelOrderResponse = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
-                    .PostJsonAsync(cancelOrders, cancellationToken)
+                    .PostJsonAsync(cancelOrders, HttpCompletionOption.ResponseContentRead, cancellationToken)
                     .ReceiveJson<CancelOrdersResponse>();
 
                 response.Data = cancelOrderResponse;

@@ -22,7 +22,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
                 var accountsPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
                     .SetQueryParam(RequestParameters.Cursor, cursor)
@@ -48,7 +47,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(accountId)) throw new ArgumentNullException(nameof(accountId), ErrorMessages.AccountIdRequired);
 
                 var accountsPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.AccountsEndpoint)
                     .AppendPathSegment(accountId)
                     .GetJsonAsync<AccountsPage>();
