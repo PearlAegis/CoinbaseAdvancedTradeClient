@@ -4,6 +4,7 @@ using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.TransactionSummaries;
 using CoinbaseAdvancedTradeClient.Models.Config;
+using CoinbaseAdvancedTradeClient.UnitTests.TestHelpers;
 using Flurl.Http;
 using Flurl.Http.Testing;
 using Xunit;
@@ -16,12 +17,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         public TransactionSummaryEndpointTests()
         {
-            var config = new ApiClientConfig()
-            {
-                ApiKey = "key",
-                ApiSecret = "secret"
-            };
-
+            var config = TestConfigHelper.CreateTestApiConfig();
             _testClient = new CoinbaseAdvancedTradeApiClient(config);
         }
 

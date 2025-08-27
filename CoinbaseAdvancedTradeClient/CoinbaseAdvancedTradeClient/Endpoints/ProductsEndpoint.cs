@@ -6,6 +6,7 @@ using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Api.Products;
 using CoinbaseAdvancedTradeClient.Models.Pages;
 using CoinbaseAdvancedTradeClient.Resources;
+using Flurl;
 using Flurl.Http;
 
 namespace CoinbaseAdvancedTradeClient
@@ -24,7 +25,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
 
                 var productsPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
                     .SetQueryParam(RequestParameters.Offset, offset)
@@ -51,7 +51,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
 
                 var product = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
                     .GetJsonAsync<Product>();
@@ -78,7 +77,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
 
                 var candlesPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
                     .AppendPathSegment(ApiEndpoints.CandlesEndpoint)
@@ -108,7 +106,6 @@ namespace CoinbaseAdvancedTradeClient
                 if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
                 var tradesPage = await _config.ApiUrl
-                    .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
                     .AppendPathSegment(ApiEndpoints.TickerEndpoint)

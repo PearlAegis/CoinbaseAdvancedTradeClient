@@ -1,6 +1,7 @@
 ﻿using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Config;
+using CoinbaseAdvancedTradeClient.UnitTests.TestHelpers;
 using System.Net.Sockets;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_NullConfig_ThrowsArgumentNullException()
         {
             //Arrange
-            WebSocketClientConfig config = null;
+            SecretApiKeyWebSocketConfig config = null;
 
             //Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
@@ -30,10 +31,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_EmptyConfigSetting_ThrowsArgumentException(string key, string secret)
         {
             //Arrange
-            WebSocketClientConfig config = new WebSocketClientConfig()
+            SecretApiKeyWebSocketConfig config = new SecretApiKeyWebSocketConfig()
             {
-                ApiKey = key,
-                ApiSecret = secret
+                KeyName = key,
+                KeySecret = string.IsNullOrWhiteSpace(secret) ? secret : TestConfigHelper.GenerateTestKeySecret()
             };
 
             //Act & Assert
@@ -164,12 +165,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
 
         private ICoinbaseAdvancedTradeWebSocketClient CreateTestClient()
         {
-            WebSocketClientConfig config = new WebSocketClientConfig()
-            {
-                ApiKey = "testKey",
-                ApiSecret = "testSecret"
-            };
-
+            var config = TestConfigHelper.CreateTestWebSocketConfig();
             return new CoinbaseAdvancedTradeWebSocketClient(config);
         }
     }

@@ -1,48 +1,44 @@
 ﻿using CoinbaseAdvancedTradeClient.Authentication;
-using CoinbaseAdvancedTradeClient.Constants;
 using CoinbaseAdvancedTradeClient.Interfaces;
 using CoinbaseAdvancedTradeClient.Models.Api.Common;
 using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
-using Flurl.Http.Configuration;
 
 namespace CoinbaseAdvancedTradeClient
 {
     public partial class CoinbaseAdvancedTradeApiClient : FlurlClient, ICoinbaseAdvancedTradeApiClient
     {
-        private ApiClientConfig _config;
+        private readonly SecretApiKeyConfig _config;
 
-        public CoinbaseAdvancedTradeApiClient(ApiClientConfig config)
+        public CoinbaseAdvancedTradeApiClient(SecretApiKeyConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
-            if (string.IsNullOrWhiteSpace(config.ApiKey)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.ApiKey));
-            if (string.IsNullOrWhiteSpace(config.ApiSecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.ApiSecret));
+            if (string.IsNullOrWhiteSpace(config.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.KeyName));
+            if (string.IsNullOrWhiteSpace(config.KeySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.KeySecret));
 
             _config = config;
 
-            this.Configure(ApiKeyAuthentication);
+            this.BeforeCall(SecretApiKeyAuthentication);
         }
 
         #region Authentication
 
-        private void ApiKeyAuthentication(ClientFlurlHttpSettings settings)
+        private void SecretApiKeyAuthentication(FlurlCall call)
         {
-            async Task SetHeaders(FlurlCall http)
-            {
-                var body = http.RequestBody;
-                var method = http.Request.Verb.Method.ToUpperInvariant();
-                var url = http.Request.Url.ToUri().AbsolutePath;
-                var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-                var signature = ApiKeyAuthenticator.GenerateApiSignature(_config.ApiSecret, timestamp, method, url, body);
+            var method = call.Request.Verb.Method.ToUpperInvariant();
+            var uri = call.Request.Url.ToUri();
+            var requestHost = uri.Host;
+            var requestPath = uri.PathAndQuery;
 
-                http.Request
-                   .WithHeader(RequestHeaders.AccessKey, _config.ApiKey)
-                   .WithHeader(RequestHeaders.AccessSign, signature)
-                   .WithHeader(RequestHeaders.AccessTimestamp, timestamp);
-            }
+            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+                _config.KeyName, 
+                _config.KeySecret, 
+                method, 
+                requestHost, 
+                requestPath);
 
-            settings.BeforeCallAsync = SetHeaders;
+            call.Request.WithHeader("Authorization", $"Bearer {jwt}");
         }
 
         #endregion // Authentication
