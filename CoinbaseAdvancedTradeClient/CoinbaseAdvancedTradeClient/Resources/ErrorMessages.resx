@@ -204,4 +204,7 @@
   <data name="InvalidEd25519KeyLength" xml:space="preserve">
     <value>Invalid Ed25519 key length. Expected 64 bytes.</value>
   </data>
+  <data name="BearerTokenFormat" xml:space="preserve">
+    <value>Bearer {0}</value>
+  </data>
 </root>

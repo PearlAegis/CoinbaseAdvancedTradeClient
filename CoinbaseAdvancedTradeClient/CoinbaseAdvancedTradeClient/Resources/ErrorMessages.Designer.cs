@@ -320,5 +320,14 @@ namespace CoinbaseAdvancedTradeClient.Resources {
                 return ResourceManager.GetString("InvalidEd25519KeyLength", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bearer {0}.
+        /// </summary>
+        public static string BearerTokenFormat {
+            get {
+                return ResourceManager.GetString("BearerTokenFormat", resourceCulture);
+            }
+        }
     }
 }
