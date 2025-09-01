@@ -313,11 +313,11 @@ namespace CoinbaseAdvancedTradeClient.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid Ed25519 key length. Expected 64 bytes..
+        ///   Looks up a localized string similar to Invalid EC private key format. Expected PEM format..
         /// </summary>
-        public static string InvalidEd25519KeyLength {
+        public static string InvalidECKeyFormat {
             get {
-                return ResourceManager.GetString("InvalidEd25519KeyLength", resourceCulture);
+                return ResourceManager.GetString("InvalidECKeyFormat", resourceCulture);
             }
         }
         

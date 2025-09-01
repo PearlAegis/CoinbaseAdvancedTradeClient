@@ -201,8 +201,8 @@
   <data name="InvalidBase64KeyFormat" xml:space="preserve">
     <value>Invalid base64 key format.</value>
   </data>
-  <data name="InvalidEd25519KeyLength" xml:space="preserve">
-    <value>Invalid Ed25519 key length. Expected 64 bytes.</value>
+  <data name="InvalidECKeyFormat" xml:space="preserve">
+    <value>Invalid EC private key format. Expected PEM format.</value>
   </data>
   <data name="BearerTokenFormat" xml:space="preserve">
     <value>Bearer {0}</value>
