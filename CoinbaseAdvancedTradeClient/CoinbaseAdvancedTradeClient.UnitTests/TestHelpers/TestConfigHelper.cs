@@ -1,11 +1,9 @@
 using CoinbaseAdvancedTradeClient.Models.Config;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Asn1.Sec;
-using System.Text;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.TestHelpers
 {
@@ -27,7 +25,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.TestHelpers
             using var stringWriter = new StringWriter();
             var pemWriter = new PemWriter(stringWriter);
             pemWriter.WriteObject(privateKey);
-            pemWriter.Writer.Flush();
             
             return stringWriter.ToString();
         }

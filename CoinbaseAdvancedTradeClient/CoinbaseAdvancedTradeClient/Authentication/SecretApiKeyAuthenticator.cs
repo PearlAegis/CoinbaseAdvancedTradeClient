@@ -1,5 +1,6 @@
 using CoinbaseAdvancedTradeClient.Resources;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using Org.BouncyCastle.OpenSsl;
@@ -26,12 +27,18 @@ namespace CoinbaseAdvancedTradeClient.Authentication
                 var pemReader = new PemReader(stringReader);
                 var keyObject = pemReader.ReadObject();
                 
-                if (keyObject is not ECPrivateKeyParameters ecKey)
+                if (keyObject is ECPrivateKeyParameters ecKey)
+                {
+                    privateKey = ecKey;
+                }
+                else if (keyObject is AsymmetricCipherKeyPair keyPair && keyPair.Private is ECPrivateKeyParameters ecPrivateKey)
+                {
+                    privateKey = ecPrivateKey;
+                }
+                else
                 {
                     throw new ArgumentException(ErrorMessages.InvalidECKeyFormat, nameof(keySecret));
                 }
-                
-                privateKey = ecKey;
             }
             catch (Exception ex) when (!(ex is ArgumentException))
             {
