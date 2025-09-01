@@ -189,4 +189,22 @@
   <data name="WebSocketMustBeConnected" xml:space="preserve">
     <value>Web Socket must be connected.</value>
   </data>
+  <data name="RequestMethodRequired" xml:space="preserve">
+    <value>A request method is required.</value>
+  </data>
+  <data name="RequestHostRequired" xml:space="preserve">
+    <value>A request host is required.</value>
+  </data>
+  <data name="RequestPathRequired" xml:space="preserve">
+    <value>A request path is required.</value>
+  </data>
+  <data name="InvalidBase64KeyFormat" xml:space="preserve">
+    <value>Invalid base64 key format.</value>
+  </data>
+  <data name="InvalidEd25519KeyLength" xml:space="preserve">
+    <value>Invalid Ed25519 key length. Expected 64 bytes.</value>
+  </data>
+  <data name="BearerTokenFormat" xml:space="preserve">
+    <value>Bearer {0}</value>
+  </data>
 </root>

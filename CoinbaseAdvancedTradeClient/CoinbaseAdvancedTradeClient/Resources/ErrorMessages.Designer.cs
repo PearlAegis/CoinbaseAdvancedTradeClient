@@ -275,5 +275,59 @@ namespace CoinbaseAdvancedTradeClient.Resources {
                 return ResourceManager.GetString("WebSocketMustBeConnected", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A request method is required..
+        /// </summary>
+        public static string RequestMethodRequired {
+            get {
+                return ResourceManager.GetString("RequestMethodRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A request host is required..
+        /// </summary>
+        public static string RequestHostRequired {
+            get {
+                return ResourceManager.GetString("RequestHostRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A request path is required..
+        /// </summary>
+        public static string RequestPathRequired {
+            get {
+                return ResourceManager.GetString("RequestPathRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid base64 key format..
+        /// </summary>
+        public static string InvalidBase64KeyFormat {
+            get {
+                return ResourceManager.GetString("InvalidBase64KeyFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Ed25519 key length. Expected 64 bytes..
+        /// </summary>
+        public static string InvalidEd25519KeyLength {
+            get {
+                return ResourceManager.GetString("InvalidEd25519KeyLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bearer {0}.
+        /// </summary>
+        public static string BearerTokenFormat {
+            get {
+                return ResourceManager.GetString("BearerTokenFormat", resourceCulture);
+            }
+        }
     }
 }
