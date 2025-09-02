@@ -13,9 +13,9 @@ using WebSocket4Net;
 
 namespace CoinbaseAdvancedTradeClient
 {
-    public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient, IDisposable
+    public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient
     {
-        private WebSocketClientConfig _config;
+        private CoinbaseClientConfig _config;
         private WebSocket _socket;
 
         private Action<object?, bool> _messageReceivedCallback;
@@ -25,11 +25,11 @@ namespace CoinbaseAdvancedTradeClient
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
 
-        public CoinbaseAdvancedTradeWebSocketClient(WebSocketClientConfig config)
+        public CoinbaseAdvancedTradeWebSocketClient(CoinbaseClientConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
-            if (string.IsNullOrWhiteSpace(config.ApiKey)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.ApiKey));
-            if (string.IsNullOrWhiteSpace(config.ApiSecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.ApiSecret));
+            if (string.IsNullOrWhiteSpace(config.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.KeyName));
+            if (string.IsNullOrWhiteSpace(config.KeySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.KeySecret));
 
             _config = config;
         }
@@ -80,17 +80,19 @@ namespace CoinbaseAdvancedTradeClient
 
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
-            var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
+            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+                _config.KeyName,
+                _config.KeySecret,
+                "GET",
+                _config.WebSocketUrl,
+                "/");
 
             var subscriptionMessage = new SubscriptionMessage
             {
-                ApiKey = _config.ApiKey,
+                Type = SubscriptionType.Subscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = signature,
-                Timestamp = timestamp,
-                Type = SubscriptionType.Subscribe,
+                Jwt = jwt
             };
 
             var subscribe = JsonConvert.SerializeObject(subscriptionMessage);
@@ -105,17 +107,19 @@ namespace CoinbaseAdvancedTradeClient
 
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
-            var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
+            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+                _config.KeyName,
+                _config.KeySecret,
+                "GET",
+                "advanced-trade-ws.coinbase.com",
+                "/");
 
             var unsubscribeMessage = new SubscriptionMessage
             {
-                ApiKey = _config.ApiKey,
+                Type = SubscriptionType.Unsubscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = signature,
-                Timestamp = timestamp,
-                Type = SubscriptionType.Unsubscribe
+                Jwt = jwt
             };
 
             var unsubscribe = JsonConvert.SerializeObject(unsubscribeMessage);

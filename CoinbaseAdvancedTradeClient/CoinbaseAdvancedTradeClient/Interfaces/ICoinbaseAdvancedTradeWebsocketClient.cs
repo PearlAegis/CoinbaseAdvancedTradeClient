@@ -2,7 +2,7 @@
 
 namespace CoinbaseAdvancedTradeClient.Interfaces
 {
-    public interface ICoinbaseAdvancedTradeWebSocketClient
+    public interface ICoinbaseAdvancedTradeWebSocketClient : IDisposable
     {
         public bool IsConnected { get; }
         Task<bool> ConnectAsync(Action<object?, bool> messageReceivedCallback, Action<object?, EventArgs>? openedCallback = null, Action<object?, EventArgs>? closedCallback = null, Action<Exception>? errorCallback = null);
