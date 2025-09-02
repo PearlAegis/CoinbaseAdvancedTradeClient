@@ -84,17 +84,15 @@ namespace CoinbaseAdvancedTradeClient
                 _config.KeyName,
                 _config.KeySecret,
                 "GET",
-                "advanced-trade-ws.coinbase.com",
+                _config.WebSocketUrl,
                 "/");
 
             var subscriptionMessage = new SubscriptionMessage
             {
-                ApiKey = _config.KeyName,
+                Type = SubscriptionType.Subscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = jwt,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                Type = SubscriptionType.Subscribe,
+                Jwt = jwt
             };
 
             var subscribe = JsonConvert.SerializeObject(subscriptionMessage);
@@ -118,12 +116,10 @@ namespace CoinbaseAdvancedTradeClient
 
             var unsubscribeMessage = new SubscriptionMessage
             {
-                ApiKey = _config.KeyName,
+                Type = SubscriptionType.Unsubscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = jwt,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                Type = SubscriptionType.Unsubscribe
+                Jwt = jwt
             };
 
             var unsubscribe = JsonConvert.SerializeObject(unsubscribeMessage);
