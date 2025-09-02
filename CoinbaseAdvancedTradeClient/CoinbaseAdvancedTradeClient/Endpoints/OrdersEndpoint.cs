@@ -28,7 +28,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (start.Equals(DateTimeOffset.MinValue)) start = null;
                 if (end.Equals(DateTimeOffset.MinValue)) end = null;
 
-                var fillsPage = await _config.ApiUrl
+                var fillsPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalFillsEndpoint)
                     .SetQueryParam(RequestParameters.OrderId, orderId)
@@ -64,7 +64,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (startDate.Equals(DateTimeOffset.MinValue)) startDate = null;
                 if (endDate.Equals(DateTimeOffset.MinValue)) endDate = null;
 
-                var ordersPage = await _config.ApiUrl
+                var ordersPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalBatchEndpoint)
                     .SetQueryParam(RequestParameters.ProductId, productId)
@@ -99,7 +99,7 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (string.IsNullOrWhiteSpace(orderId)) throw new ArgumentNullException(nameof(orderId), ErrorMessages.OrderIdRequired);
 
-                var ordersPage = await _config.ApiUrl
+                var ordersPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersHistoricalEndpoint)
                     .AppendPathSegment(orderId)
@@ -135,7 +135,7 @@ namespace CoinbaseAdvancedTradeClient
                     createOrder.ClientOrderId = Guid.NewGuid().ToString();
                 }
 
-                var createOrderResponse = await _config.ApiUrl
+                var createOrderResponse = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersEndpoint)
                     .PostJsonAsync(createOrder, cancellationToken)
@@ -161,7 +161,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (cancelOrders == null) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderParametersRequired);
                 if (cancelOrders.OrderIds == null || !cancelOrders.OrderIds.Any()) throw new ArgumentNullException(nameof(cancelOrders), ErrorMessages.OrderIdRequired);
 
-                var cancelOrderResponse = await _config.ApiUrl
+                var cancelOrderResponse = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.OrdersBatchCancelEndpoint)
                     .PostJsonAsync(cancelOrders, cancellationToken)
