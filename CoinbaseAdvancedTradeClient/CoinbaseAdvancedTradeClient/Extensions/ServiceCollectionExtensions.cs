@@ -7,15 +7,15 @@ namespace CoinbaseAdvancedTradeClient.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddCoinbaseAdvancedTradeClient(this IServiceCollection services, IConfiguration configurationManager, ServiceLifetime apiClientLifetime = ServiceLifetime.Singleton, ServiceLifetime webSocketLifetime = ServiceLifetime.Scoped)
+        public static void AddCoinbaseAdvancedTradeClient(this IServiceCollection services, IConfiguration configurationManager)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
             if (configurationManager == null) throw new ArgumentNullException(nameof(configurationManager));
 
             services.Configure<CoinbaseClientConfig>(configurationManager.GetSection(nameof(CoinbaseClientConfig)));
 
-            services.Add(new ServiceDescriptor(typeof(ICoinbaseAdvancedTradeApiClient), typeof(CoinbaseAdvancedTradeApiClient), apiClientLifetime));
-            services.Add(new ServiceDescriptor(typeof(ICoinbaseAdvancedTradeWebSocketClient), typeof(CoinbaseAdvancedTradeWebSocketClient), apiClientLifetime));
+            services.AddScoped<ICoinbaseAdvancedTradeApiClient, CoinbaseAdvancedTradeApiClient>();
+            services.AddScoped<ICoinbaseAdvancedTradeWebSocketClient, CoinbaseAdvancedTradeWebSocketClient>();
         }
     }
 }
