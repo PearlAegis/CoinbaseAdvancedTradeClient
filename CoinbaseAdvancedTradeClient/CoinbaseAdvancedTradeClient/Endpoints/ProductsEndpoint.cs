@@ -23,7 +23,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (limit != null && (limit < 1 || limit > 250)) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
                 if (offset != null && (offset < 0)) throw new ArgumentException(ErrorMessages.OffsetParameterRange, nameof(offset));
 
-                var productsPage = await _config.ApiUrl
+                var productsPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .SetQueryParam(RequestParameters.Limit, limit)
@@ -50,7 +50,7 @@ namespace CoinbaseAdvancedTradeClient
             {
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
 
-                var product = await _config.ApiUrl
+                var product = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
@@ -77,7 +77,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (start.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(start));
                 if (end.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(end));
 
-                var candlesPage = await _config.ApiUrl
+                var candlesPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)
@@ -107,7 +107,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (string.IsNullOrWhiteSpace(productId)) throw new ArgumentNullException(nameof(productId), ErrorMessages.ProductIdRequired);
                 if (limit < 1 || limit > 250) throw new ArgumentException(ErrorMessages.LimitParameterRange, nameof(limit));
 
-                var tradesPage = await _config.ApiUrl
+                var tradesPage = await _config.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.ProductsEndpoint)
                     .AppendPathSegment(productId)

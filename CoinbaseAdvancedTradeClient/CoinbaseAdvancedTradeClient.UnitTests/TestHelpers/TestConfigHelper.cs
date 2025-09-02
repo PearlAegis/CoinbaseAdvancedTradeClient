@@ -29,18 +29,18 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.TestHelpers
             return stringWriter.ToString();
         }
 
-        public static SecretApiKeyConfig CreateTestApiConfig()
+        public static CoinbaseClientConfig CreateTestApiConfig()
         {
-            return new SecretApiKeyConfig()
+            return new CoinbaseClientConfig()
             {
                 KeyName = "test-key",
                 KeySecret = GenerateTestKeySecret()
             };
         }
 
-        public static SecretApiKeyWebSocketConfig CreateTestWebSocketConfig()
+        public static CoinbaseClientConfig CreateTestWebSocketConfig()
         {
-            return new SecretApiKeyWebSocketConfig()
+            return new CoinbaseClientConfig()
             {
                 KeyName = "test-key",
                 KeySecret = GenerateTestKeySecret()

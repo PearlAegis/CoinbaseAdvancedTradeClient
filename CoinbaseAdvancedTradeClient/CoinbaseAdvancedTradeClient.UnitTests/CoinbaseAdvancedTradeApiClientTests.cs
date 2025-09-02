@@ -9,7 +9,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_NullConfig_ThrowsArgumentNullException()
         {
             //Arrange
-            SecretApiKeyConfig config = null;
+            CoinbaseClientConfig config = null;
 
             //Act & Assert
             Assert.Throws<ArgumentNullException>(() => 
@@ -27,7 +27,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_EmptyConfigSetting_ThrowsArgumentException(string key, string secret)
         {
             //Arrange
-            SecretApiKeyConfig config = new SecretApiKeyConfig()
+            CoinbaseClientConfig config = new CoinbaseClientConfig()
             {
                 KeyName = key,
                 KeySecret = secret

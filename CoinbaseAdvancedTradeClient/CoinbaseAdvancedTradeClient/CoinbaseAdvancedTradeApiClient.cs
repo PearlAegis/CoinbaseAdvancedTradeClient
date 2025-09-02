@@ -11,9 +11,9 @@ namespace CoinbaseAdvancedTradeClient
 {
     public partial class CoinbaseAdvancedTradeApiClient : FlurlClient, ICoinbaseAdvancedTradeApiClient
     {
-        private SecretApiKeyConfig _config;
+        private CoinbaseClientConfig _config;
 
-        public CoinbaseAdvancedTradeApiClient(SecretApiKeyConfig config)
+        public CoinbaseAdvancedTradeApiClient(CoinbaseClientConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
             if (string.IsNullOrWhiteSpace(config.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.KeyName));

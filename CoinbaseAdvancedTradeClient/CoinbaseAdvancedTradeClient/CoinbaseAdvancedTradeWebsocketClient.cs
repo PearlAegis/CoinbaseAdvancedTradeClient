@@ -15,7 +15,7 @@ namespace CoinbaseAdvancedTradeClient
 {
     public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient, IDisposable
     {
-        private SecretApiKeyWebSocketConfig _config;
+        private CoinbaseClientConfig _config;
         private WebSocket _socket;
 
         private Action<object?, bool> _messageReceivedCallback;
@@ -25,7 +25,7 @@ namespace CoinbaseAdvancedTradeClient
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
 
-        public CoinbaseAdvancedTradeWebSocketClient(SecretApiKeyWebSocketConfig config)
+        public CoinbaseAdvancedTradeWebSocketClient(CoinbaseClientConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
             if (string.IsNullOrWhiteSpace(config.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.KeyName));
