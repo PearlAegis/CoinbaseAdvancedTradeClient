@@ -16,10 +16,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         public AccountsEndpointTests()
         {
-            var config = new ApiClientConfig()
+            var config = new CoinbaseClientConfig()
             {
-                ApiKey = "key",
-                ApiSecret = "secret"
+                KeyName = "key",
+                KeySecret = TestHelpers.TestConfigHelper.GenerateTestKeySecret()
             };
 
             _testClient = new CoinbaseAdvancedTradeApiClient(config);
