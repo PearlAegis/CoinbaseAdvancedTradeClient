@@ -13,7 +13,7 @@ using WebSocket4Net;
 
 namespace CoinbaseAdvancedTradeClient
 {
-    public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient, IDisposable
+    public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient
     {
         private CoinbaseClientConfig _config;
         private WebSocket _socket;
