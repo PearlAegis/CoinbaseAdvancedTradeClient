@@ -22,7 +22,7 @@ namespace CoinbaseAdvancedTradeClient
                 if (startDate.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.StartDateRequired, nameof(startDate));
                 if (endDate.Equals(DateTimeOffset.MinValue)) throw new ArgumentException(ErrorMessages.EndDateRequired, nameof(endDate));
 
-                var transactionSummary = await _config.ApiUrl
+                var transactionSummary = await _config.Value.ApiBaseUrl
                     .WithClient(this)
                     .AppendPathSegment(ApiEndpoints.TransactionSummaryEndpoint)
                     .SetQueryParam(RequestParameters.StartDate, startDate.ToUniversalTime())
