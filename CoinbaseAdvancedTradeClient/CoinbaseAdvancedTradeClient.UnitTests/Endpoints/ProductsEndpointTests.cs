@@ -7,6 +7,7 @@ using CoinbaseAdvancedTradeClient.Models.Pages;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
 using Flurl.Http.Testing;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
@@ -17,11 +18,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Endpoints
 
         public ProductsEndpointTests()
         {
-            var config = new CoinbaseClientConfig()
+            var configValue = new CoinbaseClientConfig()
             {
                 KeyName = "key",
                 KeySecret = TestHelpers.TestConfigHelper.GenerateTestKeySecret()
             };
+            var config = Options.Create(configValue);
 
             _testClient = new CoinbaseAdvancedTradeApiClient(config);
         }

@@ -6,18 +6,19 @@ using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Resources;
 using Flurl.Http;
 using Flurl.Http.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CoinbaseAdvancedTradeClient
 {
     public partial class CoinbaseAdvancedTradeApiClient : FlurlClient, ICoinbaseAdvancedTradeApiClient
     {
-        private CoinbaseClientConfig _config;
+        private IOptions<CoinbaseClientConfig> _config;
 
-        public CoinbaseAdvancedTradeApiClient(CoinbaseClientConfig config)
+        public CoinbaseAdvancedTradeApiClient(IOptions<CoinbaseClientConfig> config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
-            if (string.IsNullOrWhiteSpace(config.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.KeyName));
-            if (string.IsNullOrWhiteSpace(config.KeySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.KeySecret));
+            if (string.IsNullOrWhiteSpace(config.Value.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.Value.KeyName));
+            if (string.IsNullOrWhiteSpace(config.Value.KeySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.Value.KeySecret));
 
             _config = config;
 
@@ -34,8 +35,8 @@ namespace CoinbaseAdvancedTradeClient
                 var url = http.Request.Url.ToUri().AbsolutePath;
                 var host = http.Request.Url.ToUri().Host;
                 var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
-                    _config.KeyName, 
-                    _config.KeySecret, 
+                    _config.Value.KeyName, 
+                    _config.Value.KeySecret, 
                     method, 
                     host, 
                     url);

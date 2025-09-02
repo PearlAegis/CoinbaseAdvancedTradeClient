@@ -1,9 +1,8 @@
-using CoinbaseAdvancedTradeClient.Models.Config;
+using Org.BouncyCastle.Asn1.Sec;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
 using Org.BouncyCastle.OpenSsl;
-using Org.BouncyCastle.Asn1.Sec;
+using Org.BouncyCastle.Security;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests.TestHelpers
 {
@@ -27,24 +26,6 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.TestHelpers
             pemWriter.WriteObject(privateKey);
             
             return stringWriter.ToString();
-        }
-
-        public static CoinbaseClientConfig CreateTestApiConfig()
-        {
-            return new CoinbaseClientConfig()
-            {
-                KeyName = "test-key",
-                KeySecret = GenerateTestKeySecret()
-            };
-        }
-
-        public static CoinbaseClientConfig CreateTestWebSocketConfig()
-        {
-            return new CoinbaseClientConfig()
-            {
-                KeyName = "test-key",
-                KeySecret = GenerateTestKeySecret()
-            };
         }
     }
 }
