@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-09-08
+
+### Added
+- JWT Bearer Authentication with ES256 signatures replacing legacy HMAC
+- Unified `CoinbaseClientConfig` for both API and WebSocket clients
+- Dependency Injection support with `AddCoinbaseAdvancedTradeClient()` extension
+- Enhanced security with JWT tokens (2-minute expiration and replay protection)
+
+### Changed
+- Migrated from HMAC-SHA256 to JWT Bearer tokens with ECDSA ES256 signatures
+- Configuration properties renamed: `ApiKey`/`ApiSecret` → `KeyName`/`KeySecret`
+- Requires Coinbase Cloud API keys (EC P-256 private keys in PEM format)
+- Constructor parameters now use `IOptions<CoinbaseClientConfig>`
+
+### Removed
+- Legacy `ApiKeyAuthenticator` and CB-ACCESS-* header authentication
+
 ## [0.3.0] - 2025-08-25
 
 ### Added
