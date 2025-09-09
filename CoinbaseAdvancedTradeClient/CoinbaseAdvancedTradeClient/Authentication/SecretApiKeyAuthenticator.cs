@@ -15,9 +15,9 @@ namespace CoinbaseAdvancedTradeClient.Authentication
         {
             if (string.IsNullOrWhiteSpace(keyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(keyName));
             if (string.IsNullOrWhiteSpace(keySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(keySecret));
-            if (string.IsNullOrWhiteSpace(requestMethod)) throw new ArgumentNullException(nameof(requestMethod), ErrorMessages.RequestMethodRequired);
-            if (string.IsNullOrWhiteSpace(requestHost)) throw new ArgumentNullException(nameof(requestHost), ErrorMessages.RequestHostRequired);
-            if (string.IsNullOrWhiteSpace(requestPath)) throw new ArgumentNullException(nameof(requestPath), ErrorMessages.RequestPathRequired);
+            if (string.IsNullOrWhiteSpace(requestMethod)) throw new ArgumentException(ErrorMessages.RequestMethodRequired, nameof(requestMethod));
+            if (string.IsNullOrWhiteSpace(requestHost)) throw new ArgumentException(ErrorMessages.RequestHostRequired, nameof(requestHost));
+            if (string.IsNullOrWhiteSpace(requestPath)) throw new ArgumentException(ErrorMessages.RequestPathRequired, nameof(requestPath));
 
             // Parse the EC private key from PEM format
             ECPrivateKeyParameters privateKey;
