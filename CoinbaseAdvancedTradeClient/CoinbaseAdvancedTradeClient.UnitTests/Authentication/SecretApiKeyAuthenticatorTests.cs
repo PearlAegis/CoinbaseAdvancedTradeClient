@@ -12,8 +12,8 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Authentication
             // Arrange
             var testKeySecret = TestConfigHelper.GenerateTestKeySecret();
             
-            // Act & Assert - Should not throw exception
-            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+            // Act
+            var result = SecretApiKeyAuthenticator.GenerateBearerJWT(
                 "test-key-name",
                 testKeySecret,
                 "GET",
@@ -21,10 +21,10 @@ namespace CoinbaseAdvancedTradeClient.UnitTests.Authentication
                 "/v1/test"
             );
 
-            // Basic JWT format validation
-            Assert.NotNull(jwt);
-            Assert.Contains(".", jwt);
-            var parts = jwt.Split('.');
+            // Assert
+            Assert.NotNull(result);
+            Assert.Contains(".", result);
+            var parts = result.Split('.');
             Assert.Equal(3, parts.Length); // header.payload.signature
         }
 
