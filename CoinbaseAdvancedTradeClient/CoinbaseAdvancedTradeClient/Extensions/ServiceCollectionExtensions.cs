@@ -7,15 +7,26 @@ namespace CoinbaseAdvancedTradeClient.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddCoinbaseAdvancedTradeClient(this IServiceCollection services, IConfiguration configurationManager)
+        /// <summary>
+        /// Adds CoinbaseAdvancedTradeClient services to the service collection.
+        /// Automatically resolves configuration from the CoinbaseClientConfig section in appsettings.json.
+        /// </summary>
+        /// <param name="services">The service collection to add services to</param>
+        /// <returns>The service collection for method chaining</returns>
+        public static IServiceCollection AddCoinbaseAdvancedTradeClient(this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
-            if (configurationManager == null) throw new ArgumentNullException(nameof(configurationManager));
 
-            services.Configure<CoinbaseClientConfig>(configurationManager.GetSection(nameof(CoinbaseClientConfig)));
+            services.AddOptions<CoinbaseClientConfig>()
+                .Configure<IConfiguration>((config, configuration) =>
+                {
+                    configuration.GetSection(nameof(CoinbaseClientConfig)).Bind(config);
+                });
 
             services.AddScoped<ICoinbaseAdvancedTradeApiClient, CoinbaseAdvancedTradeApiClient>();
             services.AddScoped<ICoinbaseAdvancedTradeWebSocketClient, CoinbaseAdvancedTradeWebSocketClient>();
+
+            return services;
         }
     }
 }
