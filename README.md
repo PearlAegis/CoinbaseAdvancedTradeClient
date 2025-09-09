@@ -20,7 +20,7 @@ We are actively working toward a 1.0.0 stable release. Check the [CHANGELOG.md](
 
 - **Complete API Coverage**: Support for all Coinbase Advanced Trade endpoints including accounts, orders, products, and transaction summaries
 - **WebSocket Support**: Real-time market data streaming with support for multiple channels
-- **Authentication**: Secure API key-based authentication with HMAC signature generation
+- **Authentication**: Secure JWT Bearer token authentication with ECDSA ES256 signatures
 - **Type Safety**: Strongly-typed models for all API requests and responses
 - **Testing**: Comprehensive unit test suite with 142+ passing tests
 - **Modern .NET**: Built for .NET 9.0 with nullable reference types and implicit usings
@@ -41,46 +41,74 @@ Or add to your `.csproj` file:
 
 ## Quick Start
 
+### Configuration
+
+⚠️ **Security Warning**: Never commit your API key names or secrets to version control. Use secure configuration methods:
+- User secrets for development: `dotnet user-secrets set "CoinbaseClientConfig:KeyName" "your-key-name"`
+- Azure Key Vault or AWS Secrets Manager for production
+- Environment variables with proper access controls
+- Kubernetes secrets or similar container orchestration secrets
+
+Add your Coinbase Cloud API credentials to `appsettings.json`:
+
+```json
+{
+  "CoinbaseClientConfig": {
+    "KeyName": "your-key-name",
+    "KeySecret": "-----BEGIN EC PRIVATE KEY-----\n...\n-----END EC PRIVATE KEY-----",
+    "ApiBaseUrl": "https://api.coinbase.com", // Optional, defaults to production
+    "WebSocketUrl": "wss://advanced-trade-ws.coinbase.com" // Optional, defaults to production
+  }
+}
+```
+
 ### API Client Setup
 
 ```csharp
-using CoinbaseAdvancedTradeClient;
-using CoinbaseAdvancedTradeClient.Models.Config;
+using CoinbaseAdvancedTradeClient.Extensions;
 
-var config = new ApiClientConfig
+// Register during startup
+builder.Services.AddCoinbaseAdvancedTradeClient();
+
+// Use in your services
+public class TradingService
 {
-    ApiKey = "your-api-key",
-    ApiSecret = "your-api-secret"
-};
-
-using var client = new CoinbaseAdvancedTradeApiClient(config);
-
-// Get account information
-var accounts = await client.GetAccountsAsync();
-
-// Place a market order
-var orderResponse = await client.CreateOrderAsync(new CreateOrderParameters
-{
-    // Order configuration here
-});
+    private readonly ICoinbaseAdvancedTradeApiClient _client;
+    
+    public TradingService(ICoinbaseAdvancedTradeApiClient client)
+    {
+        _client = client;
+    }
+    
+    public async Task<ApiResponse<AccountsPage>> GetAccountsAsync()
+    {
+        return await _client.GetAccountsAsync();
+    }
+}
 ```
 
 ### WebSocket Client Setup
 
 ```csharp
-using CoinbaseAdvancedTradeClient;
-using CoinbaseAdvancedTradeClient.Models.Config;
-
-var config = new WebsocketClientConfig
+// WebSocket client is automatically registered with the API client
+public class MarketDataService
 {
-    ApiKey = "your-api-key",
-    ApiSecret = "your-api-secret"
-};
-
-using var wsClient = new CoinbaseAdvancedTradeWebsocketClient(config);
-
-// Subscribe to market data
-await wsClient.SubscribeAsync("BTC-USD", SubscriptionType.Ticker);
+    private readonly ICoinbaseAdvancedTradeWebSocketClient _wsClient;
+    
+    public MarketDataService(ICoinbaseAdvancedTradeWebSocketClient wsClient)
+    {
+        _wsClient = wsClient;
+    }
+    
+    public async Task SubscribeToTicker(string productId)
+    {
+        // Connect to WebSocket first
+        await _wsClient.ConnectAsync();
+        
+        // Then subscribe to market data
+        await _wsClient.SubscribeAsync(productId, SubscriptionType.Ticker);
+    }
+}
 ```
 
 ## API Reference
