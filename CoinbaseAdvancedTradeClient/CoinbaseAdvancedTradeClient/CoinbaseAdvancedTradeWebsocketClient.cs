@@ -6,6 +6,7 @@ using CoinbaseAdvancedTradeClient.Models.Config;
 using CoinbaseAdvancedTradeClient.Models.WebSocket;
 using CoinbaseAdvancedTradeClient.Models.WebSocket.Events;
 using CoinbaseAdvancedTradeClient.Resources;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Authentication;
@@ -15,7 +16,7 @@ namespace CoinbaseAdvancedTradeClient
 {
     public class CoinbaseAdvancedTradeWebSocketClient : ICoinbaseAdvancedTradeWebSocketClient, IDisposable
     {
-        private WebSocketClientConfig _config;
+        private IOptions<CoinbaseClientConfig> _config;
         private WebSocket _socket;
 
         private Action<object?, bool> _messageReceivedCallback;
@@ -25,11 +26,11 @@ namespace CoinbaseAdvancedTradeClient
 
         public bool IsConnected => _socket?.State == WebSocketState.Open;
 
-        public CoinbaseAdvancedTradeWebSocketClient(WebSocketClientConfig config)
+        public CoinbaseAdvancedTradeWebSocketClient(IOptions<CoinbaseClientConfig> config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config), ErrorMessages.ApiConfigRequired);
-            if (string.IsNullOrWhiteSpace(config.ApiKey)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.ApiKey));
-            if (string.IsNullOrWhiteSpace(config.ApiSecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.ApiSecret));
+            if (string.IsNullOrWhiteSpace(config.Value.KeyName)) throw new ArgumentException(ErrorMessages.ApiKeyRequired, nameof(config.Value.KeyName));
+            if (string.IsNullOrWhiteSpace(config.Value.KeySecret)) throw new ArgumentException(ErrorMessages.ApiSecretRequired, nameof(config.Value.KeySecret));
 
             _config = config;
         }
@@ -50,7 +51,7 @@ namespace CoinbaseAdvancedTradeClient
                 Disconnect();
             }
 
-            _socket = new WebSocket(_config.WebSocketUrl);
+            _socket = new WebSocket(_config.Value.WebSocketUrl);
             _socket.Security.EnabledSslProtocols = SslProtocols.Tls12;
 
             _socket.Opened += Socket_Opened;
@@ -80,17 +81,19 @@ namespace CoinbaseAdvancedTradeClient
 
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
-            var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
+            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+                _config.Value.KeyName,
+                _config.Value.KeySecret,
+                "GET",
+                _config.Value.WebSocketUrl,
+                "/");
 
             var subscriptionMessage = new SubscriptionMessage
             {
-                ApiKey = _config.ApiKey,
+                Type = SubscriptionType.Subscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = signature,
-                Timestamp = timestamp,
-                Type = SubscriptionType.Subscribe,
+                Jwt = jwt
             };
 
             var subscribe = JsonConvert.SerializeObject(subscriptionMessage);
@@ -105,17 +108,19 @@ namespace CoinbaseAdvancedTradeClient
 
             if (!IsConnected) throw new InvalidOperationException(ErrorMessages.WebSocketMustBeConnected);
 
-            var timestamp = ApiKeyAuthenticator.GenerateTimestamp();
-            var signature = ApiKeyAuthenticator.GenerateWebSocketSignature(_config.ApiSecret, timestamp, channel, productIds);
+            var jwt = SecretApiKeyAuthenticator.GenerateBearerJWT(
+                _config.Value.KeyName,
+                _config.Value.KeySecret,
+                "GET",
+                _config.Value.WebSocketUrl,
+                "/");
 
             var unsubscribeMessage = new SubscriptionMessage
             {
-                ApiKey = _config.ApiKey,
+                Type = SubscriptionType.Unsubscribe,
                 Channel = channel,
                 ProductIds = productIds,
-                Signature = signature,
-                Timestamp = timestamp,
-                Type = SubscriptionType.Unsubscribe
+                Jwt = jwt
             };
 
             var unsubscribe = JsonConvert.SerializeObject(unsubscribeMessage);
