@@ -1,4 +1,5 @@
 ﻿using CoinbaseAdvancedTradeClient.Models.Config;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace CoinbaseAdvancedTradeClient.UnitTests
@@ -9,7 +10,7 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_NullConfig_ThrowsArgumentNullException()
         {
             //Arrange
-            ApiClientConfig config = null;
+            IOptions<CoinbaseClientConfig> config = null;
 
             //Act & Assert
             Assert.Throws<ArgumentNullException>(() => 
@@ -27,11 +28,12 @@ namespace CoinbaseAdvancedTradeClient.UnitTests
         public void Constructor_EmptyConfigSetting_ThrowsArgumentException(string key, string secret)
         {
             //Arrange
-            ApiClientConfig config = new ApiClientConfig()
+            var configValue = new CoinbaseClientConfig()
             {
-                ApiKey = key,
-                ApiSecret = secret
+                KeyName = key,
+                KeySecret = secret
             };
+            var config = Options.Create(configValue);
 
             //Act & Assert
             Assert.Throws<ArgumentException>(() => 
